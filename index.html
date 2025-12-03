@@ -113,7 +113,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.4rem;
+      margin-bottom: 0.8rem;
     }
 
     .brand {
@@ -191,6 +191,35 @@
       50%      { transform: scale(1.45); opacity: 0.4; }
     }
 
+    /* TOP MICRO-NAV -------------------------------------------------------- */
+
+    .top-nav {
+      margin: 0 0 1.1rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+    }
+
+    .top-link {
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(106,159,211,0.5);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      background: rgba(4,7,14,0.9);
+      backdrop-filter: blur(10px);
+      transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease, transform 0.12s ease;
+    }
+
+    .top-link:hover {
+      color: var(--accent-strong);
+      border-color: rgba(164,219,255,0.9);
+      background: rgba(10,16,26,0.98);
+      transform: translateY(-1px);
+    }
+
     /* MAIN ------------------------------------------------------------------ */
 
     .frame-row {
@@ -199,6 +228,17 @@
       grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
       gap: 1.8rem;
       align-items: center;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .ready .reveal {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* LAUNCH CARD ----------------------------------------------------------- */
@@ -249,7 +289,25 @@
       text-transform: uppercase;
       letter-spacing: 0.26em;
       color: var(--text-muted);
-      margin-bottom: 1.3rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .tag-chip {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 0.18rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(88,134,187,0.8);
+      background: rgba(6,10,18,0.92);
+      color: var(--text-muted);
     }
 
     .launch-line {
@@ -257,7 +315,7 @@
       color: var(--text-muted);
       max-width: 34rem;
       line-height: 1.65;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.4rem;
     }
 
     .launch-highlight {
@@ -296,21 +354,45 @@
       50.01%, 100% { opacity: 0; }
     }
 
-    /* INFO GRID below console ---------------------------------------------- */
+    /* INFO GRID ------------------------------------------------------------- */
 
     .info-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0.75rem;
       font-size: 0.78rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.4rem;
     }
 
     .info-item {
+      position: relative;
       background: rgba(6,10,18,0.8);
       border-radius: 12px;
       padding: 0.55rem 0.7rem;
       border: 1px solid rgba(88,134,187,0.6);
+      overflow: hidden;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease, background 0.18s ease;
+    }
+
+    .info-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(130,202,255,0.25), transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .info-item:hover {
+      border-color: rgba(158,216,255,0.95);
+      box-shadow: 0 12px 28px rgba(58,119,190,0.5);
+      transform: translateY(-2px);
+      background: rgba(9,14,24,0.96);
+    }
+
+    .info-item:hover::before {
+      opacity: 1;
     }
 
     .info-label {
@@ -441,11 +523,55 @@
       opacity: 0.8;
     }
 
+    /* METRICS & PROGRESS ---------------------------------------------------- */
+
+    .side-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      font-size: 0.72rem;
+    }
+
+    .metric-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .metric-label {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+
+    .metric-bar {
+      position: relative;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(12,19,30,0.9);
+      overflow: hidden;
+      border: 1px solid rgba(94,139,190,0.7);
+    }
+
+    .metric-fill {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(117,203,255,0.0), rgba(117,203,255,0.9));
+      transform-origin: left;
+      transform: scaleX(0.5);
+    }
+
+    .metric-fill.mid { transform: scaleX(0.7); }
+    .metric-fill.high { transform: scaleX(0.9); }
+
     /* PROGRESS STRIP with glow line + items -------------------------------- */
 
     .side-progress {
       display: flex;
       align-items: flex-end;
+      justify-content: space-between;
       gap: 0.75rem;
       margin-top: 0.8rem;
     }
@@ -494,9 +620,12 @@
       width: 6px;
       height: 96px;
       border-radius: 999px;
-      background: linear-gradient(to top, rgba(90,183,255,0.0), rgba(90,183,255,0.8));
+      background:
+        radial-gradient(circle at 50% 0, rgba(189,236,255,0.9), transparent 60%),
+        linear-gradient(to top, rgba(90,183,255,0.0), rgba(90,183,255,0.8));
       position: relative;
       overflow: hidden;
+      box-shadow: 0 0 30px rgba(117,203,255,0.6);
     }
 
     .signal-indicator {
@@ -542,6 +671,9 @@
       }
       .side-panel {
         order: 0;
+      }
+      .top-nav {
+        justify-content: flex-start;
       }
     }
 
@@ -590,7 +722,7 @@
 
   <div class="shell">
     <!-- TOP BAR -->
-    <header class="top-bar">
+    <header class="top-bar reveal">
       <div class="brand">
         <div class="brand-mark">S</div>
         <div class="brand-text">
@@ -608,13 +740,26 @@
       </div>
     </header>
 
+    <!-- TOP NAV -->
+    <nav class="top-nav reveal">
+      <a class="top-link" href="#status">Status</a>
+      <a class="top-link" href="#outline">Outline</a>
+      <a class="top-link" href="#channels">Channels</a>
+    </nav>
+
     <!-- MAIN CONTENT -->
     <main class="frame-row">
       <!-- LEFT: PRIMARY LAUNCH CARD -->
-      <section class="launch-card">
+      <section class="launch-card reveal" id="status">
         <div class="launch-kicker">Launch window · Initial surface</div>
         <h1 class="launch-title-main">Launching very soon.</h1>
         <div class="launch-title-sub">Quiet interface · limited circle</div>
+
+        <div class="tag-row">
+          <span class="tag-chip">Low-noise operation</span>
+          <span class="tag-chip">Limited intake</span>
+          <span class="tag-chip">Manual review</span>
+        </div>
 
         <p class="launch-line">
           Shinken is moving from internal systems to a controlled public surface.
@@ -630,7 +775,7 @@
         </div>
 
         <!-- INFORMATIVE STRIP -->
-        <div class="info-grid">
+        <div class="info-grid" id="outline">
           <div class="info-item">
             <div class="info-label">Current phase</div>
             <div class="info-main">Surface assembly</div>
@@ -649,7 +794,7 @@
         </div>
 
         <!-- CTAS -->
-        <div class="cta-row">
+        <div class="cta-row" id="channels">
           <a href="https://wa.me/17097007361" target="_blank" class="btn">WhatsApp line</a>
           <a href="mailto:helpline.kensano@gmail.com" class="btn secondary">Email desk</a>
           <a href="https://instagram.com/kensano.in" target="_blank" class="btn secondary">Instagram hub</a>
@@ -657,7 +802,7 @@
       </section>
 
       <!-- RIGHT: SIDE PANEL / META -->
-      <aside class="side-panel">
+      <aside class="side-panel reveal">
         <div>
           <div class="side-heading">What Shinken is</div>
           <p class="side-body">
@@ -683,6 +828,37 @@
           <div class="side-owners">
             This is not a mass service. Contact is for people who already know
             what they are building and why they want Shinken involved.
+          </div>
+
+          <!-- METRICS -->
+          <div class="side-metrics">
+            <div class="metric-row">
+              <div class="metric-label">
+                <span>Noise floor</span>
+                <span>Low</span>
+              </div>
+              <div class="metric-bar">
+                <div class="metric-fill"></div>
+              </div>
+            </div>
+            <div class="metric-row">
+              <div class="metric-label">
+                <span>Capacity</span>
+                <span>Limited</span>
+              </div>
+              <div class="metric-bar">
+                <div class="metric-fill mid"></div>
+              </div>
+            </div>
+            <div class="metric-row">
+              <div class="metric-label">
+                <span>Latency</span>
+                <span>Human-paced</span>
+              </div>
+              <div class="metric-bar">
+                <div class="metric-fill high"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -718,7 +894,7 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="foot">
+    <footer class="foot reveal">
       <span>© <span id="year"></span> Shinken. All rights reserved.</span>
       <span>Phase: surface assembly. Once ready, this holding page dissolves into the full interface.</span>
     </footer>
@@ -727,6 +903,11 @@
   <script>
     // Dynamic year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Trigger entrance animations
+    window.addEventListener('load', function () {
+      document.documentElement.classList.add('ready');
+    });
   </script>
 </body>
 </html>
