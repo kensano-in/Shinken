@@ -270,8 +270,6 @@
       margin-bottom: 3.2rem;
     }
 
-    .hero-main {}
-
     .hero-kicker {
       text-transform: uppercase;
       letter-spacing: 0.2em;
@@ -417,7 +415,7 @@
       color: var(--text-muted);
     }
 
-    /* SECTIONS */
+    /* SECTION */
     .section {
       margin-bottom: 3.4rem;
     }
@@ -461,7 +459,7 @@
       color: var(--text-muted);
     }
 
-    /* CARDS */
+    /* WORK CARDS */
     .cards {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -562,7 +560,7 @@
       gap: 0.7rem;
     }
 
-    /* REVEAL ANIMATION */
+    /* REVEAL */
     .reveal {
       opacity: 0;
       transform: translateY(18px);
@@ -737,7 +735,7 @@
         </article>
         <article class="card">
           <div class="card-tag">02 · Writing</div>
-          <div class="card-title">Language & shayari desk</div>
+          <div class="card-title">Language &amp; shayari desk</div>
           <p>
             Captions, shayari, long-form pieces, and narrative framing. Text designed to sound like
             the person behind it – just sharper and more disciplined.
@@ -790,17 +788,17 @@
 
       <div class="two-col-panel">
         <div>
-          <div class="operator-name" style="font-size:0.96rem;color:var(--ice);margin-bottom:0.25rem;">Shinichiro</div>
-          <div class="operator-meta" style="margin-bottom:0.4rem;">Legal name: <strong>Subhankar Singha</strong></div>
-          <div class="operator-meta" style="margin-bottom:0.4rem;">Base: Kolkata, India</div>
+          <div style="font-size:0.96rem;color:var(--ice);margin-bottom:0.25rem;">Shinichiro</div>
+          <div style="margin-bottom:0.4rem;">Legal name: <strong>Subhankar Singha</strong></div>
+          <div style="margin-bottom:0.4rem;">Base: Kolkata, India</div>
           <p>
             Primary operator on the visible side. Works across writing, shayari, script systems,
             number provisioning, and day-to-day handling of surfaces that face the outside world.
           </p>
         </div>
         <div>
-          <div class="operator-name" style="font-size:0.96rem;color:var(--ice);margin-bottom:0.25rem;">Ken</div>
-          <div class="operator-meta" style="margin-bottom:0.4rem;">Identity: intentionally minimal on public layers.</div>
+          <div style="font-size:0.96rem;color:var(--ice);margin-bottom:0.25rem;">Ken</div>
+          <div style="margin-bottom:0.4rem;">Identity: intentionally minimal on public layers.</div>
           <p>
             Involved on the structural and operational side: documentation, system design, and quiet
             architecture behind the work. More present in how Shinken runs than in what it posts.
@@ -867,7 +865,7 @@
       links.classList.toggle('open');
     }
 
-    // section reveal on scroll
+    // scroll reveal
     var revealEls = document.querySelectorAll('.reveal');
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
@@ -880,7 +878,7 @@
 
     revealEls.forEach(function(el) { observer.observe(el); });
 
-    // nav active state on scroll
+    // nav active state
     var sections = document.querySelectorAll('#top, #meaning, #work, #operators, #contact');
     var navLinks = document.querySelectorAll('.nav-link');
 
