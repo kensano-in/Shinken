@@ -1,800 +1,906 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SHINKEN — Private Digital Collective</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SHINKEN — Private Digital Collective</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
 
-<style>
-:root {
-  --bg: #02030a;
-  --panel: rgba(10, 13, 20, 0.78);
-  --panel-soft: rgba(15, 19, 30, 0.8);
-  --border: rgba(117, 190, 255, 0.3);
-  --border-soft: rgba(117, 190, 255, 0.16);
-  --ice: #75c7ff;
-  --ice-strong: #c4e6ff;
-  --text-main: #e7edf6;
-  --text-muted: #9ca4b2;
-}
+  <style>
+    :root {
+      --bg: #02030a;
+      --panel: rgba(8, 12, 20, 0.9);
+      --panel-soft: rgba(11, 16, 27, 0.9);
+      --border: rgba(118, 194, 255, 0.4);
+      --border-soft: rgba(118, 194, 255, 0.16);
+      --ice: #79c9ff;
+      --ice-strong: #d0ebff;
+      --text-main: #e7edf7;
+      --text-muted: #9da5b5;
+    }
 
-/* RESET */
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-html, body {
-  height: 100%;
-  scroll-behavior: smooth;
-}
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
 
-body {
-  background: radial-gradient(circle at top, #051021, #02030a 55%);
-  color: var(--text-main);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
+    body {
+      background: radial-gradient(circle at top, #071021, #02030a 55%);
+      color: var(--text-main);
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-/* BACKGROUND EFFECTS */
-.bg-grid {
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 44px 44px;
-  opacity: 0.25;
-  pointer-events: none;
-  z-index: 1;
-}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-.bg-orb {
-  position: fixed;
-  width: 420px;
-  height: 420px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 20%, rgba(168,227,255,0.9), transparent 60%);
-  filter: blur(32px);
-  opacity: 0.45;
-  top: -140px;
-  right: -90px;
-  mix-blend-mode: screen;
-  animation: orbRotate 26s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-}
+    /* BACKGROUND FX */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity: 0.24;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-@keyframes orbRotate {
-  0% { transform: translate3d(0,0,0) rotate(0deg); }
-  50% { transform: translate3d(-40px,10px,0) rotate(180deg); }
-  100% { transform: translate3d(0,0,0) rotate(360deg); }
-}
+    .bg-orb {
+      position: fixed;
+      width: 420px;
+      height: 420px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 30%, rgba(161,224,255,0.9), transparent 60%);
+      filter: blur(36px);
+      opacity: 0.45;
+      top: -140px;
+      right: -110px;
+      mix-blend-mode: screen;
+      animation: orbRotate 26s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-/* COMMON */
-.page-wrap {
-  position: relative;
-  z-index: 5;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 1.8rem 1.5rem 3.5rem;
-}
+    @keyframes orbRotate {
+      0%   { transform: translate3d(0,0,0) rotate(0deg); }
+      50%  { transform: translate3d(-40px,20px,0) rotate(180deg); }
+      100% { transform: translate3d(0,0,0) rotate(360deg); }
+    }
 
-/* NAVBAR */
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-}
+    .page-wrap {
+      position: relative;
+      z-index: 5;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.8rem 1.4rem 3.2rem;
+    }
 
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-}
+    /* NAVBAR */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.8rem;
+    }
 
-.nav-mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
-  border: 1px solid rgba(138,199,255,0.5);
-  background: radial-gradient(circle at 20% 20%, rgba(158,221,255,0.7), transparent 55%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Playfair Display', serif;
-  font-size: 0.95rem;
-  letter-spacing: 0.16em;
-}
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
 
-.nav-text {
-  display: flex;
-  flex-direction: column;
-}
+    .nav-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      border: 1px solid rgba(138,199,255,0.5);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(158,221,255,0.7), transparent 55%),
+        radial-gradient(circle at 80% 80%, rgba(2,5,10,0.9), #02030a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Playfair Display", serif;
+      font-size: 0.98rem;
+      letter-spacing: 0.18em;
+    }
 
-.nav-title {
-  font-size: 0.78rem;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--ice-strong);
-}
+    .nav-text {
+      display: flex;
+      flex-direction: column;
+    }
 
-.nav-sub {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-}
+    .nav-title {
+      font-size: 0.76rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ice-strong);
+    }
 
-.nav-links {
-  display: flex;
-  gap: 1.3rem;
-  font-size: 0.8rem;
-}
+    .nav-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
 
-.nav-link {
-  text-decoration: none;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.72rem;
-  position: relative;
-  padding-bottom: 0.2rem;
-}
+    .nav-links {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.78rem;
+      align-items: center;
+    }
 
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 1px;
-  width: 0;
-  background: linear-gradient(90deg, var(--ice), transparent);
-  transition: width 0.18s ease;
-}
+    .nav-link {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+      position: relative;
+      padding-bottom: 0.22rem;
+      color: var(--text-muted);
+    }
 
-.nav-link:hover {
-  color: var(--text-main);
-}
-.nav-link:hover::after {
-  width: 100%;
-}
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 1px;
+      width: 0;
+      background: linear-gradient(90deg, var(--ice), transparent);
+      transition: width 0.18s ease;
+    }
 
-.nav-link.active {
-  color: var(--ice);
-}
-.nav-link.active::after {
-  width: 100%;
-}
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
 
-/* MOBILE NAV */
-.nav-toggle {
-  display: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  border: 1px solid rgba(138,199,255,0.6);
-  background: rgba(10,12,18,0.95);
-  align-items: center;
-  justify-content: center;
-}
+    .nav-link.active {
+      color: var(--ice);
+    }
+    .nav-link.active::after {
+      width: 100%;
+    }
 
-.nav-toggle span {
-  width: 16px;
-  height: 1px;
-  background: #dfe9ff;
-  position: relative;
-}
-.nav-toggle span::before,
-.nav-toggle span::after {
-  content: "";
-  position: absolute;
-  width: 16px;
-  height: 1px;
-  left: 0;
-  background: #dfe9ff;
-}
-.nav-toggle span::before { top: -5px; }
-.nav-toggle span::after { top: 5px; }
+    .nav-toggle {
+      display: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(138,199,255,0.6);
+      background: rgba(5,7,13,0.98);
+      align-items: center;
+      justify-content: center;
+    }
 
-@media (max-width: 720px) {
-  .nav-links {
-    position: absolute;
-    right: 1.5rem;
-    top: 3.4rem;
-    flex-direction: column;
-    align-items: flex-end;
-    padding: 0.9rem 1.1rem;
-    border-radius: 14px;
-    background: rgba(5,7,12,0.96);
-    border: 1px solid rgba(123,183,255,0.3);
-    backdrop-filter: blur(12px);
-    display: none;
-  }
-  .nav-links.open {
-    display: flex;
-  }
-  .nav-toggle {
-    display: inline-flex;
-  }
-}
+    .nav-toggle span {
+      width: 16px;
+      height: 1px;
+      background: #dfe9ff;
+      position: relative;
+    }
+    .nav-toggle span::before,
+    .nav-toggle span::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 1px;
+      left: 0;
+      background: #dfe9ff;
+    }
+    .nav-toggle span::before { top: -5px; }
+    .nav-toggle span::after { top: 5px; }
 
-/* HERO */
-.hero {
-  margin-top: 1.6rem;
-  margin-bottom: 3rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.1fr);
-  gap: 2.5rem;
-}
+    @media (max-width: 720px) {
+      .nav-links {
+        position: absolute;
+        right: 1.4rem;
+        top: 3.4rem;
+        flex-direction: column;
+        align-items: flex-end;
+        padding: 0.9rem 1.1rem;
+        border-radius: 14px;
+        background: rgba(5,7,12,0.98);
+        border: 1px solid rgba(123,183,255,0.3);
+        backdrop-filter: blur(14px);
+        display: none;
+      }
+      .nav-links.open {
+        display: flex;
+      }
+      .nav-toggle {
+        display: inline-flex;
+      }
+    }
 
-.hero-main {
-  position: relative;
-}
+    /* STATUS STRIP */
+    .status-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.7rem 1.1rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(140,215,255,0.24), transparent 50%), rgba(10,14,24,0.98);
+      border: 1px solid rgba(145,208,255,0.4);
+      box-shadow: 0 12px 36px rgba(66,145,220,0.32);
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 1.8rem;
+    }
 
-.hero-kicker {
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-size: 0.75rem;
-  color: var(--ice-strong);
-  margin-bottom: 0.9rem;
-}
+    .status-left {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.7rem;
+      color: var(--ice-strong);
+    }
 
-.hero-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 3.2rem;
-  line-height: 1.1;
-  letter-spacing: 0.08em;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  text-shadow: 0 0 40px rgba(117,199,255,0.4);
-}
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: radial-gradient(circle at center, var(--ice), #163046);
+      margin-right: 0.4rem;
+      display: inline-block;
+    }
 
-.hero-sub {
-  font-size: 1rem;
-  color: var(--text-muted);
-  max-width: 32rem;
-  line-height: 1.7;
-}
+    .status-right {
+      opacity: 0.9;
+    }
 
-.hero-actions {
-  margin-top: 2.1rem;
-}
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.1fr);
+      gap: 2.4rem;
+      margin-bottom: 3.2rem;
+    }
 
-.btn-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-}
+    .hero-main {}
 
-.btn {
-  text-decoration: none;
-  padding: 0.78rem 1.9rem;
-  border-radius: 999px;
-  background: radial-gradient(circle at 0 0, rgba(158,221,255,0.16), transparent 60%), 
-              linear-gradient(135deg, rgba(11,14,22,0.95), rgba(7,9,16,0.98));
-  border: 1px solid rgba(117,190,255,0.55);
-  color: var(--ice-strong);
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  backdrop-filter: blur(10px);
-  transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-}
+    .hero-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.74rem;
+      color: var(--ice-strong);
+      margin-bottom: 0.9rem;
+    }
 
-.btn::after {
-  content: "↗";
-  font-size: 0.78rem;
-  opacity: 0.65;
-}
+    .hero-title {
+      font-family: "Playfair Display", serif;
+      font-size: 3.1rem;
+      line-height: 1.1;
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      text-shadow: 0 0 40px rgba(120,196,255,0.45);
+    }
 
-.btn:hover {
-  transform: translateY(-2px);
-  border-color: rgba(163,211,255,0.9);
-  box-shadow: 0 12px 38px rgba(88,172,255,0.25);
-  background: radial-gradient(circle at 0 0, rgba(158,221,255,0.24), transparent 60%), 
-              linear-gradient(135deg, rgba(12,16,26,0.97), rgba(8,10,18,1));
-}
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 32rem;
+      line-height: 1.7;
+    }
 
-.btn.secondary {
-  border-color: rgba(126,171,222,0.5);
-  color: var(--text-main);
-  opacity: 0.9;
-}
-.btn.secondary:hover {
-  opacity: 1;
-}
+    .hero-actions {
+      margin-top: 2.1rem;
+    }
 
-.btn.ghost {
-  background: transparent;
-  border-color: rgba(94,130,176,0.7);
-  color: var(--text-muted);
-}
-.btn.ghost::after { content: "↓"; }
-.btn.ghost:hover {
-  color: var(--ice-strong);
-  border-color: rgba(143,203,255,0.9);
-  background: rgba(7,9,16,0.95);
-}
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
 
-/* HERO SIDE PANEL */
-.hero-side {
-  align-self: center;
-}
+    .btn {
+      padding: 0.8rem 1.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(120,193,255,0.55);
+      background:
+        radial-gradient(circle at 0 0, rgba(158,221,255,0.2), transparent 60%),
+        linear-gradient(135deg, rgba(14,18,29,0.98), rgba(7,9,18,1));
+      color: var(--ice-strong);
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      backdrop-filter: blur(10px);
+      transition: transform 0.16s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+    }
 
-.hero-card {
-  background: var(--panel);
-  border-radius: 18px;
-  border: 1px solid var(--border-soft);
-  padding: 1.3rem 1.4rem;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 0 40px rgba(18,27,48,0.65);
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
+    .btn::after {
+      content: "↗";
+      font-size: 0.78rem;
+      opacity: 0.7;
+    }
 
-.hero-card-label {
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.7rem;
-  color: var(--ice-strong);
-  margin-bottom: 0.4rem;
-}
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(167,214,255,0.9);
+      box-shadow: 0 12px 38px rgba(95,177,255,0.35);
+      background:
+        radial-gradient(circle at 0 0, rgba(158,221,255,0.26), transparent 60%),
+        linear-gradient(135deg, rgba(16,21,34,0.98), rgba(8,11,20,1));
+    }
 
-/* SECTION BASE */
-.section {
-  margin-bottom: 3.5rem;
-}
+    .btn.secondary {
+      border-color: rgba(104,148,202,0.7);
+      color: var(--text-main);
+      opacity: 0.92;
+    }
+    .btn.secondary:hover {
+      opacity: 1;
+    }
 
-.section-header {
-  margin-bottom: 1.5rem;
-}
+    .btn.ghost {
+      background: transparent;
+      border-color: rgba(90,124,172,0.9);
+      color: var(--text-muted);
+    }
+    .btn.ghost::after { content: "↓"; }
+    .btn.ghost:hover {
+      color: var(--ice-strong);
+      border-color: rgba(145,208,255,0.95);
+      background: rgba(7,9,16,0.98);
+    }
 
-.section-kicker {
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.76rem;
-  color: var(--ice-strong);
-  margin-bottom: 0.5rem;
-}
+    .hero-side {
+      align-self: center;
+    }
 
-.section-title {
-  font-size: 1.35rem;
-  font-weight: 500;
-  margin-bottom: 0.3rem;
-}
+    .hero-card {
+      position: relative;
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 1.4rem 1.5rem;
+      border: 1px solid var(--border-soft);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 0 40px rgba(11,17,32,0.85);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      overflow: hidden;
+    }
 
-.section-sub {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  max-width: 32rem;
-}
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      background:
+        linear-gradient(135deg, rgba(118,194,255,0.6), transparent 55%);
+      opacity: 0.16;
+      pointer-events: none;
+    }
 
-/* CARDS GRID */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.4rem;
-}
+    .hero-card-label {
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.7rem;
+      color: var(--ice-strong);
+      margin-bottom: 0.5rem;
+    }
 
-.card {
-  background: var(--panel-soft);
-  border-radius: 16px;
-  border: 1px solid var(--border-soft);
-  padding: 1.1rem 1.2rem;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 0 32px rgba(10,15,28,0.8);
-  font-size: 0.86rem;
-  color: var(--text-muted);
-}
+    .hero-badges {
+      margin-top: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
 
-.card-tag {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--ice-strong);
-  margin-bottom: 0.5rem;
-}
+    .hero-chip {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(100,142,194,0.8);
+      background: rgba(7,11,20,0.95);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
 
-.card-title {
-  font-size: 0.98rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--text-main);
-}
+    /* SECTIONS */
+    .section {
+      margin-bottom: 3.4rem;
+    }
 
-/* TWO COLUMN PANEL */
-.two-col-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
-  gap: 1.6rem;
-  background: var(--panel);
-  border-radius: 18px;
-  border: 1px solid var(--border-soft);
-  padding: 1.6rem 1.7rem;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 0 40px rgba(18,27,48,0.7);
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
+    .section-header {
+      margin-bottom: 1.5rem;
+    }
 
-.operator-name {
-  font-size: 0.95rem;
-  color: var(--ice);
-  margin-bottom: 0.2rem;
-  font-weight: 500;
-}
+    .section-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.76rem;
+      color: var(--ice-strong);
+      margin-bottom: 0.5rem;
+    }
 
-.operator-meta {
-  margin-bottom: 0.4rem;
-}
+    .section-title {
+      font-size: 1.34rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
 
-/* CONTACT PANEL */
-.contact-panel {
-  background: var(--panel);
-  border-radius: 18px;
-  border: 1px solid var(--border-soft);
-  padding: 1.7rem 1.8rem;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 0 40px rgba(18,27,48,0.7);
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
+    .section-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 32rem;
+    }
 
-.contact-list {
-  margin-top: 0.7rem;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
-}
+    /* MEANING PANEL */
+    .two-col-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
+      gap: 1.7rem;
+      background: var(--panel-soft);
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      padding: 1.7rem 1.8rem;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 0 46px rgba(11,17,32,0.9);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
 
-.contact-item-label {
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.7rem;
-  color: var(--ice-strong);
-  margin-bottom: 0.2rem;
-}
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.4rem;
+    }
 
-.contact-item-value {
-  font-size: 0.86rem;
-}
+    .card {
+      position: relative;
+      background: var(--panel-soft);
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      padding: 1.1rem 1.2rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 0 36px rgba(10,15,30,0.9);
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      overflow: hidden;
+      transform: translateY(0);
+      transition: transform 0.18s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
 
-/* FOOTER */
-.footer {
-  margin-top: 2.6rem;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.7rem;
-}
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(121,201,255,0.28), transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
 
-/* REVEAL ANIMATION */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.5s ease, transform 0.6s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(140,210,255,0.9);
+      box-shadow: 0 16px 40px rgba(55,128,210,0.45);
+      background: rgba(12,18,31,0.98);
+    }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .hero-side {
-    order: -1;
-  }
-  .cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .two-col-panel {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .contact-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
+    .card:hover::before {
+      opacity: 1;
+    }
 
-@media (max-width: 640px) {
-  .page-wrap {
-    padding-inline: 1.2rem;
-  }
-  .hero-title {
-    font-size: 2.4rem;
-  }
-  .cards {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .contact-list {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-</style>
+    .card-tag {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--ice-strong);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 0.98rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    /* CONTACT PANEL */
+    .contact-panel {
+      background: var(--panel);
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      padding: 1.8rem 1.9rem;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 0 46px rgba(11,17,32,0.9);
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .contact-list {
+      margin-top: 0.9rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .contact-item-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.7rem;
+      color: var(--ice-strong);
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-item-value {
+      font-size: 0.86rem;
+      word-break: break-word;
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 2.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.7rem;
+    }
+
+    /* REVEAL ANIMATION */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-side {
+        order: -1;
+      }
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .two-col-panel {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .contact-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-wrap {
+        padding-inline: 1.1rem;
+      }
+      .status-strip {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .cards {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .contact-list {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="bg-grid"></div>
-<div class="bg-orb"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-orb"></div>
 
-<div class="page-wrap">
-
-  <!-- NAV -->
-  <header class="nav">
-    <div class="nav-left">
-      <div class="nav-mark">S</div>
-      <div class="nav-text">
-        <div class="nav-title">SHINKEN</div>
-        <div class="nav-sub">Private digital collective</div>
-      </div>
-    </div>
-    <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleNav()">
-      <span></span>
-    </button>
-    <nav class="nav-links" id="nav-links">
-      <a href="#top" class="nav-link active">Overview</a>
-      <a href="#meaning" class="nav-link">Meaning</a>
-      <a href="#work" class="nav-link">Work</a>
-      <a href="#operators" class="nav-link">Operators</a>
-      <a href="#contact" class="nav-link">Contact</a>
-    </nav>
-  </header>
-
-  <!-- HERO -->
-  <main id="top" class="hero reveal">
-    <div class="hero-main">
-      <div class="hero-kicker">In preparation</div>
-      <h1 class="hero-title">A quiet unit for loud problems.</h1>
-      <p class="hero-sub">
-        Shinken is a private, low-noise collective operated by <strong>Shinichiro &amp; Ken</strong>, focused on number provisioning,
-        refined writing and script work, editorial tightening, and discreet social account handling for a limited circle.
-      </p>
-      <div class="hero-actions">
-        <div class="btn-row">
-          <a href="https://wa.me/17097007361" target="_blank" class="btn">WhatsApp line</a>
-          <a href="mailto:helpline.kensano@gmail.com" class="btn secondary">Email desk</a>
-          <a href="#work" class="btn ghost">View scope</a>
+  <div class="page-wrap">
+    <!-- NAV -->
+    <header class="nav">
+      <div class="nav-left">
+        <div class="nav-mark">S</div>
+        <div class="nav-text">
+          <div class="nav-title">SHINKEN</div>
+          <div class="nav-sub">Private digital collective</div>
         </div>
       </div>
-    </div>
-    <aside class="hero-side">
-      <div class="hero-card">
-        <div class="hero-card-label">Current state</div>
-        <p>
-          The public interface is being assembled.  
-          Core structure already exists; we are now layering the systems, controls, and surfaces around it.
-        </p>
-      </div>
-    </aside>
-  </main>
+      <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleNav()">
+        <span></span>
+      </button>
+      <nav class="nav-links" id="nav-links">
+        <a href="#top" class="nav-link active">Overview</a>
+        <a href="#meaning" class="nav-link">Meaning</a>
+        <a href="#work" class="nav-link">Work</a>
+        <a href="#operators" class="nav-link">Operators</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+    </header>
 
-  <!-- MEANING -->
-  <section id="meaning" class="section reveal">
-    <div class="section-header">
-      <div class="section-kicker">Name & intent</div>
-      <h2 class="section-title">What “Shinken” stands for.</h2>
-      <p class="section-sub">
-        The name is not decorative. It is a statement about how work is treated inside this collective.
-      </p>
-    </div>
-
-    <div class="two-col-panel">
-      <div>
-        <p>
-          “Shinken” points to work carried out in real conditions, with real stakes — not rehearsal,  
-          not performance for feeds. It reflects a preference for outcomes over impressions, and  
-          for structure over spectacle.
-        </p>
-        <br />
-        <p>
-          The operating assumption is simple: fewer clients, deeper context, longer arcs. Less exposure,  
-          more control. The systems are designed so that you always know what is happening, even if  
-          it is happening quietly.
-        </p>
+    <!-- STATUS STRIP -->
+    <div class="status-strip reveal" id="top">
+      <div class="status-left">
+        <span class="status-dot"></span>
+        In preparation
       </div>
-      <div>
-        <p>
-          Inside Shinken, numbers, words, scripts, and presence are treated as critical infrastructure,  
-          not decoration. The aim is to keep these layers clean, stable, and intentional — especially  
-          when everything outside them is noisy.
-        </p>
+      <div class="status-right">
+        The public interface is being assembled. Core structure already exists; systems and surfaces are now being layered in.
       </div>
     </div>
-  </section>
 
-  <!-- WORK / SERVICES -->
-  <section id="work" class="section reveal">
-    <div class="section-header">
-      <div class="section-kicker">Scope</div>
-      <h2 class="section-title">What actually happens inside.</h2>
-      <p class="section-sub">
-        Not everything is public. But this is the surface view of the work handled here.
-      </p>
-    </div>
-
-    <div class="cards">
-      <article class="card">
-        <div class="card-tag">01 · Access</div>
-        <div class="card-title">Number provisioning</div>
-        <p>
-          Curated, long-term oriented number access for WhatsApp and Telegram.  
-          Focus on stability, clean history, and alignment with how you present yourself.
+    <!-- HERO -->
+    <main class="hero reveal">
+      <div class="hero-main">
+        <div class="hero-kicker">Shinichiro &amp; Ken · Operators</div>
+        <h1 class="hero-title">A quiet unit for loud problems.</h1>
+        <p class="hero-sub">
+          Shinken is a private, low-noise collective focused on number provisioning, refined writing and script work,
+          editorial tightening, and discreet social account handling for a deliberately small circle.
         </p>
-      </article>
-      <article class="card">
-        <div class="card-tag">02 · Writing</div>
-        <div class="card-title">Language & shayari desk</div>
-        <p>
-          Caption systems, long-form copy, shayari, and narrative framing.  
-          Calm, sharp language tuned to your world instead of generic templates.
-        </p>
-      </article>
-      <article class="card">
-        <div class="card-tag">03 · Scripts</div>
-        <div class="card-title">Structured script work</div>
-        <p>
-          For video, audio, campaigns, and serial content. From outline to final version,  
-          built to hold attention without shouting for it.
-        </p>
-      </article>
-      <article class="card">
-        <div class="card-tag">04 · Editorial</div>
-        <div class="card-title">Refinement layer</div>
-        <p>
-          Line-by-line tightening of existing material: structure, clarity, rhythm.  
-          The goal is for your work to read like you, just cleaner.
-        </p>
-      </article>
-      <article class="card">
-        <div class="card-tag">05 · Presence</div>
-        <div class="card-title">Discreet account handling</div>
-        <p>
-          Low-noise management for social accounts: planning, posting, and replies handled  
-          behind the surface. Visibility without chaos.
-        </p>
-      </article>
-      <article class="card">
-        <div class="card-tag">06 · Ongoing</div>
-        <div class="card-title">Long-term arrangements</div>
-        <p>
-          For work that needs a steady operator instead of a one-time fix,  
-          Shinken can be held on retainer with clearly defined lanes and expectations.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <!-- OPERATORS -->
-  <section id="operators" class="section reveal">
-    <div class="section-header">
-      <div class="section-kicker">Operators</div>
-      <h2 class="section-title">Who is actually in the room.</h2>
-      <p class="section-sub">
-        Names are not the main point, but accountability matters.
-      </p>
-    </div>
-
-    <div class="two-col-panel">
-      <div>
-        <div class="operator-name">Shinichiro</div>
-        <div class="operator-meta">Legal name: <strong>Subhankar Singha</strong></div>
-        <div class="operator-meta">Base: Kolkata, India</div>
-        <p>
-          Primary operator on the ground side. Works across writing, scripts,  
-          number provisioning, and day-to-day handling of digital surfaces.
-        </p>
-      </div>
-      <div>
-        <div class="operator-name">Ken</div>
-        <div class="operator-meta">Identity: kept intentionally minimal on public layers.</div>
-        <p>
-          Works on structure, systems, and strategy. Present on the build, documentation,  
-          and operational design side of the collective more than the visible output.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="section reveal">
-    <div class="section-header">
-      <div class="section-kicker">Contact</div>
-      <h2 class="section-title">If you need to open a line.</h2>
-      <p class="section-sub">
-        These channels go straight to the operators. Use them when you have context, not curiosity.
-      </p>
-    </div>
-
-    <div class="contact-panel">
-      <p>
-        Shinken does not run a public support queue. If you reach out, keep it clear and direct:  
-        who you are, what you are building, and what you expect us to handle.
-      </p>
-
-      <div class="contact-list">
-        <div>
-          <div class="contact-item-label">WhatsApp</div>
-          <div class="contact-item-value">
-            <a href="https://wa.me/17097007361" target="_blank">+1 709 700 7361</a>
-          </div>
-        </div>
-        <div>
-          <div class="contact-item-label">Email</div>
-          <div class="contact-item-value">
-            <a href="mailto:helpline.kensano@gmail.com">helpline.kensano@gmail.com</a>
-          </div>
-        </div>
-        <div>
-          <div class="contact-item-label">Instagram</div>
-          <div class="contact-item-value">
-            <a href="https://instagram.com/kensano.in" target="_blank">@kensano.in</a>
+        <div class="hero-actions">
+          <div class="btn-row">
+            <a href="https://wa.me/17097007361" target="_blank" class="btn">WhatsApp line</a>
+            <a href="mailto:helpline.kensano@gmail.com" class="btn secondary">Email desk</a>
+            <a href="#work" class="btn ghost">View scope</a>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+      <aside class="hero-side">
+        <div class="hero-card">
+          <div class="hero-card-label">Current state</div>
+          <p>
+            Shinken is live as an internal structure. This surface is a controlled access point:
+            a single page that points to the real work rather than trying to replace it.
+          </p>
+          <div class="hero-badges">
+            <span class="hero-chip">Low profile</span>
+            <span class="hero-chip">Operator mindset</span>
+            <span class="hero-chip">Limited capacity</span>
+          </div>
+        </div>
+      </aside>
+    </main>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <span>© <span id="year"></span> Shinken. All rights reserved.</span>
-    <span>Public build is still in motion. The work has already started.</span>
-  </footer>
+    <!-- MEANING -->
+    <section id="meaning" class="section reveal">
+      <div class="section-header">
+        <div class="section-kicker">Name & intent</div>
+        <h2 class="section-title">What “Shinken” signals.</h2>
+        <p class="section-sub">
+          The name is not ornamental. It is a statement about how work is treated once it enters this space.
+        </p>
+      </div>
 
-</div>
+      <div class="two-col-panel">
+        <div>
+          <p>
+            “Shinken” refers to work carried out in real conditions, with real weight behind it.
+            No rehearsal, no staged performance for metrics. The focus is on outcomes and durability,
+            not on decoration for public feeds.
+          </p>
+          <br />
+          <p>
+            The structure is deliberately narrow: fewer clients, deeper context, and longer arcs.
+            This allows decisions to stay measured and calm even when the outside environment is not.
+          </p>
+        </div>
+        <div>
+          <p>
+            Inside Shinken, numbers, words, scripts, and digital presence are treated as infrastructure.
+            The goal is to keep those layers clean, stable, and intentional – especially when everything
+            around them is restless and loud.
+          </p>
+        </div>
+      </div>
+    </section>
 
-<script>
-document.getElementById('year').textContent = new Date().getFullYear();
+    <!-- WORK -->
+    <section id="work" class="section reveal">
+      <div class="section-header">
+        <div class="section-kicker">Scope</div>
+        <h2 class="section-title">What actually happens here.</h2>
+        <p class="section-sub">
+          Not every lane is public, but this is the surface view of the work handled inside Shinken.
+        </p>
+      </div>
 
-function toggleNav() {
-  const links = document.getElementById('nav-links');
-  links.classList.toggle('open');
-}
+      <div class="cards">
+        <article class="card">
+          <div class="card-tag">01 · Access</div>
+          <div class="card-title">Number provisioning</div>
+          <p>
+            Number access for WhatsApp and Telegram with attention to history, stability, and how it
+            fits the person or brand using it. Built for continuity, not throwaway use.
+          </p>
+        </article>
+        <article class="card">
+          <div class="card-tag">02 · Writing</div>
+          <div class="card-title">Language & shayari desk</div>
+          <p>
+            Captions, shayari, long-form pieces, and narrative framing. Text designed to sound like
+            the person behind it – just sharper and more disciplined.
+          </p>
+        </article>
+        <article class="card">
+          <div class="card-tag">03 · Scripts</div>
+          <div class="card-title">Structured script work</div>
+          <p>
+            Script systems for video, audio, and serial content. From outline to final pass,
+            the aim is clarity and pull, not noise and overreach.
+          </p>
+        </article>
+        <article class="card">
+          <div class="card-tag">04 · Editorial</div>
+          <div class="card-title">Refinement layer</div>
+          <p>
+            Line-by-line tightening of existing material: pacing, structure, and language decisions.
+            The work should still feel like you – only more precise.
+          </p>
+        </article>
+        <article class="card">
+          <div class="card-tag">05 · Presence</div>
+          <div class="card-title">Discreet account handling</div>
+          <p>
+            Quiet handling of social accounts where needed: planning, uploads, and replies managed
+            without turning your presence into a circus.
+          </p>
+        </article>
+        <article class="card">
+          <div class="card-tag">06 · Ongoing</div>
+          <div class="card-title">Long-term arrangements</div>
+          <p>
+            For people who need a steady operator instead of a single project, Shinken can sit as a
+            long-term layer with clearly defined lanes and boundaries.
+          </p>
+        </article>
+      </div>
+    </section>
 
-// scroll reveal
-const revealEls = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.18 }
-);
+    <!-- OPERATORS -->
+    <section id="operators" class="section reveal">
+      <div class="section-header">
+        <div class="section-kicker">Operators</div>
+        <h2 class="section-title">Who is responsible.</h2>
+        <p class="section-sub">
+          Names are not the centre of the story, but accountability matters.
+        </p>
+      </div>
 
-revealEls.forEach(el => observer.observe(el));
+      <div class="two-col-panel">
+        <div>
+          <div class="operator-name" style="font-size:0.96rem;color:var(--ice);margin-bottom:0.25rem;">Shinichiro</div>
+          <div class="operator-meta" style="margin-bottom:0.4rem;">Legal name: <strong>Subhankar Singha</strong></div>
+          <div class="operator-meta" style="margin-bottom:0.4rem;">Base: Kolkata, India</div>
+          <p>
+            Primary operator on the visible side. Works across writing, shayari, script systems,
+            number provisioning, and day-to-day handling of surfaces that face the outside world.
+          </p>
+        </div>
+        <div>
+          <div class="operator-name" style="font-size:0.96rem;color:var(--ice);margin-bottom:0.25rem;">Ken</div>
+          <div class="operator-meta" style="margin-bottom:0.4rem;">Identity: intentionally minimal on public layers.</div>
+          <p>
+            Involved on the structural and operational side: documentation, system design, and quiet
+            architecture behind the work. More present in how Shinken runs than in what it posts.
+          </p>
+        </div>
+      </div>
+    </section>
 
-// nav active state
-const sections = document.querySelectorAll('main[id], section[id]');
-const navLinks = document.querySelectorAll('.nav-link');
+    <!-- CONTACT -->
+    <section id="contact" class="section reveal">
+      <div class="section-header">
+        <div class="section-kicker">Contact</div>
+        <h2 class="section-title">If you need to open a line.</h2>
+        <p class="section-sub">
+          These channels go directly to the operators. Reach out when you have context, not curiosity.
+        </p>
+      </div>
 
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(sec => {
-    const top = sec.offsetTop - 120;
-    if (pageYOffset >= top) current = sec.getAttribute('id');
-  });
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href') === '#' + current || (current === '' && link.getAttribute('href') === '#top')) {
-      link.classList.add('active');
+      <div class="contact-panel">
+        <p>
+          There is no public support queue. If you get in touch, keep it simple:
+          who you are, what you are building, and what you expect Shinken to handle.
+        </p>
+
+        <div class="contact-list">
+          <div>
+            <div class="contact-item-label">WhatsApp</div>
+            <div class="contact-item-value">
+              <a href="https://wa.me/17097007361" target="_blank">+1&nbsp;709&nbsp;700&nbsp;7361</a>
+            </div>
+          </div>
+          <div>
+            <div class="contact-item-label">Email</div>
+            <div class="contact-item-value">
+              <a href="mailto:helpline.kensano@gmail.com">helpline.kensano@gmail.com</a>
+            </div>
+          </div>
+          <div>
+            <div class="contact-item-label">Instagram</div>
+            <div class="contact-item-value">
+              <a href="https://instagram.com/kensano.in" target="_blank">@kensano.in</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <span>© <span id="year"></span> Shinken. All rights reserved.</span>
+      <span>Surface build is ongoing. The work itself is already in motion.</span>
+    </footer>
+
+  </div>
+
+  <script>
+    // dynamic year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile nav toggle
+    function toggleNav() {
+      var links = document.getElementById('nav-links');
+      if (!links) return;
+      links.classList.toggle('open');
     }
-  });
-});
-</script>
 
+    // section reveal on scroll
+    var revealEls = document.querySelectorAll('.reveal');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    revealEls.forEach(function(el) { observer.observe(el); });
+
+    // nav active state on scroll
+    var sections = document.querySelectorAll('#top, #meaning, #work, #operators, #contact');
+    var navLinks = document.querySelectorAll('.nav-link');
+
+    window.addEventListener('scroll', function() {
+      var current = '';
+      sections.forEach(function(sec) {
+        var rect = sec.getBoundingClientRect();
+        var offsetTop = rect.top + window.pageYOffset;
+        if (window.pageYOffset >= offsetTop - 140) {
+          current = sec.getAttribute('id');
+        }
+      });
+      navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        var href = link.getAttribute('href');
+        if (href === '#' + current || (current === 'top' && href === '#top')) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
