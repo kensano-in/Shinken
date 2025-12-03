@@ -10,7 +10,6 @@
 
   <style>
     :root {
-      /* Deep slate / blue palette (inspired by your refs) */
       --bg-top: #0b1925;
       --bg-bottom: #02050b;
       --panel: rgba(9, 18, 28, 0.98);
@@ -192,7 +191,7 @@
       50%      { transform: scale(1.45); opacity: 0.4; }
     }
 
-    /* MAIN CARD ------------------------------------------------------------- */
+    /* MAIN ------------------------------------------------------------------ */
 
     .frame-row {
       flex: 1;
@@ -201,6 +200,8 @@
       gap: 1.8rem;
       align-items: center;
     }
+
+    /* LAUNCH CARD ----------------------------------------------------------- */
 
     .launch-card {
       position: relative;
@@ -265,14 +266,14 @@
     }
 
     .launch-console {
-      font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 0.8rem;
       background: radial-gradient(circle at 0 0, rgba(133,207,255,0.18), transparent 60%);
       border-radius: 12px;
       padding: 0.7rem 0.8rem;
       border: 1px solid rgba(101,154,205,0.55);
       color: var(--accent-strong);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.4rem;
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
@@ -293,6 +294,42 @@
     @keyframes caretBlink {
       0%, 50% { opacity: 1; }
       50.01%, 100% { opacity: 0; }
+    }
+
+    /* INFO GRID below console ---------------------------------------------- */
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      font-size: 0.78rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+      background: rgba(6,10,18,0.8);
+      border-radius: 12px;
+      padding: 0.55rem 0.7rem;
+      border: 1px solid rgba(88,134,187,0.6);
+    }
+
+    .info-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.68rem;
+      color: var(--accent);
+      margin-bottom: 0.18rem;
+    }
+
+    .info-main {
+      font-size: 0.78rem;
+      color: var(--text-main);
+      margin-bottom: 0.12rem;
+    }
+
+    .info-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
     }
 
     .cta-row {
@@ -344,7 +381,6 @@
       color: var(--text-main);
       opacity: 0.95;
     }
-
     .btn.secondary:hover {
       opacity: 1;
     }
@@ -405,8 +441,47 @@
       opacity: 0.8;
     }
 
-    .side-signal {
-      align-self: flex-end;
+    /* PROGRESS STRIP with glow line + items -------------------------------- */
+
+    .side-progress {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.75rem;
+      margin-top: 0.8rem;
+    }
+
+    .progress-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.38rem;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .progress-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .progress-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(133,199,255,0.9);
+      background: radial-gradient(circle at center, rgba(133,199,255,0.85), transparent 60%);
+      box-shadow: 0 0 10px rgba(133,199,255,0.75);
+      opacity: 0.9;
+    }
+
+    .progress-dot.pending {
+      opacity: 0.45;
+      box-shadow: none;
+      background: radial-gradient(circle at center, rgba(133,199,255,0.4), transparent 60%);
+    }
+
+    .signal-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -417,7 +492,7 @@
 
     .signal-bar {
       width: 6px;
-      height: 86px;
+      height: 96px;
       border-radius: 999px;
       background: linear-gradient(to top, rgba(90,183,255,0.0), rgba(90,183,255,0.8));
       position: relative;
@@ -486,11 +561,23 @@
       .launch-console {
         max-width: 100%;
       }
+      .info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
       .cta-row {
         flex-direction: column;
       }
+      .side-progress {
+        align-items: flex-start;
+      }
       .foot {
         flex-direction: column;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .info-grid {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
   </style>
@@ -531,16 +618,37 @@
 
         <p class="launch-line">
           Shinken is moving from internal systems to a controlled public surface.
-          The <span class="launch-highlight">full multi-page experience</span> is being wired in the background.
+          The <span class="launch-highlight">full multi-page experience</span> is being wired in the background:
+          layered pages for services, operators, scope, and discreet contact channels.
           This page is the holding pattern while we finish the last cables.
         </p>
 
         <div class="launch-console">
-          <span>> Initiating interface :</span>
+          <span>&gt; Initiating interface :</span>
           <span> public deployment incoming</span>
           <span class="caret"></span>
         </div>
 
+        <!-- INFORMATIVE STRIP -->
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Current phase</div>
+            <div class="info-main">Surface assembly</div>
+            <div class="info-sub">Core stack live, navigation and pages being layered in.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Planned surface</div>
+            <div class="info-main">Home · Services · Scope</div>
+            <div class="info-sub">Dedicated lanes for number access, writing, scripts & discreet handling.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Active channels</div>
+            <div class="info-main">Selective access</div>
+            <div class="info-sub">WhatsApp, email & Instagram are already routed to the operators.</div>
+          </div>
+        </div>
+
+        <!-- CTAS -->
         <div class="cta-row">
           <a href="https://wa.me/17097007361" target="_blank" class="btn">WhatsApp line</a>
           <a href="mailto:helpline.kensano@gmail.com" class="btn secondary">Email desk</a>
@@ -555,23 +663,56 @@
           <p class="side-body">
             A private, low-noise digital collective for work that needs precision,
             continuity, and discretion more than noise. No storefront, no shout.
-            Just operators and outcomes.
+            A small operator layer handling numbers, language, scripts, and accounts
+            for a deliberately limited circle.
           </p>
 
           <div class="side-divider"></div>
 
           <div class="side-label">Operators</div>
           <div class="side-owners">
-            Shinichiro — legal name Subhankar Singha (Kolkata) <br />
-            Ken — structural counterpart, identity kept minimal on public layers.
+            Shinichiro — legal name Subhankar Singha, based in Kolkata. Primary visible operator across
+            number provisioning, writing, and social surfaces. <br /><br />
+            Ken — structural counterpart. More present in the systems and documentation layer
+            than in public identity.
+          </div>
+
+          <div class="side-divider"></div>
+
+          <div class="side-label">Access notes</div>
+          <div class="side-owners">
+            This is not a mass service. Contact is for people who already know
+            what they are building and why they want Shinken involved.
           </div>
         </div>
 
-        <div class="side-signal">
-          <div class="signal-bar">
-            <div class="signal-indicator"></div>
+        <!-- PROGRESS AREA WITH GLOW LINE + ITEMS -->
+        <div class="side-progress">
+          <ul class="progress-list">
+            <li class="progress-item">
+              <span class="progress-dot"></span>
+              <span>Core environment online</span>
+            </li>
+            <li class="progress-item">
+              <span class="progress-dot"></span>
+              <span>Contact channels routed</span>
+            </li>
+            <li class="progress-item">
+              <span class="progress-dot pending"></span>
+              <span>Public pages being wired</span>
+            </li>
+            <li class="progress-item">
+              <span class="progress-dot pending"></span>
+              <span>Final review & deploy window</span>
+            </li>
+          </ul>
+
+          <div class="signal-wrap">
+            <div class="signal-bar">
+              <div class="signal-indicator"></div>
+            </div>
+            <div>Systems warming</div>
           </div>
-          <div>Systems warming</div>
         </div>
       </aside>
     </main>
