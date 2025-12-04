@@ -105,6 +105,8 @@ html, body {
     font-family: "Inter", system-ui, sans-serif;
     overflow-x: hidden;
     scroll-behavior: smooth;
+   position: relative;
+    padding-top: 60px;
 }
 
 /* ---------------------------------------------- */
