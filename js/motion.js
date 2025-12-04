@@ -1,295 +1,293 @@
 /* ============================================================
-   SHINKEN MOTION ENGINE — GOD MODE BACKGROUND + UI
+   SHINKEN – MOTION ENGINE
+   Layers:
+   1. Star field
+   2. Cursor parallax (background + cards)
+   3. Magnetic buttons
+   4. Clock
+   5. Notification form (front-end)
+   6. Cookie / consent state
    ============================================================ */
 
-(() => {
-  // Small helper
-  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+console.log(
+  "%cShinken Motion Engine online",
+  "color:#9cecff;background:#00111e;padding:4px 10px;border-radius:999px;font-size:11px;"
+);
 
-  // ==========================================================
-  // 1. REAL-TIME CLOCK BAND
-  // ==========================================================
-  function initClock() {
-    const el = document.getElementById("clock-time");
-    if (!el) return;
+/* ------------------------------------------------------------
+   1. STAR FIELD
+------------------------------------------------------------- */
+(function initStarField() {
+  const canvas = document.getElementById("bg-stars");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const STAR_COUNT = 120;
+  const stars = [];
 
-    const update = () => {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, "0");
-      const m = String(now.getMinutes()).padStart(2, "0");
-      const s = String(now.getSeconds()).padStart(2, "0");
-      el.textContent = `${h}:${m}:${s}`;
-    };
-
-    update();
-    setInterval(update, 1000);
+  function resize() {
+    canvas.width = window.innerWidth * window.devicePixelRatio;
+    canvas.height = window.innerHeight * window.devicePixelRatio;
+    ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
   }
 
-  // ==========================================================
-  // 2. BACKGROUND CANVAS — PARTICLES + PARALLAX
-  // ==========================================================
-  function initBackground() {
-    const canvas = document.getElementById("bg-canvas");
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    const particles = [];
-    const STAR_COUNT = 120;
-    const ORB_COUNT = 22;
-
-    let width = 0;
-    let height = 0;
-    let px = 0;
-    let py = 0;
-
-    function resize() {
-      width = canvas.width = window.innerWidth * window.devicePixelRatio;
-      height = canvas.height = window.innerHeight * window.devicePixelRatio;
-      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+  function spawnStars() {
+    stars.length = 0;
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: Math.random() * 1.2 + 0.2,
+        speed: Math.random() * 0.04 + 0.008,
+        alpha: Math.random() * 0.6 + 0.2,
+      });
     }
+  }
 
-    function createParticles() {
-      particles.length = 0;
+  function step() {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx.fillStyle = "rgba(255,255,255,0.9)";
 
-      for (let i = 0; i < STAR_COUNT; i++) {
-        particles.push({
-          x: Math.random(),
-          y: Math.random(),
-          z: Math.random() * 0.7 + 0.3,
-          type: "star",
-        });
+    for (const star of stars) {
+      star.y -= star.speed;
+      if (star.y < -4) {
+        star.y = window.innerHeight + 4;
+        star.x = Math.random() * window.innerWidth;
       }
 
-      for (let i = 0; i < ORB_COUNT; i++) {
-        particles.push({
-          x: Math.random(),
-          y: Math.random(),
-          z: Math.random() * 0.8 + 0.6,
-          r: 40 + Math.random() * 80,
-          type: "orb",
-        });
-      }
+      ctx.globalAlpha = star.alpha;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fill();
     }
 
-    function draw(t) {
-      const time = t * 0.00006;
+    requestAnimationFrame(step);
+  }
 
-      ctx.clearRect(0, 0, width, height);
-
-      // subtle gradient background
-      const g = ctx.createLinearGradient(0, 0, 0, height);
-      g.addColorStop(0, "#020813");
-      g.addColorStop(0.3, "#020e1f");
-      g.addColorStop(1, "#020815");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, width, height);
-
-      // Slight movement factor from cursor
-      const offsetX = px * 26;
-      const offsetY = py * 30;
-
-      for (const p of particles) {
-        const baseX = p.x * width;
-        const baseY = p.y * height;
-
-        const depth = p.z;
-        const parX = baseX + offsetX * (1.8 - depth);
-        const parY = baseY + offsetY * (1.8 - depth);
-
-        if (p.type === "star") {
-          const twinkle = 0.6 + 0.4 * Math.sin(time * 8 + depth * 16 + p.x * 40);
-          ctx.globalAlpha = 0.15 + 0.4 * twinkle;
-          ctx.fillStyle = "#c9e9ff";
-          ctx.beginPath();
-          ctx.arc(parX, parY, 0.9 + 1.4 * depth, 0, Math.PI * 2);
-          ctx.fill();
-        } else {
-          const pulse = 0.4 + 0.6 * Math.sin(time * 10 + depth * 24 + p.y * 50);
-          ctx.globalAlpha = 0.08 * depth * pulse;
-          const r = p.r * (0.7 + 0.3 * pulse);
-
-          const rg = ctx.createRadialGradient(parX, parY, 0, parX, parY, r);
-          rg.addColorStop(0, "rgba(130, 222, 255, 0.9)");
-          rg.addColorStop(0.4, "rgba(83, 179, 255, 0.35)");
-          rg.addColorStop(1, "transparent");
-
-          ctx.fillStyle = rg;
-          ctx.beginPath();
-          ctx.arc(parX, parY, r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(draw);
-    }
-
-    function handlePointer(x, y) {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-
-      px = clamp((x - cx) / cx, -1, 1);
-      py = clamp((y - cy) / cy, -1, 1);
-    }
-
-    window.addEventListener("mousemove", (e) => {
-      handlePointer(e.clientX, e.clientY);
-    });
-
-    // basic mobile support: move with scroll a bit
-    window.addEventListener("scroll", () => {
-      const y = window.scrollY;
-      py = clamp(y / window.innerHeight, -1, 1) * -0.35;
-    });
-
+  resize();
+  spawnStars();
+  window.addEventListener("resize", () => {
     resize();
-    createParticles();
+    spawnStars();
+  });
 
-    window.addEventListener("resize", () => {
-      resize();
-      createParticles();
-    });
+  requestAnimationFrame(step);
+})();
 
-    requestAnimationFrame(draw);
+/* ------------------------------------------------------------
+   2. CURSOR PARALLAX – BACKGROUND + CARDS
+------------------------------------------------------------- */
+(function initParallax() {
+  const gradient = document.querySelector(".bg-gradient");
+  const depthTargets = document.querySelectorAll("[data-tilt-target]");
+
+  if (!gradient && !depthTargets.length) return;
+
+  const state = { x: 0, y: 0, tx: 0, ty: 0 };
+
+  function handleMove(e) {
+    const rect = document.body.getBoundingClientRect();
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+
+    const x = (e.clientX - cx) / cx;
+    const y = (e.clientY - cy) / cy;
+
+    state.tx = x;
+    state.ty = y;
   }
 
-  // ==========================================================
-  // 3. UI PARALLAX — CARDS FOLLOW CURSOR
-  // ==========================================================
-  function initParallaxLayers() {
-    const layers = Array.from(document.querySelectorAll(".parallax-layer"));
-    if (!layers.length) return;
+  function loop() {
+    state.x += (state.tx - state.x) * 0.08;
+    state.y += (state.ty - state.y) * 0.08;
 
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
-    function onMove(e) {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      targetX = clamp((e.clientX - cx) / cx, -1, 1);
-      targetY = clamp((e.clientY - cy) / cy, -1, 1);
+    const gx = state.x * 12;
+    const gy = state.y * 12;
+    if (gradient) {
+      gradient.style.transform = `translate3d(${gx}px, ${gy}px, 0)`;
     }
 
-    window.addEventListener("mousemove", onMove);
+    depthTargets.forEach((el) => {
+      const depth = parseFloat(el.getAttribute("data-depth")) || 16;
+      const tx = -state.x * depth;
+      const ty = -state.y * depth;
+      el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+      el.classList.add("is-tilting");
+    });
 
-    function animate() {
-      // smooth follow
-      currentX += (targetX - currentX) * 0.08;
-      currentY += (targetY - currentY) * 0.08;
+    requestAnimationFrame(loop);
+  }
 
-      layers.forEach((el) => {
-        const depth = parseFloat(el.dataset.depth || "0.1");
-        const tx = -currentX * depth * 22;
-        const ty = -currentY * depth * 18;
-        const tiltX = currentY * depth * 6;
-        const tiltY = -currentX * depth * 6;
+  window.addEventListener("pointermove", handleMove, { passive: true });
+  requestAnimationFrame(loop);
+})();
 
-        el.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-        if (Math.abs(currentX) > 0.05 || Math.abs(currentY) > 0.05) {
-          el.classList.add("is-active");
-        } else {
-          el.classList.remove("is-active");
-        }
+/* ------------------------------------------------------------
+   3. MAGNETIC BUTTONS
+------------------------------------------------------------- */
+(function initMagnetic() {
+  const magnetic = document.querySelectorAll(".magnetic");
+  if (!magnetic.length) return;
+
+  magnetic.forEach((el) => {
+    const strength = parseFloat(el.getAttribute("data-strength")) || 18;
+
+    function move(e) {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - (rect.left + rect.width / 2);
+      const y = e.clientY - (rect.top + rect.height / 2);
+      el.style.transform = `translate(${x / strength}px, ${y / strength}px)`;
+    }
+
+    function leave() {
+      el.style.transform = "translate(0, 0)";
+    }
+
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+  });
+})();
+
+/* ------------------------------------------------------------
+   4. REAL-TIME CLOCK
+------------------------------------------------------------- */
+(function initClock() {
+  const el = document.getElementById("ui-clock");
+  if (!el) return;
+
+  function pad(n) {
+    return n.toString().padStart(2, "0");
+  }
+
+  function tick() {
+    const now = new Date();
+    const h = pad(now.getHours());
+    const m = pad(now.getMinutes());
+    const s = pad(now.getSeconds());
+    el.textContent = `${h}:${m}:${s}`;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ------------------------------------------------------------
+   5. NOTIFICATION FORM – FRONT-END HANDLER
+   NOTE:
+   - This only sends a POST to /notify
+   - You must implement /notify (e.g., Cloudflare Worker)
+     to actually send Telegram / email and store addresses.
+------------------------------------------------------------- */
+(function initNotifyForm() {
+  const form = document.getElementById("notify-form");
+  const statusEl = document.getElementById("notify-status");
+  const btn = document.getElementById("notify-btn");
+  const consent = document.getElementById("notify-consent");
+
+  if (!form || !statusEl || !btn || !consent) return;
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const email = form.email.value.trim();
+
+    if (!email) {
+      statusEl.textContent = "Drop a working email first.";
+      statusEl.style.color = "#ffb35b";
+      return;
+    }
+
+    if (!consent.checked) {
+      statusEl.textContent = "You need to consent to a single launch notice.";
+      statusEl.style.color = "#ffb35b";
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Queuing…";
+    statusEl.textContent = "";
+    statusEl.style.color = "";
+
+    try {
+      const res = await fetch("/notify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
       });
 
-      requestAnimationFrame(animate);
+      if (!res.ok) {
+        throw new Error("Non-200 response");
+      }
+
+      statusEl.textContent = "Locked in. You’ll get a single quiet ping when we go live.";
+      statusEl.style.color = "#9cecff";
+      form.reset();
+    } catch (err) {
+      console.error("Notify error:", err);
+      statusEl.textContent =
+        "Signal failed on the first pass. Try once more later—line stays open.";
+      statusEl.style.color = "#ffb35b";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Notify me";
     }
-
-    animate();
   }
 
-  // ==========================================================
-  // 4. NOTIFICATION FORM — PROFESSIONAL HANDLING
-  // ==========================================================
-  function initNotification() {
-    const form = document.getElementById("notify-form");
-    const statusEl = document.getElementById("notify-status");
-    if (!form || !statusEl) return;
+  form.addEventListener("submit", handleSubmit);
+})();
 
-    const ENDPOINT = "https://your-secure-endpoint.example/notify"; // TODO: replace with your backend
+/* ------------------------------------------------------------
+   6. COOKIE / CONSENT BANNER
+------------------------------------------------------------- */
+(function initConsent() {
+  const banner = document.getElementById("consent-banner");
+  const acceptBtn = document.getElementById("consent-accept");
+  const rejectBtn = document.getElementById("consent-reject");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      statusEl.textContent = "";
-      statusEl.classList.remove("ok", "err");
+  if (!banner || !acceptBtn || !rejectBtn) return;
 
-      const data = new FormData(form);
-      const email = String(data.get("email") || "").trim();
+  const STORAGE_KEY = "shinken_consent";
 
-      if (!email || !email.includes("@")) {
-        statusEl.textContent = "Supply a valid signal address.";
-        statusEl.classList.add("err");
-        return;
-      }
-
-      // Optimistic UI
-      statusEl.textContent = "Routing to control surface…";
-      form.querySelector("button[type='submit']").disabled = true;
-
-      try {
-        // NOTE:
-        // For a truly professional setup, point this POST to a backend
-        // that stores the email and handles notifications.
-        // Do NOT put secret API keys or bot tokens in this frontend file.
-        await fetch(ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
-
-        statusEl.textContent = "Registered. You’ll get a single quiet launch ping.";
-        statusEl.classList.add("ok");
-        form.reset();
-      } catch (err) {
-        console.error("Notify error:", err);
-        statusEl.textContent =
-          "Local registration only. Backend not wired yet, but we’ve kept it noted.";
-        statusEl.classList.add("err");
-      } finally {
-        form.querySelector("button[type='submit']").disabled = false;
-      }
-    });
+  function getState() {
+    try {
+      const v = localStorage.getItem(STORAGE_KEY);
+      return v ? JSON.parse(v) : null;
+    } catch {
+      return null;
+    }
   }
 
-  // ==========================================================
-  // 5. BUTTON PRESS + MAGNETIC HOVER (tiny polish)
-  // ==========================================================
-  function initButtonPhysics() {
-    const magnetic = document.querySelectorAll(".magnetic");
-
-    magnetic.forEach((btn) => {
-      const strength = parseFloat(btn.getAttribute("data-strength") || "25");
-
-      function onMove(e) {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - (rect.left + rect.width / 2);
-        const y = e.clientY - (rect.top + rect.height / 2);
-        btn.style.transform = `translate(${x / strength}px, ${y / strength}px)`;
-      }
-
-      function reset() {
-        btn.style.transform = "translate(0, 0)";
-      }
-
-      btn.addEventListener("mousemove", onMove);
-      btn.addEventListener("mouseleave", reset);
-    });
+  function setState(value) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+    } catch {
+      // ignore
+    }
   }
 
-  // ==========================================================
-  // BOOTSTRAP
-  // ==========================================================
-  document.addEventListener("DOMContentLoaded", () => {
-    initClock();
-    initBackground();
-    initParallaxLayers();
-    initNotification();
-    initButtonPhysics();
-    console.log(
-      "%cShinken Motion Engine: Online",
-      "color:#8fd7ff;background:#031321;padding:4px 10px;border-radius:999px"
-    );
+  function hide() {
+    banner.classList.add("hidden");
+  }
+
+  function show() {
+    banner.classList.remove("hidden");
+  }
+
+  const existing = getState();
+
+  if (!existing) {
+    show();
+  }
+
+  acceptBtn.addEventListener("click", () => {
+    setState({ analytics: true, ts: Date.now() });
+    hide();
+    // Here you’d wire your analytics (Plausible, etc.) if you use one.
+  });
+
+  rejectBtn.addEventListener("click", () => {
+    setState({ analytics: false, ts: Date.now() });
+    hide();
   });
 })();
