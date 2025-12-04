@@ -103,3 +103,145 @@ document.querySelectorAll(".btn-press").forEach(button => {
         button.classList.remove("pressed");
     });
 });
+
+
+
+
+/* ---------------------------------------------------------
+   7. REAL-TIME SYSTEM CLOCK (UI CLOCK MODULE)
+----------------------------------------------------------*/
+
+function initShinkenClock() {
+    const clockEl = document.querySelector(".ui-clock");
+    if (!clockEl) return;
+
+    function updateClock() {
+        const now = new Date();
+        const h = now.getHours().toString().padStart(2, "0");
+        const m = now.getMinutes().toString().padStart(2, "0");
+        const s = now.getSeconds().toString().padStart(2, "0");
+        clockEl.innerHTML = `${h}:${m}:${s}`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+}
+
+document.addEventListener("DOMContentLoaded", initShinkenClock);
+
+
+
+/* ---------------------------------------------------------
+   8. AMBIENT FLOAT LAYER (Soft rotation + parallax depth)
+----------------------------------------------------------*/
+
+(function () {
+    const floats = document.querySelectorAll(".float-layer");
+
+    window.addEventListener("mousemove", (e) => {
+        const x = (e.clientX - window.innerWidth / 2) * 0.002;
+        const y = (e.clientY - window.innerHeight / 2) * 0.002;
+
+        floats.forEach((el) => {
+            el.style.transform = `translate(${x * 20}px, ${y * 20}px) rotate(${x * 4}deg)`;
+        });
+    });
+})();
+
+
+
+/* ---------------------------------------------------------
+   9. GLOW SCAN-LINE (Cyber surface highlight sweep)
+----------------------------------------------------------*/
+
+(function () {
+    const scan = document.createElement("div");
+    scan.className = "scanline";
+    document.body.appendChild(scan);
+
+    let pos = -200;
+
+    function animateScan() {
+        pos += 1.2;
+        scan.style.top = pos + "px";
+
+        if (pos > window.innerHeight + 200) pos = -200;
+
+        requestAnimationFrame(animateScan);
+    }
+
+    animateScan();
+})();
+
+
+
+/* ---------------------------------------------------------
+   10. SECTION FADE PROGRESSION (God-tier cinematic reveal)
+----------------------------------------------------------*/
+
+const sections = document.querySelectorAll(".soft-reveal");
+
+const progressiveObserver = new IntersectionObserver(
+    (entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("soft-reveal-show");
+            }
+        });
+    },
+    { threshold: 0.3 }
+);
+
+sections.forEach((s) => progressiveObserver.observe(s));
+
+
+
+/* ---------------------------------------------------------
+   11. MICRO-PARTICLE FIELD (Subtle atmospheric dust)
+----------------------------------------------------------*/
+
+(function () {
+    const particleLayer = document.createElement("canvas");
+    particleLayer.className = "particle-field";
+    document.body.appendChild(particleLayer);
+
+    const ctx = particleLayer.getContext("2d");
+
+    let particles = [];
+    const count = 60;
+
+    function resize() {
+        particleLayer.width = window.innerWidth;
+        particleLayer.height = window.innerHeight;
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * particleLayer.width,
+            y: Math.random() * particleLayer.height,
+            size: Math.random() * 2 + 0.5,
+            speed: Math.random() * 0.4 + 0.1,
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, particleLayer.width, particleLayer.height);
+
+        particles.forEach((p) => {
+            p.y += p.speed;
+            if (p.y > particleLayer.height) p.y = 0;
+
+            ctx.fillStyle = "rgba(255,255,255,0.08)";
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+})();
