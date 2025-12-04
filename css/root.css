@@ -1,241 +1,609 @@
-/* ==========================================================
-   SHINKEN — CORE UI + GOD MODE BACKGROUND SYSTEM
-   Full professional rebuild — 2025 version
-   ==========================================================*/
+/* ======================================================
+   SHINKEN — CORE STYLING LAYER (GOD MODE BACKGROUND + UI)
+   ====================================================== */
 
-/* ---------- COLOR & TOKEN SYSTEM ---------- */
+/* --------- TOKENS / COLORS --------- */
+
 :root {
-    --bg-00: #04070d;
-    --bg-01: #0d1520;
-    --bg-02: #02101f;
-    --bg-03: #091827;
+  --bg-00: #020312;
+  --bg-01: #041326;
+  --bg-02: #02101f;
+  --bg-03: #031827;
 
-    --accent-strong: #53b3ff;
-    --accent-soft: rgba(104, 193, 255, 0.3);
-    --accent-warn: #f4be7b;
+  --accent-strong: #53b3ff;
+  --accent-soft: rgba(118, 201, 255, 0.72);
+  --accent-warn: #ffb47b;
 
-    --card-border: rgba(151, 197, 255, 0.18);
-    --card-glass: rgba(7, 25, 46, 0.82);
-    --card-glass-soft: rgba(7, 25, 46, 0.55);
+  --card-border: rgba(151, 197, 255, 0.22);
+  --card-grad-a: rgba(7, 25, 46, 0.9);
+  --card-grad-b: rgba(9, 34, 67, 0.96);
 
-    --text-strong: #ffffff;
-    --text-main: #a4c4ff;
-    --text-soft: #7b94cc;
+  --text-main: #e8f0ff;
+  --text-soft: #a7b4cc;
+  --text-mute: #6b74a3;
 
-    --shadow-soft: 0 20px 40px rgba(0,0,0,0.45);
-    --shadow-glow: 0 0 45px rgba(94, 192, 255, 0.4);
+  --shadow-soft: 0 28px 80px rgba(0, 0, 0, 0.65);
+  --shadow-glow: 0 0 40px rgba(94, 192, 255, 0.5);
 
-    --radius: 20px;
-    --radius-sm: 12px;
-    --radius-lg: 26px;
+  --radius-md: 20px;
+  --radius-lg: 24px;
+  --radius-round: 999px;
 
-    --f-xs: 11px;
-    --f-s: 13px;
-    --f-m: 14px;
-    --f-l: 19px;
-    --f-xl: 28px;
-    --f-xxl: 42px;
+  --f-xs: 11px;
+  --f-sm: 13px;
+  --f-base: 14px;
+  --f-md: 15px;
+  --f-lg: 18px;
+  --f-xl: 30px;
 
-    --ease-soft: cubic-bezier(0.18, 0.64, 0.26, 1);
+  --ease-soft: cubic-bezier(0.18, 0.64, 0.26, 1);
 }
 
-/* ---------- GLOBAL RESET ---------- */
-*, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* --------- RESET --------- */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-html, body {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    font-family: "Inter", system-ui, sans-serif;
-    background: var(--bg-00);
-    color: var(--text-main);
-    -webkit-font-smoothing: antialiased;
+html,
+body {
+  width: 100%;
+  height: 100%;
 }
 
-/* ------------------------------------------------------
-   LAYOUT
--------------------------------------------------------*/
-
-.wrapper {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 60px 24px;
-    position: relative;
-    z-index: 10;
+body {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-00);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* ------------------------------------------------------
-   PANELS (cards)
--------------------------------------------------------*/
+/* ======================================================
+   BACKGROUND GOD MODE
+   ====================================================== */
+
+#bg-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+
+#bg-canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bg-gradient {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(63, 138, 255, 0.35), transparent 60%),
+    radial-gradient(circle at 85% 0%, rgba(48, 209, 255, 0.18), transparent 60%),
+    radial-gradient(circle at 50% 85%, rgba(23, 87, 181, 0.45), transparent 70%);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+  filter: blur(4px);
+  transition: transform 1.2s var(--ease-soft);
+}
+
+/* ======================================================
+   SHELL / LAYOUT
+   ====================================================== */
+
+.surface-shell {
+  position: relative;
+  min-height: 100vh;
+  padding: 32px 18px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Top strip */
+
+.top-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: radial-gradient(circle at 30% 0%, #4ac4ff, #0a1b2e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  font-size: 16px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-name {
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.brand-tag {
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+/* Clock chip */
+
+.top-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(132, 196, 255, 0.38);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(90, 158, 255, 0.7), transparent 60%),
+    linear-gradient(135deg, rgba(6, 22, 44, 0.96), rgba(5, 11, 24, 0.98));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(72, 168, 255, 0.4);
+  font-size: 11px;
+}
+
+.chip-label {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--accent-soft);
+}
+
+.chip-time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Grid */
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2.3fr);
+  grid-template-rows: auto;
+  gap: 16px;
+}
+
+/* Breakpoints */
+
+@media (max-width: 900px) {
+  .surface-shell {
+    padding: 22px 14px 32px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ======================================================
+   PANELS / CARDS
+   ====================================================== */
 
 .panel {
-    background: var(--card-glass);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    backdrop-filter: blur(22px);
-    padding: 22px 26px;
-    margin-bottom: 28px;
-    box-shadow: var(--shadow-soft);
-    transition: all 0.28s var(--ease-soft);
+  position: relative;
+  border-radius: var(--radius-md);
+  padding: 18px 18px 18px;
+  background:
+    linear-gradient(145deg, rgba(6, 18, 35, 0.96), rgba(4, 12, 24, 0.96));
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
 }
 
-.panel:hover {
-    box-shadow: var(--shadow-glow);
-    transform: translateY(-3px);
+.panel-hero {
+  grid-column: 1 / -1;
+  padding: 22px 22px 22px;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(79, 157, 255, 0.5), transparent 60%),
+    linear-gradient(145deg, rgba(5, 18, 40, 0.98), rgba(2, 7, 21, 0.98));
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.95),
+    0 0 80px rgba(94, 192, 255, 0.65);
 }
 
-/* panel headings */
+.panel-glass {
+  background:
+    linear-gradient(145deg, rgba(4, 16, 34, 0.95), rgba(3, 10, 24, 0.97));
+  backdrop-filter: blur(22px);
+}
+
+/* Panel inside */
+
 .panel-label {
-    font-size: var(--f-s);
-    letter-spacing: 1.2px;
-    color: var(--text-soft);
-    text-transform: uppercase;
-    margin-bottom: 12px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: var(--accent-soft);
 }
 
-/* ------------------------------------------------------
-   BUTTONS
--------------------------------------------------------*/
-
-.btn {
-    padding: 10px 18px;
-    border-radius: var(--radius-sm);
-    font-size: var(--f-s);
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid transparent;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .25s var(--ease-soft);
+.panel-copy {
+  font-size: var(--f-base);
+  color: var(--text-main);
+  line-height: 1.7;
+  margin-bottom: 8px;
 }
 
-.btn-primary {
-    background: var(--accent-strong);
-    color: #000;
-}
-.btn-primary:hover {
-    filter: brightness(1.18);
+.panel-copy:last-child {
+  margin-bottom: 0;
 }
 
-.btn-secondary {
-    border-color: var(--accent-soft);
-    color: var(--text-main);
-}
-.btn-secondary:hover {
-    background: rgba(255,255,255,0.08);
-}
+/* ======================================================
+   TYPOGRAPHY
+   ====================================================== */
 
-/* ------------------------------------------------------
-   HERO SECTION
--------------------------------------------------------*/
+.heading-xl {
+  font-family: "Playfair Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", serif;
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
 
 .hero-title {
-    font-size: var(--f-xxl);
-    color: var(--text-strong);
-    margin-bottom: 14px;
+  margin-top: 6px;
 }
 
 .hero-sub {
-    font-size: var(--f-m);
-    opacity: 0.72;
-    margin-bottom: 18px;
+  font-size: var(--f-sm);
+  margin-bottom: 10px;
 }
 
 .hero-copy {
-    font-size: var(--f-s);
-    line-height: 1.6;
-    max-width: 620px;
-    margin-bottom: 26px;
+  font-size: var(--f-base);
+  line-height: 1.8;
+  max-width: 640px;
+  margin-bottom: 14px;
 }
 
-/* ------------------------------------------------------
-   NOTIFICATION INPUT
--------------------------------------------------------*/
+.hero-status {
+  margin-top: 12px;
+}
+
+/* subtle text */
+
+.subtle {
+  font-size: var(--f-xs);
+  color: var(--text-soft);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+/* ======================================================
+   BUTTONS
+   ====================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-round);
+  font-size: var(--f-sm);
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background:
+    radial-gradient(circle at 0% 0%, #72c6ff, #2f6fff);
+  color: #020612;
+  border-color: rgba(126, 204, 255, 0.9);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(102, 190, 255, 0.7);
+}
+
+.btn-secondary {
+  background:
+    linear-gradient(135deg, rgba(8, 36, 71, 1), rgba(12, 53, 105, 1));
+  color: var(--text-main);
+  border-color: rgba(109, 175, 255, 0.65);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--accent-soft);
+  border-color: rgba(109, 175, 255, 0.4);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.8);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Button press helper */
+
+.btn-press.pressed {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: none;
+}
+
+/* Hero actions */
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ======================================================
+   STATUS / ROADMAP
+   ====================================================== */
+
+.status-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: var(--f-base);
+}
+
+.status-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-main);
+}
+
+.status-list span {
+  color: var(--text-soft);
+  font-size: var(--f-sm);
+}
+
+/* Roadmap */
+
+.roadmap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--f-base);
+}
+
+.step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  box-shadow: 0 0 12px rgba(82, 175, 255, 0.9);
+}
+
+.step-label {
+  font-weight: 500;
+}
+
+.step-note {
+  font-size: var(--f-sm);
+  color: var(--text-soft);
+}
+
+/* ======================================================
+   ROLES
+   ====================================================== */
+
+.role-block + .role-block {
+  margin-top: 10px;
+}
+
+.role-name {
+  font-weight: 600;
+  font-size: var(--f-md);
+}
+
+.role-meta {
+  margin-top: 3px;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: var(--f-base);
+}
+
+/* ======================================================
+   NOTIFICATION FORM
+   ====================================================== */
+
+.notify-card {
+  grid-column: 1 / -1;
+}
 
 .notify-form {
-    display: flex;
-    gap: 10px;
-    margin-top: 14px;
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .notify-input {
-    flex: 1;
-    padding: 12px 16px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--card-border);
-    background: rgba(255,255,255,0.06);
-    color: var(--text-main);
-    font-size: var(--f-s);
+  flex: 1 1 210px;
+  min-width: 0;
+  border-radius: var(--radius-round);
+  border: 1px solid rgba(120, 178, 255, 0.5);
+  background: rgba(3, 13, 28, 0.96);
+  padding: 9px 14px;
+  color: var(--text-main);
+  font-size: var(--f-base);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+    background 0.18s ease;
 }
+
 .notify-input::placeholder {
-    color: var(--text-soft);
+  color: var(--text-mute);
 }
 
-/* Status text */
-#notify-status {
-    margin-top: 10px;
-    font-size: var(--f-xs);
-    color: var(--accent-strong);
+.notify-input:focus {
+  border-color: rgba(138, 204, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(130, 199, 255, 0.6);
+  background: rgba(5, 18, 35, 0.98);
 }
 
-/* ------------------------------------------------------
+.notify-btn {
+  flex: 0 0 auto;
+}
+
+.notify-status {
+  margin-top: 8px;
+  min-height: 14px;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: var(--f-sm);
+  color: var(--text-soft);
+}
+
+.notify-status.error {
+  color: #ff8d8d;
+}
+
+.notify-status.active {
+  color: var(--accent-soft);
+}
+
+/* ======================================================
    FOOTER
--------------------------------------------------------*/
+   ====================================================== */
 
 .footer-strip {
-    margin-top: 80px;
-    padding-top: 30px;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    display: flex;
-    justify-content: space-between;
-    color: var(--text-soft);
-    font-size: var(--f-xs);
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(33, 52, 92, 0.9);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  font-size: var(--f-xs);
+  color: var(--text-soft);
 }
 
-/* ------------------------------------------------------
-   GOD MODE BACKGROUND (FINAL CLEAN VERSION)
--------------------------------------------------------*/
+/* ======================================================
+   COOKIE BANNER
+   ====================================================== */
 
-#bg-wrap {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
+.cookie-banner {
+  position: fixed;
+  inset: auto 0 0 0;
+  padding: 12px 18px;
+  background: rgba(1, 5, 17, 0.98);
+  border-top: 1px solid rgba(79, 135, 210, 0.8);
+  backdrop-filter: blur(18px);
+  display: flex;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.4s var(--ease-soft), transform 0.4s var(--ease-soft);
 }
 
-/* Light rays */
-.bg-gradient {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 10%, rgba(30,80,140,0.45), transparent 70%),
-                radial-gradient(circle at 85% 80%, rgba(0,120,255,0.25), transparent 75%),
-                radial-gradient(circle at 15% 75%, rgba(0,180,255,0.18), transparent 80%);
-    filter: blur(90px);
-    opacity: 0.85;
-    transition: transform 0.5s ease-out;
+.cookie-banner--hide {
+  opacity: 0;
+  transform: translateY(100%);
+  pointer-events: none;
 }
 
-/* Stars layer */
-.bg-stars {
-    position: absolute;
-    inset: 0;
-    background-image:
-        radial-gradient(2px 2px at 20% 25%, rgba(255,255,255,0.28), transparent),
-        radial-gradient(2px 2px at 70% 40%, rgba(255,255,255,0.18), transparent),
-        radial-gradient(2px 2px at 40% 80%, rgba(255,255,255,0.25), transparent),
-        radial-gradient(2px 2px at 90% 60%, rgba(255,255,255,0.22), transparent),
-        radial-gradient(2px 2px at 30% 50%, rgba(255,255,255,0.30), transparent);
-    background-repeat: no-repeat;
-    opacity: 0.55;
-    transition: transform 0.35s ease-out;
+.cookie-inner {
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--f-sm);
+  color: var(--text-soft);
 }
 
-/* Cursor parallax motion */
-.parallax-move {
-    transform: translate(var(--px), var(--py));
+.cookie-text {
+  line-height: 1.6;
+}
+
+.btn-accept {
+  min-width: 110px;
+  padding-inline: 16px;
+}
+
+/* ======================================================
+   REVEAL ANIMATIONS
+   ====================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.55s var(--ease-soft),
+    transform 0.55s var(--ease-soft);
+}
+
+.reveal-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ======================================================
+   SMALL UTILITIES
+   ====================================================== */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .top-strip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .footer-strip {
+    flex-direction: column;
+  }
 }
