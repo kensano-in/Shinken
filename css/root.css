@@ -1,0 +1,301 @@
+/* ===========================================================================================
+   SHINKEN — ROOT / CORE STYLING LAYER
+   Version: God-Tier Prototype 1.0
+   Scope: Global tokens, palette, text system, elevation, spacing, utilities.
+   ================================================================================================= */
+
+/* ---------------------------------------------- */
+/* =============== COLOR SYSTEM ================= */
+/* ---------------------------------------------- */
+
+:root {
+
+    /* --- Core Brand Palette (Cold + Ultra Premium Mix: A + D Palette Fusion) --- */
+    --cold-00: #00070D;
+    --cold-01: #021017;
+    --cold-02: #091E2A;
+    --cold-03: #0F2A38;
+    --cold-04: #133647;
+    --cold-05: #1B465C;
+
+    --dusk-01: #0A0F18;
+    --dusk-02: #161D27;
+    --dusk-03: #222B37;
+    --dusk-04: #313C4B;
+
+    /* Premium Accent Colors (ice blue + muted metallics) */
+    --accent-blue-01: #E3F6FF;
+    --accent-blue-02: #A3DFF8;
+    --accent-blue-03: #67C4E3;
+    --accent-blue-04: #34A8CF;
+    --accent-blue-glow: rgba(99, 210, 255, 0.75);
+
+    --accent-cyan-soft: rgba(145, 255, 255, 0.15);
+    --accent-line: #54E1FF;
+
+    /* Structural Greys */
+    --grey-01: #CCD0CF;
+    --grey-02: #9BA8AB;
+    --grey-03: #4A5C6A;
+    --grey-04: #253745;
+
+    /* Text System */
+    --text-100: #F5F9FB;
+    --text-200: #D6E1E8;
+    --text-300: #AEBCC6;
+    --text-400: #8697A2;
+    --text-500: #55626D;
+
+    /* Shadows */
+    --shadow-soft: 0px 2px 12px rgba(0, 0, 0, 0.15);
+    --shadow-medium: 0px 4px 24px rgba(0, 0, 0, 0.28);
+    --shadow-deep: 0px 8px 42px rgba(0, 0, 0, 0.45);
+
+    /* Border Radiuses (consistent system) */
+    --r-xs: 6px;
+    --r-sm: 10px;
+    --r-md: 16px;
+    --r-lg: 24px;
+    --r-xl: 36px;
+    --r-round: 100px;
+
+    /* Typography Scale */
+    --f-xxl: clamp(42px, 5vw, 72px);
+    --f-xl: clamp(28px, 3.6vw, 42px);
+    --f-lg: clamp(22px, 2.4vw, 28px);
+    --f-md: 20px;
+    --f-base: 17px;
+    --f-sm: 15px;
+
+    /* Line Heights */
+    --lh-tight: 1.1;
+    --lh-normal: 1.35;
+    --lh-loose: 1.6;
+
+    /* Animation Timings */
+    --fast: 0.25s;
+    --med: 0.45s;
+    --slow: 0.75s;
+
+    /* Z-index Layers */
+    --z-l1: 10;
+    --z-l2: 50;
+    --z-l3: 100;
+    --z-l4: 500;
+    --z-max: 9999;
+}
+
+/* ---------------------------------------------- */
+/* =============== GLOBAL RESET ================= */
+/* ---------------------------------------------- */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: var(--cold-00);
+    color: var(--text-100);
+    font-family: "Inter", system-ui, sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* ---------------------------------------------- */
+/* =============== TEXT UTILITIES =============== */
+/* ---------------------------------------------- */
+
+.heading-xl {
+    font-size: var(--f-xl);
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    color: var(--text-100);
+    line-height: var(--lh-tight);
+}
+
+.heading-lg {
+    font-size: var(--f-lg);
+    font-weight: 600;
+    color: var(--text-100);
+}
+
+.heading-md {
+    font-size: var(--f-md);
+    font-weight: 500;
+    color: var(--text-200);
+}
+
+.subtle {
+    font-size: var(--f-sm);
+    color: var(--text-400);
+}
+
+/* ---------------------------------------------- */
+/* =============== PANEL SYSTEM ================= */
+/* ---------------------------------------------- */
+
+.panel {
+    background: var(--dusk-02);
+    padding: 28px;
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-medium);
+    border: 1px solid rgba(255,255,255,0.05);
+    backdrop-filter: blur(16px);
+}
+
+/* Frosted Version */
+.panel-glass {
+    background: rgba(10,20,30,0.35);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(24px);
+}
+
+/* ---------------------------------------------- */
+/* =============== BUTTON SYSTEM ================ */
+/* ---------------------------------------------- */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 26px;
+    border-radius: var(--r-round);
+    font-size: var(--f-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.25s ease;
+    text-decoration: none;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 24px rgba(0,255,255,0.18);
+}
+
+/* Primary */
+.btn-primary {
+    background: var(--accent-blue-04);
+    color: #fff;
+    box-shadow: 0px 0px 18px var(--accent-blue-glow);
+}
+
+.btn-primary:hover {
+    background: var(--accent-blue-03);
+}
+
+/* Soft Button */
+.btn-soft {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-soft:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* ---------------------------------------------- */
+/* =============== HOVER RINGS ================== */
+/* ---------------------------------------------- */
+
+.hover-ring {
+    position: relative;
+}
+
+.hover-ring::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: var(--r-round);
+    border: 1.5px solid rgba(99,210,255,0.25);
+    opacity: 0;
+    transition: var(--med);
+}
+
+.hover-ring:hover::after {
+    opacity: 1;
+}
+
+/* ---------------------------------------------- */
+/* =============== GRID SPACING ================= */
+/* ---------------------------------------------- */
+
+.section {
+    padding: 90px 6vw;
+}
+
+.section-tight {
+    padding: 45px 5vw;
+}
+
+.max-w-900 {
+    max-width: 900px;
+}
+
+/* ---------------------------------------------- */
+/* =============== ANIMATIONS =================== */
+/* ---------------------------------------------- */
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-up {
+    animation: fadeUp 0.9s ease forwards;
+}
+
+/* Glow Sweep */
+@keyframes glowSweep {
+    0% { opacity: 0; transform: translateX(-40%) }
+    50% { opacity: 1; transform: translateX(30%) }
+    100% { opacity: 0; transform: translateX(120%) }
+}
+
+.glow-sweep {
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-sweep::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 35%;
+    background: linear-gradient(90deg, transparent, rgba(160,255,255,0.18), transparent);
+    animation: glowSweep 3.8s infinite ease-in-out;
+}
+
+/* ---------------------------------------------- */
+/* =============== DIVIDERS ===================== */
+/* ---------------------------------------------- */
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255,255,255,0.25),
+        transparent
+    );
+    margin: 40px 0;
+}
+
+/* ---------------------------------------------- */
+/* End of PART B (root.css) */
+/* Next: PART C — parallax.css */
+/* =========================================================================================== */
