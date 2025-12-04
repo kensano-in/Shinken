@@ -2,273 +2,340 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
   <title>SHINKEN — High-Integrity Digital Surface</title>
+
+  <!-- ROOT CSS -->
+  <link rel="stylesheet" href="css/root.css" />
+  <!-- PARALLAX / FX CSS -->
+  <link rel="stylesheet" href="css/parallax.css" />
 
   <!-- GOOGLE FONTS -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
     rel="stylesheet"
   />
-
-  <!-- CORE STYLE LAYERS -->
-  <link rel="stylesheet" href="css/root.css" />
-  <link rel="stylesheet" href="css/parallax.css" />
 </head>
+
 <body>
-  <!-- CLOCK OVERLAY -->
+  <!-- CLOCK BADGE (MOTION.JS CONTROLS THIS) -->
   <div class="ui-clock">00:00:00</div>
 
-  <!-- BACKGROUND FX -->
+  <!-- BACKGROUND FX LAYERS (OPTIONAL, CSS-ONLY) -->
   <div class="bg-grid"></div>
   <div class="bg-orb"></div>
+  <div class="bg-orb bg-orb-alt"></div>
   <canvas class="particle-field"></canvas>
   <div class="scanline"></div>
 
-  <!-- PAGE SHELL -->
-  <div class="shell">
+  <!-- BOOT / STARTUP OVERLAY -------------------------------------------- -->
+  <div id="boot-screen" class="boot-screen">
+    <div class="boot-inner">
+      <div class="boot-logo">SHINKEN</div>
+      <div class="boot-tagline">High-Integrity Digital Surface</div>
+      <div class="boot-line"></div>
+      <div class="boot-subtext">Initializing subsurface control mesh…</div>
+      <div class="boot-meta">
+        Systems check · noise floor calibration · operator layer online
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN SURFACE ------------------------------------------------------ -->
+  <main class="shell">
     <!-- TOP BAR -->
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">S</div>
-        <div class="brand-text">
-          <div class="brand-name">SHINKEN</div>
-          <div class="brand-sub">Private digital collective</div>
-        </div>
+    <header class="top-bar">
+      <div class="brand-mark">
+        <span class="brand-icon">S</span>
+        <span class="brand-text">
+          <span class="brand-name">SHINKEN</span>
+          <span class="brand-sub">Private digital collective</span>
+        </span>
       </div>
 
-      <div class="top-right">
-        <div class="top-status-pill">
-          <span class="dot live"></span>
-          Interface staging
-        </div>
-        <div class="top-contact subtle">
-          Contact:
-          <a href="mailto:admin@kensano.in">admin@kensano.in</a>
-        </div>
+      <div class="top-meta">
+        <span class="meta-pill">Interface staging</span>
+        <a href="mailto:admin@kensano.in" class="meta-link">
+          Contact: admin@kensano.in
+        </a>
       </div>
     </header>
 
-    <main class="layout">
-      <!-- LEFT: PRIMARY SURFACE -->
+    <!-- LAYOUT: MAIN COLUMN + SIDEBAR ----------------------------------- -->
+    <div class="layout-grid">
+      <!-- PRIMARY COLUMN -->
       <section class="primary">
-        <!-- CURRENT STATE PANEL -->
-        <div class="panel panel-glass subtle reveal">
-          <div class="panel-label">Current state</div>
-          <div class="panel-body">
-            <p>
-              The public interface is being assembled. Core structure already exists;
-              we are now layering the systems, controls, and surfaces around it.
-            </p>
-          </div>
-        </div>
-
-        <!-- HERO BLOCK -->
-        <section id="top" class="hero reveal">
-          <div class="hero-kicker subtle">Launch window · Initial surface</div>
-          <h1 class="hero-title">
-            A quiet unit<br />
-            for loud problems.
+        <!-- HERO -->
+        <section class="panel hero panel-glass">
+          <div class="hero-label subtle">Launch window · Initial surface</div>
+          <h1 class="heading-xl hero-title">
+            Launching very soon.
           </h1>
-          <p class="hero-copy">
-            Shinken is a private, low-noise collective operated by
-            <span class="accent-strong">Shinichiro</span> &amp;
-            <span class="accent-strong">Ken</span>, focused on premium number
-            provisioning, refined writing and script work, editorial tightening,
-            and discreet social account handling for a limited circle.
+          <p class="hero-sub subtle">
+            Quiet interface · limited circle.
           </p>
 
-          <!-- CTA ROW -->
-          <div class="hero-actions">
-            <a
-              class="btn btn-primary btn-strong btn-press magnetic"
-              href="https://wa.me/17097007361"
-              data-strength="35"
-              target="_blank"
-              rel="noopener"
-            >
-              WhatsApp line
-              <span class="btn-meta">↗</span>
-            </a>
+          <p class="hero-copy">
+            Shinken is moving from internal systems to a controlled public
+            surface. The full multi-page experience is being wired in the
+            background. This page is the holding pattern while we finish the
+            last cables.
+          </p>
 
-            <a
-              class="btn btn-secondary btn-press magnetic"
-              href="mailto:helpline.kensano@gmail.com"
-              data-strength="30"
-            >
-              Email desk
-              <span class="btn-meta">↗</span>
-            </a>
-
-            <a
-              class="btn btn-outline btn-press magnetic"
-              href="https://instagram.com/kensano.in"
-              target="_blank"
-              rel="noopener"
-              data-strength="28"
-            >
-              Instagram hub
-              <span class="btn-meta">↗</span>
-            </a>
+          <div class="hero-status-line">
+            <span class="status-dot"></span>
+            <span class="status-text">
+              &gt; Initiating interface · public deployment incoming
+            </span>
           </div>
 
-          <div class="hero-foot subtle">
-            <span class="pill pill-soft">Launch mode: quiet</span>
-            <span class="pill pill-soft">Circle: limited</span>
-            <span class="pill pill-soft">Noise floor: low</span>
+          <div class="hero-actions">
+            <a
+              href="https://wa.me/17097007361"
+              target="_blank"
+              class="btn btn-primary btn-press magnetic"
+              data-strength="40"
+            >
+              WhatsApp line ↗
+            </a>
+            <a
+              href="mailto:helpline.kensano@gmail.com"
+              class="btn btn-secondary btn-press magnetic"
+              data-strength="30"
+            >
+              Email desk ↗
+            </a>
+            <a
+              href="https://instagram.com/kensano.in"
+              target="_blank"
+              class="btn btn-ghost btn-press magnetic"
+              data-strength="25"
+            >
+              Instagram hub ↗
+            </a>
           </div>
         </section>
 
-        <!-- LAUNCHING SOON PANEL -->
-        <section class="launch-panel panel panel-glass reveal soft-reveal">
-          <div class="panel-label">Launch window · Quiet interface · Limited circle</div>
-          <h2 class="panel-title heading-lg">Launching very soon.</h2>
-          <p>
-            Shinken is moving from internal systems to a controlled public surface.
-            The full multi-page experience is being wired in the background.
-            This page is the holding pattern while we finish the last cables.
+        <!-- WHAT SHINKEN IS ------------------------------------------------ -->
+        <section class="panel panel-glass">
+          <div class="panel-label">What Shinken is</div>
+          <h2 class="heading-lg">High-Integrity Digital Surface</h2>
+          <p class="panel-copy">
+            A hybrid digital collective engineered for precision, discretion,
+            and cold-efficiency. Core systems are warming; interface will deploy
+            shortly.
           </p>
+          <p class="panel-copy">
+            No storefront, no noise. Just structured work for a controlled
+            circle that needs numbers handled, language tightened, and surfaces
+            to behave the way they should.
+          </p>
+        </section>
 
-          <div class="launch-rows">
-            <div class="launch-row">
-              <span class="launch-tag">> Interface status</span>
-              <span class="launch-value">Systems warming, controls aligning.</span>
+        <!-- OPERATOR LAYER ------------------------------------------------- -->
+        <section class="panel panel-glass">
+          <div class="panel-label">Operator layer</div>
+
+          <div class="operator-grid">
+            <div class="operator-card">
+              <div class="operator-name">Shinichiro</div>
+              <div class="operator-role subtle">
+                Legal name Subhankar Singha (Kolkata).
+              </div>
+              <p class="panel-copy">
+                Head of language, script systems, number provisioning and
+                frontline coordination. Interfaces with clients and keeps
+                external noise off the circuit.
+              </p>
             </div>
-            <div class="launch-row">
-              <span class="launch-tag">> Exposure policy</span>
-              <span class="launch-value">
-                No storefront, no shout. Only intentional entry and quiet delivery.
+
+            <div class="operator-card">
+              <div class="operator-name">Ken</div>
+              <div class="operator-role subtle">
+                Structural counterpart, identity kept quiet on public layers.
+              </div>
+              <p class="panel-copy">
+                Core systems and structural integrity. Maintains documentation,
+                frameworks, and backend discipline so the surface never drifts.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SYSTEM STATUS -------------------------------------------------- -->
+        <section class="panel panel-glass">
+          <div class="panel-label">System status</div>
+
+          <div class="status-grid">
+            <div class="status-row">
+              <span class="status-key">Noise floor</span>
+              <span class="status-bar">
+                <span class="status-bar-fill status-ok"></span>
+              </span>
+              <span class="status-note subtle">Suppressed</span>
+            </div>
+
+            <div class="status-row">
+              <span class="status-key">Capacity</span>
+              <span class="status-bar">
+                <span class="status-bar-fill status-warm"></span>
+              </span>
+              <span class="status-note subtle">Accepting selective work</span>
+            </div>
+
+            <div class="status-row">
+              <span class="status-key">Latency</span>
+              <span class="status-bar">
+                <span class="status-bar-fill status-fast"></span>
+              </span>
+              <span class="status-note subtle">Tuned for signal, not chatter</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- LAUNCH PATH / ROADMAP ----------------------------------------- -->
+        <section class="panel panel-glass">
+          <div class="panel-label">Launch path</div>
+
+          <div class="roadmap">
+            <div class="step">
+              <span class="step-dot"></span>
+              <span class="step-label">Stack</span>
+              <span class="step-note subtle">
+                Core modules hardened; internal tooling sealed.
               </span>
             </div>
-            <div class="launch-row">
-              <span class="launch-tag">> Launch note</span>
-              <span class="launch-value">
-                Once ready, this holding page will dissolve into the full interface.
+
+            <div class="step">
+              <span class="step-dot"></span>
+              <span class="step-label">Copy</span>
+              <span class="step-note subtle">
+                Public surface copy tightening; legal &amp; language pass.
               </span>
+            </div>
+
+            <div class="step">
+              <span class="step-dot"></span>
+              <span class="step-label">Interface</span>
+              <span class="step-note subtle">
+                Multi-page system wiring and motion polish.
+              </span>
+            </div>
+
+            <div class="step">
+              <span class="step-dot"></span>
+              <span class="step-label">Deploy</span>
+              <span class="step-note subtle">
+                Quiet live cut-over; existing contacts notified first.
+              </span>
+            </div>
+
+            <div class="system-warming subtle">
+              Systems warming… surface coming online.
             </div>
           </div>
         </section>
       </section>
 
-      <!-- RIGHT: OPERATOR PANEL -->
-      <aside class="sidebar reveal">
-        <!-- WHAT SHINKEN IS -->
+      <!-- SIDEBAR --------------------------------------------------------- -->
+      <aside class="sidebar">
+        <!-- CARD: WHAT SHINKEN MEANS -------------------------------------- -->
         <section class="panel panel-glass sidebar-card">
-          <div class="panel-label">What Shinken is</div>
-          <h3 class="sidebar-title">A private digital collective</h3>
+          <div class="panel-label">What “Shinken” carries</div>
+          <p class="panel-copy">
+            “Shinken” leans toward seriousness: work done with live blades,
+            not practice swords. No theatre, no volume for show. Everything
+            here is built for durability, not decoration.
+          </p>
+          <p class="panel-copy">
+            The interface is deliberately quiet. Most of the real structure
+            stays below the surface; what you see here is only the access
+            layer.
+          </p>
+        </section>
+
+        <!-- CARD: OPERATORS SUMMARY -------------------------------------- -->
+        <section class="panel panel-glass sidebar-card">
+          <div class="panel-label">Operators</div>
+          <ul class="sidebar-list">
+            <li>
+              <span class="sidebar-key">Shinichiro</span>
+              <span class="sidebar-note">Frontline &amp; visible layer.</span>
+            </li>
+            <li>
+              <span class="sidebar-key">Ken</span>
+              <span class="sidebar-note">
+                Structural layer; identity kept minimal on public edge.
+              </span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- CARD: CURRENT PHASE ------------------------------------------- -->
+        <section class="panel panel-glass sidebar-card">
+          <div class="panel-label">Current phase</div>
+          <p class="panel-copy">
+            Interface is being staged, motion and parallax tuned, and controls
+            hardened. This page will dissolve into the full environment when
+            all checks go green.
+          </p>
+        </section>
+
+        <!-- CARD: LAUNCH NOTIFICATION ------------------------------------ -->
+        <section class="panel panel-glass sidebar-card notify-card">
+          <div class="panel-label">Launch notification</div>
           <p class="sidebar-copy">
-            A private, low-noise digital collective for work that needs precision,
-            discretion, and continuity more than volume. No storefront, no hype,
-            no algorithm chasing — just operators and outcomes.
+            If you want a quiet ping when the full interface goes live, leave a
+            working email. No lists, no noise, only a single launch notice.
           </p>
 
-          <div class="sidebar-meta">
-            <div class="meta-block">
-              <div class="meta-label">Surface</div>
-              <div class="meta-value">Quiet, invitation-based</div>
-            </div>
-            <div class="meta-block">
-              <div class="meta-label">Focus</div>
-              <div class="meta-value">
-                Numbers, language, scripts, and discreet social operations.
-              </div>
-            </div>
-          </div>
-        </section>
+          <form
+            id="notify-form"
+            class="notify-form"
+            autocomplete="off"
+          >
+            <input
+              type="email"
+              name="email"
+              class="notify-input"
+              placeholder="your@signal.com"
+              required
+            />
+            <button
+              type="submit"
+              class="btn btn-secondary btn-press notify-btn"
+            >
+              Notify me
+            </button>
+          </form>
 
-        <!-- OPERATORS -->
-        <section class="panel panel-glass sidebar-card">
-          <div class="panel-label">Operator layer</div>
-          <div class="operators">
-            <div class="operator">
-              <div class="operator-name">Shinichiro</div>
-              <div class="operator-role">Primary operator</div>
-              <p class="operator-copy">
-                Legal name <span class="accent-strong">Subhankar Singha</span>,
-                based in Kolkata. Oversees language systems, number provisioning,
-                and frontline coordination for sensitive accounts.
-              </p>
-            </div>
-            <div class="operator">
-              <div class="operator-name">Ken</div>
-              <div class="operator-role">Structural counterpart</div>
-              <p class="operator-copy">
-                Core structural layer. Maintains system logic, documentation,
-                and underlying framework. Identity surface kept minimal on
-                public layers by choice.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- SYSTEM STATUS -->
-        <section class="panel panel-glass sidebar-card">
-          <div class="panel-label">System status</div>
-          <div class="status-grid">
-            <div class="status-item">
-              <div class="status-label">Noise floor</div>
-              <div class="status-bar">
-                <span class="status-fill low"></span>
-              </div>
-            </div>
-            <div class="status-item">
-              <div class="status-label">Capacity</div>
-              <div class="status-bar">
-                <span class="status-fill medium"></span>
-              </div>
-            </div>
-            <div class="status-item">
-              <div class="status-label">Latency</div>
-              <div class="status-bar">
-                <span class="status-fill low"></span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ROADMAP -->
-        <section class="panel panel-glass sidebar-card">
-          <div class="panel-label">Launch path</div>
-          <div class="roadmap">
-            <div class="step active">
-              <span class="step-dot"></span>
-              <span class="step-label">Stack</span>
-              <span class="step-note">Core stack sealed.</span>
-            </div>
-            <div class="step active">
-              <span class="step-dot"></span>
-              <span class="step-label">Copy</span>
-              <span class="step-note">Public surface copy tightening.</span>
-            </div>
-            <div class="step">
-              <span class="step-dot"></span>
-              <span class="step-label">Interface</span>
-              <span class="step-note">Multi-page system wiring.</span>
-            </div>
-            <div class="step">
-              <span class="step-dot"></span>
-              <span class="step-label">Deploy</span>
-              <span class="step-note">Quiet live cutover.</span>
-            </div>
-          </div>
-          <div class="system-warming subtle">
-            Systems warming… surface coming online.
-          </div>
+          <div
+            class="notify-status subtle"
+            id="notify-status"
+          ></div>
         </section>
       </aside>
-    </main>
+    </div>
 
-    <!-- FOOTER STRIP -->
+    <!-- FOOTER ----------------------------------------------------------- -->
     <footer class="footer subtle">
-      <div>© 2025 Shinken. All rights reserved.</div>
+      <div class="footer-main">
+        © 2025 Shinken. All rights reserved.
+      </div>
       <div class="footer-phase">
         Phase: surface assembly. Once stable, this holding page dissolves into
         the full interface.
       </div>
     </footer>
-  </div>
+  </main>
 
-  <!-- MOTION ENGINE -->
+  <!-- JS ENGINES -------------------------------------------------------- -->
+  <script src="js/boot.js"></script>
+  <script src="js/parallax.js"></script>
+  <script src="js/particles.js"></script>
   <script src="js/motion.js"></script>
 </body>
 </html>
