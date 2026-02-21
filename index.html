@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shinken</title>
 
@@ -18,21 +17,20 @@ color:white;
 }
 
 .card{
-background:rgba(255,255,255,0.07);
-backdrop-filter:blur(12px);
-padding:40px;
+background:rgba(255,255,255,0.08);
+padding:30px;
 border-radius:20px;
 text-align:center;
 width:320px;
-box-shadow:0 0 40px rgba(0,0,0,0.5);
+backdrop-filter:blur(15px);
 }
 
 input{
 width:100%;
 padding:12px;
 margin-top:20px;
-border-radius:10px;
 border:none;
+border-radius:10px;
 }
 
 button{
@@ -41,7 +39,7 @@ padding:12px;
 margin-top:15px;
 border:none;
 border-radius:10px;
-background:linear-gradient(90deg,#7b8cff,#a770ff);
+background:linear-gradient(90deg,#7b6cff,#a770ff);
 color:white;
 font-size:16px;
 cursor:pointer;
@@ -67,38 +65,30 @@ font-size:14px;
 </div>
 
 <script>
-async function send() {
+async function send(){
+const email=document.getElementById("email").value;
+const msg=document.getElementById("msg");
 
-  const email = document.getElementById("email").value;
-  const msg = document.getElementById("msg");
+if(!email){
+msg.innerHTML="❌ Enter email first";
+return;
+}
 
-  if (!email) {
-    msg.innerHTML = "❌ Enter email first";
-    return;
-  }
+msg.innerHTML="⏳ Sending...";
 
-  msg.innerHTML = "⏳ Sending...";
+try{
+await fetch("https://shinken.in/api",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email})
+});
 
-  try {
-    const res = await fetch(
-      "https://shinken-final.shinichiro-in.workers.dev",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      }
-    );
-
-    const text = await res.text();
-    msg.innerHTML = "✅ Sent";
-  }
-
-  catch (err) {
-    msg.innerHTML = "❌ " + err;
-    console.log(err);
-  }
+msg.innerHTML="✅ Sent!";
+}catch(e){
+msg.innerHTML="❌ Failed to fetch";
+}
 }
 </script>
-  
+
 </body>
 </html>
