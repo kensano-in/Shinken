@@ -1,141 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SHINKEN — Private Access Network</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shinken — Private Access</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#050608;
-  --card:#0c0f14cc;
-  --platinum:#e5e7eb;
-  --accent:#9ca3af;
-}
 
-*{margin:0;padding:0;box-sizing:border-box}
+/* ===============================
+   CINEMATIC DARK BACKGROUND
+================================ */
+
 body{
-  font-family:Inter,sans-serif;
-  background:radial-gradient(circle at 30% 20%,#0a0d13,#050608);
-  color:white;
-  overflow-x:hidden;
+margin:0;
+font-family:"Inter",sans-serif;
+color:#e8e5de;
+background:
+radial-gradient(circle at 50% 30%,rgba(255,255,255,.06),transparent 60%),
+linear-gradient(180deg,#050608,#0a0c12,#040507);
+overflow-x:hidden;
 }
 
-/* ---------- FILM GRAIN ---------- */
+/* subtle film grain */
 body::after{
 content:"";
 position:fixed;
 inset:0;
-background:url('https://grainy-gradients.vercel.app/noise.svg');
-opactiy:.08;
+background:url("https://grainy-gradients.vercel.app/noise.svg");
+opacity:.04;
 pointer-events:none;
+mix-blend-mode:overlay;
 }
 
-/* ---------- CINEMATIC INTRO ---------- */
+/* spotlight cursor */
+.spot{
+position:fixed;
+width:500px;
+height:500px;
+pointer-events:none;
+background:radial-gradient(circle,rgba(255,255,255,.08),transparent 60%);
+mix-blend-mode:soft-light;
+transform:translate(-50%,-50%);
+}
+
+/* ===============================
+   INTRO CINEMATIC
+================================ */
+
 #intro{
 position:fixed;
 inset:0;
-background:#000;
 display:flex;
-flex-direction:column;
-justify-content:center;
 align-items:center;
-z-index:999;
-animation:fadeOut 4s 2.5s forwards;
+justify-content:center;
+background:#000;
+z-index:10;
+animation:fadeOut 3s forwards 3s;
 }
+
 #intro h1{
 font-family:"Playfair Display";
-font-size:3rem;
 letter-spacing:6px;
-animation:cinema 2s ease forwards;
-}
-@keyframes cinema{0%{opacity:0;letter-spacing:20px}100%{opacity:1}}
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
-
-/* ---------- 3D LOGO ---------- */
-.logo{
-font-family:"Playfair Display";
-font-size:60px;
-letter-spacing:8px;
-margin-bottom:20px;
-background:linear-gradient(145deg,#ffffff,#9ca3af,#ffffff);
--webkit-background-clip:text;
-color:transparent;
-text-shadow:0 5px 20px #000;
-animation:rotate 12s linear infinite;
-}
-@keyframes rotate{
-0%{transform:rotateY(0)}
-100%{transform:rotateY(360deg)}
+font-size:38px;
+color:#e7e3da;
+opacity:0;
+animation:fadeIn 2s forwards;
 }
 
-/* ---------- CARD ---------- */
+@keyframes fadeIn{
+to{opacity:1}
+}
+@keyframes fadeOut{
+to{opacity:0;visibility:hidden}
+}
+
+/* ===============================
+   MAIN CARD
+================================ */
+
+.wrap{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
 .card{
-margin:auto;
-margin-top:80px;
-max-width:420px;
-background:var(--card);
+max-width:480px;
+width:100%;
 padding:40px;
-border-radius:20px;
+border-radius:24px;
+background:rgba(15,17,24,.55);
 backdrop-filter:blur(20px);
-box-shadow:0 20px 60px #0008;
+border:1px solid rgba(255,255,255,.08);
+box-shadow:
+0 40px 120px rgba(0,0,0,.7),
+inset 0 0 60px rgba(255,255,255,.03);
 text-align:center;
 }
 
+/* platinum logo */
+.logo{
+font-family:"Playfair Display";
+font-size:46px;
+letter-spacing:8px;
+margin-bottom:25px;
+background:linear-gradient(90deg,#f2efe8,#cbbd95,#ffffff);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* input */
 input{
 width:100%;
 padding:14px;
-border:none;
-border-radius:10px;
-margin-top:20px;
-background:#0b0d12;
+border-radius:12px;
+border:1px solid rgba(255,255,255,.12);
+background:rgba(255,255,255,.05);
 color:white;
+font-size:15px;
+margin-bottom:15px;
 }
+
+/* button */
 button{
-margin-top:20px;
 width:100%;
 padding:14px;
-border:none;
 border-radius:12px;
-background:linear-gradient(145deg,#ffffff,#9ca3af);
-font-weight:bold;
+border:none;
+background:linear-gradient(90deg,#e8dcc2,#c3b084);
+font-weight:600;
+font-size:16px;
 cursor:pointer;
+transition:.25s;
+}
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 25px rgba(0,0,0,.4);
 }
 
+/* info text */
 .small{
-margin-top:12px;
+margin-top:15px;
 font-size:13px;
-color:#aaa;
+opacity:.7;
 }
 
-/* ---------- SOCIAL ---------- */
+/* ===============================
+   SOCIAL GRID
+================================ */
+
 .social{
 margin-top:30px;
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 }
+
 .social a{
 padding:10px;
-background:#0b0d12;
-border-radius:8px;
+border-radius:10px;
 text-decoration:none;
-color:white;
-font-size:13px;
+color:#ddd;
+border:1px solid rgba(255,255,255,.08);
+background:rgba(255,255,255,.03);
+transition:.2s;
+font-size:14px;
+}
+.social a:hover{
+background:rgba(255,255,255,.08);
 }
 
-/* ---------- SPOTLIGHT ---------- */
-.spot{
-position:fixed;
-width:300px;height:300px;
-border-radius:50%;
-background:radial-gradient(circle,#ffffff22,transparent 60%);
-pointer-events:none;
-transform:translate(-50%,-50%);
-z-index:1;
+/* developer credit */
+.credit{
+margin-top:25px;
+font-size:12px;
+opacity:.5;
 }
+
 </style>
 </head>
 
@@ -143,49 +188,74 @@ z-index:1;
 
 <div id="intro">
 <h1>SHINKEN</h1>
-<p style="opacity:.6">Private Access Network</p>
 </div>
 
 <div class="spot" id="spot"></div>
 
+<div class="wrap">
 <div class="card">
+
 <div class="logo">SHINKEN</div>
 
-<input id="email" placeholder="Corporate Email" />
-<button onclick="sendInvite()">Request Private Access</button>
-<div class="small">One verified email per lifetime • Temp mail blocked</div>
+<input id="email" placeholder="Corporate Email">
+
+<button onclick="send()">Request Private Access</button>
+
+<div class="small">
+One verified email per lifetime • Temporary domains blocked
+</div>
 
 <div class="social">
-<a href="https://instagram.com/Shinichiro.2" target="_blank">Shinichiro Insta</a>
-<a href="https://instagram.com/Imkenfr" target="_blank">Ken Insta</a>
-<a href="https://instagram.com/Shinken.in" target="_blank">Official Insta</a>
-<a href="https://twitter.com/Shinichirofr" target="_blank">X / Twitter</a>
+<a href="https://instagram.com/Shinichiro.2">Shinichiro Insta</a>
+<a href="https://instagram.com/Imkenfr">Ken Insta</a>
+<a href="https://instagram.com/Shinken.in">Official Insta</a>
+<a href="https://x.com/Shinichirofr">X / Twitter</a>
 <a href="mailto:ownershinken@gmail.com">Business Email</a>
 <a href="https://wa.me/17097007361">WhatsApp</a>
 <a href="https://t.me/shinichirofr">Telegram</a>
-<a href="https://discord.gg/" >Discord</a>
+<a href="https://discord.gg/">Discord</a>
+</div>
+
+<div class="credit">
+Developed by Shinichiro & Ken
+</div>
+
 </div>
 </div>
 
 <script>
-async function sendInvite(){
-const email=document.getElementById('email').value;
-if(!email)return alert("Enter email");
 
-await fetch("https://shinken.in/api/new",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email})
-});
-alert("Request submitted");
-}
-
-// spotlight
-const spot=document.getElementById("spot");
+/* spotlight cursor */
 document.addEventListener("mousemove",e=>{
 spot.style.left=e.clientX+"px";
 spot.style.top=e.clientY+"px";
 });
+
+/* parallax */
+document.addEventListener("mousemove",e=>{
+document.querySelector(".card").style.transform=
+`rotateY(${(e.clientX/window.innerWidth-0.5)*6}deg)
+ rotateX(${-(e.clientY/window.innerHeight-0.5)*6}deg)`;
+});
+
+/* invite request */
+async function send(){
+const email=document.getElementById("email").value.trim();
+if(!email)return alert("Enter email");
+
+try{
+await fetch("https://shinken.in/api/test",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email})
+});
+alert("Request sent");
+}catch{
+alert("Server error");
+}
+}
+
 </script>
+
 </body>
 </html>
