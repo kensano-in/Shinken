@@ -3,123 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Shinken – Future Awaits</title>
+<title>Shinken</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
-
 body{
-  height:100vh;
-  background:linear-gradient(135deg,#0f172a,#020617);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
+    margin:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#050b1f,#0c1a3b);
+    font-family:Segoe UI, sans-serif;
+    color:white;
 }
 
-.container{
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(20px);
-  padding:40px;
-  border-radius:20px;
-  text-align:center;
-  width:90%;
-  max-width:400px;
-  box-shadow:0 0 40px rgba(0,0,0,0.6);
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(12px);
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    width:320px;
+    box-shadow:0 0 40px rgba(0,0,0,0.5);
 }
 
 h1{
-  font-size:28px;
-  margin-bottom:10px;
-}
-
-p{
-  opacity:.7;
-  margin-bottom:25px;
+    margin:0;
+    font-size:32px;
 }
 
 input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  outline:none;
-  margin-bottom:15px;
-  background:#020617;
-  color:white;
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    border-radius:10px;
+    border:none;
+    font-size:16px;
 }
 
 button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  background:#6366f1;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-  transition:.3s;
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    background:linear-gradient(90deg,#7b8cff,#a770ff);
+    color:white;
+    cursor:pointer;
 }
 
 button:hover{
-  background:#818cf8;
+    opacity:0.9;
 }
 
-.status{
-  margin-top:15px;
-  font-size:14px;
-  opacity:.8;
+#msg{
+    margin-top:15px;
+    font-size:14px;
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
-  <h1>⚡ SHINKEN</h1>
-  <p>Future usernames loading soon…</p>
+<div class="card">
+    <h1>⚡ SHINKEN</h1>
+    <p>Future usernames loading soon…</p>
 
-  <input type="email" id="email" placeholder="Enter your email" required>
-  <button onclick="send()">Notify Me</button>
+    <input id="email" placeholder="Enter your email">
+    <button onclick="send()">Notify Me</button>
 
-  <div class="status" id="status"></div>
+    <div id="msg"></div>
 </div>
 
 <script>
-const WORKER_URL = "https://shinken-final.shinichiro-in.workers.dev"; // CHANGE if needed
-
 async function send(){
-  let email = document.getElementById("email").value;
-  let status = document.getElementById("status");
+    const email = document.getElementById("email").value;
+    const msg = document.getElementById("msg");
 
-  if(!email){
-    status.innerText = "❌ Enter email first";
-    return;
-  }
+    if(!email){
+        msg.innerText = "❌ Enter email first";
+        return;
+    }
 
-  status.innerText = "Sending...";
+    msg.innerText = "Sending...";
 
-  try{
-    let res = await fetch(WORKER_URL,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({email})
-    });
+    try{
+        const res = await fetch(
+            "https://shinken-final.shinichiro-in.workers.dev",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({email})
+            }
+        );
 
-    let text = await res.text();
-    status.innerText = "✅ Done! Check Telegram 😎";
-
-  }catch(err){
-    status.innerText = "❌ Error: "+err.message;
-  }
+        msg.innerText = "✅ Done! Check Telegram";
+    }
+    catch(e){
+        msg.innerText = "❌ Failed to fetch";
+    }
 }
 </script>
 
