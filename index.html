@@ -18,12 +18,23 @@ overflow:hidden;
 
 canvas{position:fixed;inset:0;z-index:-1}
 
-body::after{
-content:"";
-position:fixed;inset:0;
-background:url("https://grainy-gradients.vercel.app/noise.svg");
-opacity:.04;
-pointer-events:none;
+/* INTRO SCREEN */
+#intro{
+position:fixed;
+inset:0;
+background:#02030a;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:"Playfair Display";
+font-size:42px;
+letter-spacing:10px;
+z-index:999;
+animation:fadeOut 2.5s forwards;
+animation-delay:1.5s;
+}
+@keyframes fadeOut{
+to{opacity:0;pointer-events:none}
 }
 
 /* MAIN CARD */
@@ -78,35 +89,17 @@ margin-bottom:10px;
 
 .msg{
 font-size:13px;
-opacity:.7;
+opacity:.8;
 margin-top:10px;
-}
-
-.social{
-margin-top:25px;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
-
-.social a{
-text-decoration:none;
-color:#ddd;
-border:1px solid rgba(255,255,255,.08);
-padding:10px;
-border-radius:10px;
-background:rgba(255,255,255,.03);
-}
-
-.footer{
-margin-top:20px;
-font-size:11px;
-opacity:.4;
+min-height:18px;
 }
 </style>
 </head>
 
 <body>
+
+<div id="intro">SHINKEN</div>
+
 <canvas id="bg"></canvas>
 
 <div class="wrap">
@@ -114,7 +107,7 @@ opacity:.4;
 
 <div class="logo">SHINKEN</div>
 
-<input id="email" placeholder="Corporate Email">
+<input id="email" placeholder="Enter your Email">
 <button onclick="request()">Request Private Access</button>
 
 <input id="code" placeholder="Membership Code">
@@ -122,60 +115,91 @@ opacity:.4;
 
 <div id="status" class="msg"></div>
 
-<div class="social">
-<a href="https://instagram.com/Shinichiro.2">Founder Instagram</a>
-<a href="https://instagram.com/Imkenfr">Co-Founder Instagram</a>
-<a href="https://instagram.com/Shinken.in">Official Instagram</a>
-<a href="https://x.com/Shinichirofr">X / Twitter</a>
-<a href="mailto:ownershinken@gmail.com">Business Email</a>
-<a href="https://wa.me/17097007361">WhatsApp</a>
-<a href="https://t.me/shinichirofr">Telegram</a>
-<a href="#">Discord</a>
-</div>
-
-<div class="footer">
-Private Membership System — Developed by Shinichiro & Ken
-</div>
-
 </div>
 </div>
 
 <script>
 const s=document.getElementById("status");
 
+/* ===== ALLOWED DOMAINS ===== */
+const allowedDomains=[
+"gmail.com","yahoo.com","hotmail.com","outlook.com",
+"proton.me","protonmail.com","icloud.com","aol.com"
+];
+
+/* ===== TEMP MAIL BLOCK SAMPLE ===== */
+const tempDomains=[
+"tempmail.com","10minutemail.com","mailinator.com",
+"guerrillamail.com","trashmail.com"
+];
+
+/* ===== EMAIL VALIDATION ===== */
+function validEmail(email){
+email=email.trim().toLowerCase();
+
+const regex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if(!regex.test(email)) return "Invalid email format.";
+
+const domain=email.split("@")[1];
+
+if(tempDomains.includes(domain))
+return "Temporary emails are blocked.";
+
+if(!allowedDomains.includes(domain))
+return "Only verified mail providers allowed.";
+
+return "OK";
+}
+
+/* ===== REQUEST ===== */
 async function request(){
 const email=document.getElementById("email").value;
-if(!email){
-s.innerText="Please enter a valid corporate email address.";
+
+const check=validEmail(email);
+if(check!=="OK"){
+s.innerText=check;
 return;
 }
 
+s.innerText="Submitting request...";
+
+try{
 await fetch("/api/request",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
-
-s.innerText=
-"Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
+s.innerText="Request submitted. Check your email for OTP.";
+}catch{
+s.innerText="Server offline. Try later.";
+}
 }
 
+/* ===== VERIFY ===== */
 async function verify(){
 const email=document.getElementById("email").value;
 const code=document.getElementById("code").value;
 
+if(!code){
+s.innerText="Enter membership code.";
+return;
+}
+
+try{
 const r=await fetch("/api/verify",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email,code})
 });
-
 const t=await r.text();
 
 if(t==="OK"){
-s.innerText="Verification successful. Welcome to SHINKEN private network.";
+s.innerText="Welcome to SHINKEN private network.";
 }else{
-s.innerText="Incorrect membership code. Kindly re-check your email and copy the verification code exactly as provided.";
+s.innerText="Wrong code.";
+}
+}catch{
+s.innerText="Server offline.";
 }
 }
 
