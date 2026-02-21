@@ -3,181 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SHINKEN — Private Digital Surface</title>
-
+<title>SHINKEN — Private Surface</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Inter, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
+body{background:#04050a;color:white;overflow:hidden}
 
-body{
-background:#05060a;
-color:white;
-overflow-x:hidden;
-}
-
-/* ===== 3D BACKGROUND ===== */
-body::before{
-content:"";
+/* ===== LOADING CINEMATIC ===== */
+#intro{
 position:fixed;
-width:200%;
-height:200%;
-background:radial-gradient(circle at 20% 20%,#0f1b4d,transparent),
-radial-gradient(circle at 80% 70%,#4c0f5c,transparent);
-animation:rotate 25s linear infinite;
+top:0;left:0;
+width:100%;height:100%;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+z-index:9999;
+animation:fadeOut 6s forwards 4s;
+}
+
+@keyframes fadeOut{to{opacity:0;visibility:hidden}}
+
+.intro-text{
+font-size:22px;
+letter-spacing:3px;
+opacity:0;
+animation:show 1s forwards;
+}
+.intro-text:nth-child(2){animation-delay:1.5s}
+.intro-text:nth-child(3){animation-delay:3s}
+
+@keyframes show{to{opacity:1}}
+
+/* ===== PARTICLES ===== */
+canvas{
+position:fixed;
+top:0;left:0;
 z-index:-2;
 }
-@keyframes rotate{
-0%{transform:rotate(0deg)}
-100%{transform:rotate(360deg)}
+
+/* ===== PARALLAX ===== */
+.parallax{
+transition:transform .2s;
 }
 
-/* ===== GLASS CARDS ===== */
-.card{
-backdrop-filter:blur(20px);
-background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.15);
-border-radius:20px;
-padding:35px;
-box-shadow:0 20px 60px rgba(0,0,0,0.6);
-margin:25px;
-transition:0.4s;
-}
-
-.card:hover{
-transform:translateY(-8px) scale(1.01);
-box-shadow:0 30px 80px rgba(0,0,0,0.9);
-}
-
-/* ===== HERO ===== */
-.hero{
+/* ===== LOGO ===== */
+.logo{
+font-size:80px;
 text-align:center;
-padding:90px 20px;
-}
-
-.hero h1{
-font-size:55px;
-font-weight:700;
+margin-top:80px;
 background:linear-gradient(90deg,#6df,#f6f);
 -webkit-background-clip:text;
 color:transparent;
+text-shadow:0 0 30px #6df;
 }
 
-.hero p{
-margin-top:20px;
-opacity:.7;
-font-size:18px;
+/* ===== CARD ===== */
+.card{
+backdrop-filter:blur(25px);
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.15);
+border-radius:20px;
+padding:35px;
+margin:40px auto;
+max-width:420px;
+text-align:center;
+box-shadow:0 20px 80px rgba(0,0,0,.8);
 }
 
-/* ===== EMAIL FORM ===== */
 input{
 width:100%;
-padding:18px;
+padding:15px;
 border-radius:12px;
 border:none;
-outline:none;
-margin-top:20px;
-font-size:16px;
 background:#111;
 color:white;
+margin-top:15px;
 }
 
 button{
 width:100%;
-padding:16px;
+padding:15px;
 margin-top:15px;
 border:none;
 border-radius:12px;
 background:linear-gradient(90deg,#6df,#f6f);
 color:white;
-font-size:17px;
-font-weight:600;
+font-size:16px;
 cursor:pointer;
 transition:.3s;
 }
-button:hover{
-transform:scale(1.05);
-}
-
-/* ===== GRID ===== */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-padding:30px;
-}
-
-/* ===== FOOTER ===== */
-footer{
-text-align:center;
-padding:40px;
-opacity:.4;
-font-size:14px;
-}
+button:hover{transform:scale(1.05)}
 </style>
 </head>
 
 <body>
 
-<div class="hero">
-<h1>SHINKEN</h1>
-<p>Private digital surface · Controlled access · High-integrity systems</p>
+<!-- ===== CINEMATIC INTRO ===== -->
+<div id="intro">
+<div class="intro-text">SHINKEN SYSTEM</div>
+<div class="intro-text">PRIVATE ACCESS SURFACE</div>
+<div class="intro-text">Developed by NAHOYAMM</div>
 </div>
 
-<div class="grid">
+<canvas id="particles"></canvas>
+
+<div class="parallax">
+<div class="logo">SHINKEN</div>
 
 <div class="card">
-<h2>System Status</h2>
-<p>Noise floor suppressed.<br>
-Selective onboarding active.<br>
-Surface stabilizing for full launch.</p>
+<h2>Request Private Access</h2>
+<input id="email" type="email" placeholder="your@email.com">
+<button onclick="send()">Submit</button>
 </div>
-
-<div class="card">
-<h2>Launch Notification</h2>
-<p>Leave your real email. One notice only. No spam.</p>
-
-<form id="form">
-<input type="email" id="email" placeholder="your@email.com" required>
-<button>Request Access</button>
-</form>
-
-<p id="msg" style="margin-top:10px;opacity:.7"></p>
 </div>
-
-<div class="card">
-<h2>Operator Layer</h2>
-<p>
-Shinichiro — Language & Systems<br>
-Ken — Core Architecture<br><br>
-Structured work. Quiet surface. Real results.
-</p>
-</div>
-
-</div>
-
-<footer>
-© SHINKEN — Secure Surface · All rights reserved
-</footer>
 
 <script>
-document.getElementById("form").onsubmit=async e=>{
-e.preventDefault();
-const email=document.getElementById("email").value;
 
-const r=await fetch("https://shinken.in/api/test",{
+/* ===== TESLA STYLE PARTICLES ===== */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+
+let particles=[];
+for(let i=0;i<120;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+vx:(Math.random()-0.5)*0.5,
+vy:(Math.random()-0.5)*0.5
+});
+}
+
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+for(let p of particles){
+p.x+=p.vx;
+p.y+=p.vy;
+if(p.x<0||p.x>canvas.width)p.vx*=-1;
+if(p.y<0||p.y>canvas.height)p.vy*=-1;
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,1.5,0,Math.PI*2);
+ctx.fillStyle="#6df";
+ctx.fill();
+}
+requestAnimationFrame(draw);
+}
+draw();
+
+/* ===== MOUSE PARALLAX ===== */
+document.addEventListener("mousemove",e=>{
+let x=(e.clientX-window.innerWidth/2)/40;
+let y=(e.clientY-window.innerHeight/2)/40;
+document.querySelector(".parallax").style.transform=
+`rotateY(${x}deg) rotateX(${-y}deg)`;
+});
+
+/* ===== API ===== */
+async function send(){
+let email=document.getElementById("email").value;
+await fetch("https://shinken.in/api/test",{
 method:"POST",
 headers:{ "Content-Type":"application/json" },
 body:JSON.stringify({email})
 });
-
-document.getElementById("msg").innerText=
-r.ok?"Request received":"Error — Try later";
-};
+alert("Request received");
+}
 </script>
 
 </body>
