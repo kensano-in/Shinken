@@ -67,39 +67,38 @@ font-size:14px;
 </div>
 
 <script>
-async function send(){
+async function send() {
 
-const email=document.getElementById("email").value;
-const msg=document.getElementById("msg");
+  const email = document.getElementById("email").value;
+  const msg = document.getElementById("msg");
 
-if(!email){
-msg.innerHTML="❌ Enter email first";
-return;
-}
+  if (!email) {
+    msg.innerHTML = "❌ Enter email first";
+    return;
+  }
 
-msg.innerHTML="⏳ Sending...";
+  msg.innerHTML = "⏳ Sending...";
 
-try{
+  try {
+    const res = await fetch(
+      "https://shinken-final.shinichiro-in.workers.dev",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      }
+    );
 
-const res=await fetch(
-"https://shinken-final.shinichiro-in.workers.dev/",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email:email})
-});
+    const text = await res.text();
+    msg.innerHTML = "✅ Sent";
+  }
 
-const t=await res.text();
-msg.innerHTML="✅ Sent";
-
-}catch(e){
-msg.innerHTML="❌ Failed to fetch";
-}
-
+  catch (err) {
+    msg.innerHTML = "❌ " + err;
+    console.log(err);
+  }
 }
 </script>
-
+  
 </body>
 </html>
