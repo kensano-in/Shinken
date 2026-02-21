@@ -1,162 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SHINKEN — Private Access Network</title>
 
-<title>SHINKEN — Private Access</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
---bg:#06070a;
---card:#0f1116;
---gold:#c7ab6d;
---soft:#7a7d84;
---text:#eaeaea;
+  --bg:#050608;
+  --card:#0c0f14cc;
+  --platinum:#e5e7eb;
+  --accent:#9ca3af;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{
-background:radial-gradient(circle at 30% 30%,#0c0d12,#050507);
-font-family:Inter;
-color:var(--text);
-overflow-x:hidden;
+  font-family:Inter,sans-serif;
+  background:radial-gradient(circle at 30% 20%,#0a0d13,#050608);
+  color:white;
+  overflow-x:hidden;
 }
 
-/* FILM GRAIN */
+/* ---------- FILM GRAIN ---------- */
 body::after{
 content:"";
 position:fixed;
 inset:0;
-background:url("https://grainy-gradients.vercel.app/noise.svg");
-opacity:.05;
+background:url('https://grainy-gradients.vercel.app/noise.svg');
+opactiy:.08;
 pointer-events:none;
 }
 
-/* INTRO CINEMATIC */
+/* ---------- CINEMATIC INTRO ---------- */
 #intro{
 position:fixed;
 inset:0;
-background:black;
+background:#000;
 display:flex;
-align-items:center;
-justify-content:center;
 flex-direction:column;
+justify-content:center;
+align-items:center;
 z-index:999;
-animation:fade 1s ease 4s forwards;
+animation:fadeOut 4s 2.5s forwards;
 }
-
 #intro h1{
 font-family:"Playfair Display";
-font-size:52px;
-letter-spacing:10px;
-animation:rise 2s forwards;
-opacity:0;
+font-size:3rem;
+letter-spacing:6px;
+animation:cinema 2s ease forwards;
 }
-#intro p{
-letter-spacing:4px;
-color:var(--soft);
-margin-top:20px;
-animation:rise 2s forwards 1.5s;
-opacity:0;
-}
-@keyframes rise{to{opacity:1;transform:translateY(0)} from{transform:translateY(40px)}}
-@keyframes fade{to{opacity:0;visibility:hidden}}
+@keyframes cinema{0%{opacity:0;letter-spacing:20px}100%{opacity:1}}
+@keyframes fadeOut{to{opacity:0;visibility:hidden}}
 
-/* PANEL */
-.wrap{
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:30px;
-}
-
-.panel{
-background:var(--card);
-padding:60px;
-border-radius:20px;
-width:420px;
-box-shadow:
-0 40px 100px rgba(0,0,0,.8),
-0 0 0 1px rgba(255,255,255,.05) inset;
-}
-
+/* ---------- 3D LOGO ---------- */
 .logo{
 font-family:"Playfair Display";
-font-size:46px;
-text-align:center;
-letter-spacing:6px;
+font-size:60px;
+letter-spacing:8px;
 margin-bottom:20px;
-background:linear-gradient(#fff,#999,#fff);
+background:linear-gradient(145deg,#ffffff,#9ca3af,#ffffff);
 -webkit-background-clip:text;
 color:transparent;
+text-shadow:0 5px 20px #000;
+animation:rotate 12s linear infinite;
+}
+@keyframes rotate{
+0%{transform:rotateY(0)}
+100%{transform:rotateY(360deg)}
 }
 
-.subtitle{
+/* ---------- CARD ---------- */
+.card{
+margin:auto;
+margin-top:80px;
+max-width:420px;
+background:var(--card);
+padding:40px;
+border-radius:20px;
+backdrop-filter:blur(20px);
+box-shadow:0 20px 60px #0008;
 text-align:center;
-font-size:13px;
-color:var(--soft);
-margin-bottom:30px;
 }
 
 input{
 width:100%;
-padding:15px;
-background:#0a0c11;
-border:1px solid #1b1d24;
-border-radius:10px;
-color:white;
-margin-top:10px;
-}
-
-button{
-width:100%;
-padding:15px;
-margin-top:18px;
-background:var(--gold);
+padding:14px;
 border:none;
 border-radius:10px;
-font-weight:600;
+margin-top:20px;
+background:#0b0d12;
+color:white;
+}
+button{
+margin-top:20px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:linear-gradient(145deg,#ffffff,#9ca3af);
+font-weight:bold;
 cursor:pointer;
-transition:.2s;
-}
-button:hover{transform:translateY(-2px)}
-
-.note{
-margin-top:20px;
-font-size:12px;
-color:var(--soft);
-text-align:center;
 }
 
-/* DEVELOPER SECTION */
-.dev{
-margin-top:50px;
+.small{
+margin-top:12px;
 font-size:13px;
-color:var(--soft);
-line-height:1.8;
+color:#aaa;
 }
 
-.dev b{color:white}
-
+/* ---------- SOCIAL ---------- */
 .social{
-margin-top:20px;
-font-size:12px;
-color:var(--soft);
-line-height:1.7;
+margin-top:30px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+.social a{
+padding:10px;
+background:#0b0d12;
+border-radius:8px;
+text-decoration:none;
+color:white;
+font-size:13px;
 }
 
-/* SPOTLIGHT CURSOR */
-#light{
+/* ---------- SPOTLIGHT ---------- */
+.spot{
 position:fixed;
-width:500px;
-height:500px;
+width:300px;height:300px;
 border-radius:50%;
-background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%);
+background:radial-gradient(circle,#ffffff22,transparent 60%);
 pointer-events:none;
-mix-blend-mode:overlay;
+transform:translate(-50%,-50%);
+z-index:1;
 }
 </style>
 </head>
@@ -165,70 +143,49 @@ mix-blend-mode:overlay;
 
 <div id="intro">
 <h1>SHINKEN</h1>
-<p>PRIVATE ACCESS SYSTEM</p>
+<p style="opacity:.6">Private Access Network</p>
 </div>
 
-<div id="light"></div>
+<div class="spot" id="spot"></div>
 
-<div class="wrap">
-<div class="panel">
-
+<div class="card">
 <div class="logo">SHINKEN</div>
-<div class="subtitle">AI-Driven Private Invite Platform</div>
 
-<input id="email" placeholder="Corporate Email">
-<button onclick="send()">Request Invite</button>
-
-<div class="note">
-One verified email per lifetime • Temporary domains blocked • AI spam detection enabled
-</div>
-
-<div class="dev">
-<b>Developed by</b><br>
-Shinichiro — Systems Architect & Founder<br>
-Ken — Security Engineer & AI Infrastructure<br><br>
-
-Shinichiro builds scalable private-access ecosystems.<br>
-Ken designs anti-abuse security & automation pipelines.
-</div>
+<input id="email" placeholder="Corporate Email" />
+<button onclick="sendInvite()">Request Private Access</button>
+<div class="small">One verified email per lifetime • Temp mail blocked</div>
 
 <div class="social">
-<b>Official Contacts</b><br>
-Instagram → Shinichiro.2 / Imkenfr / Shinken.in<br>
-X → Shinichirofr<br>
-Discord → shinichirofr<br>
-Telegram → shinichirofr<br>
-Business Email → ownershinken@gmail.com<br>
-WhatsApp → +1 709 700 7361
-</div>
-
+<a href="https://instagram.com/Shinichiro.2" target="_blank">Shinichiro Insta</a>
+<a href="https://instagram.com/Imkenfr" target="_blank">Ken Insta</a>
+<a href="https://instagram.com/Shinken.in" target="_blank">Official Insta</a>
+<a href="https://twitter.com/Shinichirofr" target="_blank">X / Twitter</a>
+<a href="mailto:ownershinken@gmail.com">Business Email</a>
+<a href="https://wa.me/17097007361">WhatsApp</a>
+<a href="https://t.me/shinichirofr">Telegram</a>
+<a href="https://discord.gg/" >Discord</a>
 </div>
 </div>
 
 <script>
-document.addEventListener("mousemove",e=>{
-let l=document.getElementById("light");
-l.style.left=e.clientX-250+"px";
-l.style.top=e.clientY-250+"px";
-});
+async function sendInvite(){
+const email=document.getElementById('email').value;
+if(!email)return alert("Enter email");
 
-async function send(){
-let email=document.getElementById("email").value;
-
-if(!email.includes("@")){
-alert("Invalid email.");
-return;
-}
-
-let res = await fetch("https://shinken.in/api/test",{
+await fetch("https://shinken.in/api/new",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
-
-alert("Request submitted. AI review in progress.");
+alert("Request submitted");
 }
-</script>
 
+// spotlight
+const spot=document.getElementById("spot");
+document.addEventListener("mousemove",e=>{
+spot.style.left=e.clientX+"px";
+spot.style.top=e.clientY+"px";
+});
+</script>
 </body>
 </html>
