@@ -16,9 +16,7 @@ color:#e8e5de;
 overflow:hidden;
 }
 
-canvas{position:fixed;inset:0;z-index:-1}
-
-/* INTRO SCREEN */
+/* ===== CINEMATIC INTRO ===== */
 #intro{
 position:fixed;
 inset:0;
@@ -26,79 +24,128 @@ background:#02030a;
 display:flex;
 align-items:center;
 justify-content:center;
-font-family:"Playfair Display";
-font-size:42px;
-letter-spacing:10px;
+flex-direction:column;
 z-index:999;
-animation:fadeOut 2.5s forwards;
-animation-delay:1.5s;
+animation:fadeOut 2s ease forwards;
+animation-delay:2.5s;
+}
+#intro h1{
+font-family:"Playfair Display";
+font-size:52px;
+letter-spacing:14px;
+margin:0;
+background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
+-webkit-background-clip:text;
+color:transparent;
+animation:zoom 2.5s ease;
+}
+#intro p{
+opacity:.6;
+margin-top:10px;
+letter-spacing:3px;
+}
+@keyframes zoom{
+0%{transform:scale(.6);opacity:0}
+100%{transform:scale(1);opacity:1}
 }
 @keyframes fadeOut{
 to{opacity:0;pointer-events:none}
 }
 
-/* MAIN CARD */
+/* PARTICLES */
+canvas{position:fixed;inset:0;z-index:-1}
+
+/* CARD */
 .wrap{
 position:absolute;
 top:50%;left:50%;
 transform:translate(-50%,-50%);
 width:92%;
-max-width:470px;
+max-width:500px;
 }
 
 .card{
-background:rgba(12,14,20,.65);
-backdrop-filter:blur(20px);
+background:rgba(12,14,20,.7);
+backdrop-filter:blur(25px);
 border:1px solid rgba(255,255,255,.08);
-border-radius:24px;
-padding:40px;
-box-shadow:0 40px 120px rgba(0,0,0,.9);
+border-radius:26px;
+padding:50px;
+box-shadow:0 50px 150px rgba(0,0,0,.9);
 text-align:center;
 }
 
 .logo{
 font-family:"Playfair Display";
-font-size:46px;
-letter-spacing:10px;
-margin-bottom:30px;
+font-size:50px;
+letter-spacing:12px;
+margin-bottom:35px;
 background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
 -webkit-background-clip:text;
 color:transparent;
 }
 
+/* BIGGER INPUTS */
 input{
 width:100%;
-padding:14px;
-border-radius:12px;
+padding:18px;
+border-radius:14px;
 border:1px solid rgba(255,255,255,.1);
-background:rgba(255,255,255,.04);
+background:rgba(255,255,255,.05);
 color:white;
-margin-bottom:14px;
+margin-bottom:18px;
+font-size:15px;
 }
 
 button{
 width:100%;
-padding:14px;
+padding:16px;
 border:none;
-border-radius:12px;
+border-radius:14px;
 background:linear-gradient(90deg,#e6d8b6,#bfa979);
 font-weight:600;
 cursor:pointer;
-margin-bottom:10px;
+margin-bottom:15px;
+font-size:15px;
 }
 
 .msg{
-font-size:13px;
+font-size:14px;
 opacity:.8;
-margin-top:10px;
 min-height:18px;
+margin-top:10px;
+}
+
+/* CONTACT BOXES BACK */
+.social{
+margin-top:35px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+.social a{
+text-decoration:none;
+color:#ddd;
+border:1px solid rgba(255,255,255,.08);
+padding:14px;
+border-radius:14px;
+background:rgba(255,255,255,.03);
+font-size:14px;
+}
+
+.footer{
+margin-top:20px;
+font-size:12px;
+opacity:.4;
 }
 </style>
 </head>
 
 <body>
 
-<div id="intro">SHINKEN</div>
+<div id="intro">
+<h1>SHINKEN</h1>
+<p>PRIVATE MEMBERSHIP NETWORK</p>
+</div>
 
 <canvas id="bg"></canvas>
 
@@ -107,7 +154,7 @@ min-height:18px;
 
 <div class="logo">SHINKEN</div>
 
-<input id="email" placeholder="Enter your Email">
+<input id="email" placeholder="Corporate Email">
 <button onclick="request()">Request Private Access</button>
 
 <input id="code" placeholder="Membership Code">
@@ -115,112 +162,83 @@ min-height:18px;
 
 <div id="status" class="msg"></div>
 
+<div class="social">
+<a href="https://instagram.com/Shinichiro.2">Founder Instagram</a>
+<a href="https://instagram.com/Imkenfr">Co-Founder Instagram</a>
+<a href="https://instagram.com/Shinken.in">Official Instagram</a>
+<a href="https://x.com/Shinichirofr">X / Twitter</a>
+<a href="mailto:ownershinken@gmail.com">Business Email</a>
+<a href="https://wa.me/17097007361">WhatsApp</a>
+<a href="https://t.me/shinichirofr">Telegram</a>
+<a href="#">Discord</a>
+</div>
+
+<div class="footer">
+Private Membership System — Developed by Shinichiro & Ken
+</div>
+
 </div>
 </div>
 
 <script>
 const s=document.getElementById("status");
 
-/* ===== ALLOWED DOMAINS ===== */
-const allowedDomains=[
+const allowed=[
 "gmail.com","yahoo.com","hotmail.com","outlook.com",
 "proton.me","protonmail.com","icloud.com","aol.com"
 ];
 
-/* ===== TEMP MAIL BLOCK SAMPLE ===== */
-const tempDomains=[
-"tempmail.com","10minutemail.com","mailinator.com",
-"guerrillamail.com","trashmail.com"
-];
-
-/* ===== EMAIL VALIDATION ===== */
-function validEmail(email){
+function valid(email){
 email=email.trim().toLowerCase();
-
-const regex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-if(!regex.test(email)) return "Invalid email format.";
-
-const domain=email.split("@")[1];
-
-if(tempDomains.includes(domain))
-return "Temporary emails are blocked.";
-
-if(!allowedDomains.includes(domain))
-return "Only verified mail providers allowed.";
-
+const r=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if(!r.test(email)) return "Invalid email format.";
+const d=email.split("@")[1];
+if(!allowed.includes(d)) return "Only verified mail providers allowed.";
 return "OK";
 }
 
-/* ===== REQUEST ===== */
 async function request(){
 const email=document.getElementById("email").value;
+const v=valid(email);
+if(v!=="OK"){s.innerText=v;return;}
 
-const check=validEmail(email);
-if(check!=="OK"){
-s.innerText=check;
-return;
-}
-
-s.innerText="Submitting request...";
-
-try{
-await fetch("/api/request",{
-method:"POST",
+await fetch("/api/request",{method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
-s.innerText="Request submitted. Check your email for OTP.";
-}catch{
-s.innerText="Server offline. Try later.";
-}
+
+s.innerText="Request submitted. Check email for OTP.";
 }
 
-/* ===== VERIFY ===== */
 async function verify(){
 const email=document.getElementById("email").value;
 const code=document.getElementById("code").value;
+if(!code){s.innerText="Enter membership code.";return;}
 
-if(!code){
-s.innerText="Enter membership code.";
-return;
-}
-
-try{
-const r=await fetch("/api/verify",{
-method:"POST",
+const r=await fetch("/api/verify",{method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email,code})
 });
 const t=await r.text();
-
-if(t==="OK"){
-s.innerText="Welcome to SHINKEN private network.";
-}else{
-s.innerText="Wrong code.";
-}
-}catch{
-s.innerText="Server offline.";
-}
+s.innerText=(t==="OK")?
+"Welcome to SHINKEN private network.":
+"Incorrect membership code.";
 }
 
 /* PARTICLES */
 const c=document.getElementById("bg");
 const x=c.getContext("2d");
-c.width=innerWidth;
-c.height=innerHeight;
-
+c.width=innerWidth;c.height=innerHeight;
 let p=[...Array(70)].map(()=>({
 x:Math.random()*c.width,
 y:Math.random()*c.height,
 vx:(Math.random()-.5)*.3,
 vy:(Math.random()-.5)*.3
 }));
-
 function loop(){
 x.clearRect(0,0,c.width,c.height);
 p.forEach(a=>{
-a.x+=a.vx;
-a.y+=a.vy;
+a.x+=a.vx;a.y+=a.vy;
 if(a.x<0||a.x>c.width)a.vx*=-1;
 if(a.y<0||a.y>c.height)a.vy*=-1;
 x.fillStyle="rgba(255,255,255,.2)";
@@ -230,5 +248,6 @@ requestAnimationFrame(loop);
 }
 loop();
 </script>
+
 </body>
 </html>
