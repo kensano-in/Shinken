@@ -1,166 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SHINKEN — Private Surface</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+<title>SHINKEN</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
-body{background:#04050a;color:white;overflow:hidden}
 
-/* ===== LOADING CINEMATIC ===== */
+/* ===== PALETTE ===== */
+:root{
+--bg:#07080b;
+--card:#111216;
+--gold:#c4a96b;
+--text:#e5e5e5;
+--soft:#8a8c92;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+background:var(--bg);
+color:var(--text);
+font-family:Inter;
+overflow:hidden;
+}
+
+/* ===== FILM GRAIN ===== */
+body::after{
+content:"";
+position:fixed;
+inset:0;
+background:url("https://grainy-gradients.vercel.app/noise.svg");
+opacity:.06;
+pointer-events:none;
+z-index:2;
+}
+
+/* ===== CINEMATIC INTRO ===== */
 #intro{
 position:fixed;
-top:0;left:0;
-width:100%;height:100%;
+inset:0;
 background:black;
 display:flex;
 align-items:center;
 justify-content:center;
 flex-direction:column;
 z-index:9999;
-animation:fadeOut 6s forwards 4s;
+animation:fadeout 1.4s ease forwards 5s;
 }
 
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
-
-.intro-text{
-font-size:22px;
-letter-spacing:3px;
+.intro-title{
+font-family:"Playfair Display";
+font-size:52px;
+letter-spacing:8px;
 opacity:0;
-animation:show 1s forwards;
+animation:rise 1.5s ease forwards;
 }
-.intro-text:nth-child(2){animation-delay:1.5s}
-.intro-text:nth-child(3){animation-delay:3s}
 
-@keyframes show{to{opacity:1}}
+.intro-sub{
+margin-top:20px;
+letter-spacing:4px;
+color:var(--soft);
+opacity:0;
+animation:rise 1.5s ease forwards 1.5s;
+}
 
-/* ===== PARTICLES ===== */
-canvas{
+.intro-credit{
+margin-top:50px;
+font-size:13px;
+color:var(--gold);
+opacity:0;
+animation:rise 1.5s ease forwards 3s;
+}
+
+@keyframes rise{
+0%{transform:translateY(40px);opacity:0}
+100%{transform:translateY(0);opacity:1}
+}
+@keyframes fadeout{
+to{opacity:0;visibility:hidden}
+}
+
+/* ===== SPOTLIGHT ===== */
+#spotlight{
 position:fixed;
-top:0;left:0;
-z-index:-2;
+width:400px;
+height:400px;
+pointer-events:none;
+border-radius:50%;
+background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);
+mix-blend-mode:overlay;
+z-index:3;
 }
 
-/* ===== PARALLAX ===== */
-.parallax{
-transition:transform .2s;
+/* ===== MAIN PANEL ===== */
+.wrapper{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+perspective:1200px;
 }
 
-/* ===== LOGO ===== */
+.panel{
+background:var(--card);
+padding:50px;
+border-radius:16px;
+width:360px;
+box-shadow:
+0 50px 100px rgba(0,0,0,.7),
+0 0 0 1px rgba(255,255,255,.03) inset;
+transition:.2s;
+}
+
+/* ===== CHROME LOGO ===== */
 .logo{
-font-size:80px;
+font-family:"Playfair Display";
+font-size:42px;
 text-align:center;
-margin-top:80px;
-background:linear-gradient(90deg,#6df,#f6f);
+margin-bottom:30px;
+background:linear-gradient(180deg,#eee,#aaa,#eee);
 -webkit-background-clip:text;
 color:transparent;
-text-shadow:0 0 30px #6df;
+animation:spin 10s linear infinite;
+}
+@keyframes spin{
+from{transform:rotateY(0)}
+to{transform:rotateY(360deg)}
 }
 
-/* ===== CARD ===== */
-.card{
-backdrop-filter:blur(25px);
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.15);
-border-radius:20px;
-padding:35px;
-margin:40px auto;
-max-width:420px;
-text-align:center;
-box-shadow:0 20px 80px rgba(0,0,0,.8);
-}
-
+/* ===== INPUT ===== */
 input{
 width:100%;
-padding:15px;
-border-radius:12px;
-border:none;
-background:#111;
+padding:14px;
+border-radius:10px;
+border:1px solid #1f2127;
+background:#0c0d11;
 color:white;
-margin-top:15px;
+margin-top:12px;
 }
 
+/* ===== BUTTON ===== */
 button{
 width:100%;
-padding:15px;
-margin-top:15px;
+padding:14px;
+margin-top:16px;
 border:none;
-border-radius:12px;
-background:linear-gradient(90deg,#6df,#f6f);
-color:white;
-font-size:16px;
+border-radius:10px;
+background:var(--gold);
+color:black;
+font-weight:600;
 cursor:pointer;
-transition:.3s;
+transition:.25s;
 }
-button:hover{transform:scale(1.05)}
+button:hover{opacity:.85}
+
+.note{
+margin-top:15px;
+font-size:12px;
+color:var(--soft);
+text-align:center;
+}
+
+/* ===== INVITE CODE ANIMATION ===== */
+.code{
+margin-top:20px;
+letter-spacing:5px;
+text-align:center;
+font-size:20px;
+color:var(--gold);
+opacity:0;
+animation:code 3s forwards 2s;
+}
+@keyframes code{
+to{opacity:1;letter-spacing:10px}
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- ===== CINEMATIC INTRO ===== -->
 <div id="intro">
-<div class="intro-text">SHINKEN SYSTEM</div>
-<div class="intro-text">PRIVATE ACCESS SURFACE</div>
-<div class="intro-text">Developed by NAHOYAMM</div>
+<div class="intro-title">SHINKEN</div>
+<div class="intro-sub">PRIVATE ACCESS SYSTEM</div>
+<div class="intro-credit">Developed by NAHOYAMM</div>
 </div>
 
-<canvas id="particles"></canvas>
+<div id="spotlight"></div>
 
-<div class="parallax">
+<div class="wrapper">
+<div class="panel" id="panel">
+
 <div class="logo">SHINKEN</div>
 
-<div class="card">
-<h2>Request Private Access</h2>
-<input id="email" type="email" placeholder="your@email.com">
-<button onclick="send()">Submit</button>
+<input id="email" placeholder="Corporate Email">
+<button onclick="send()">Request Invite</button>
+
+<div class="code">INVITE ONLY</div>
+
+<div class="note">
+One email lifetime · Temp mail blocked
+</div>
+
 </div>
 </div>
 
 <script>
 
-/* ===== TESLA STYLE PARTICLES ===== */
-const canvas=document.getElementById("particles");
-const ctx=canvas.getContext("2d");
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-
-let particles=[];
-for(let i=0;i<120;i++){
-particles.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-vx:(Math.random()-0.5)*0.5,
-vy:(Math.random()-0.5)*0.5
-});
-}
-
-function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-for(let p of particles){
-p.x+=p.vx;
-p.y+=p.vy;
-if(p.x<0||p.x>canvas.width)p.vx*=-1;
-if(p.y<0||p.y>canvas.height)p.vy*=-1;
-
-ctx.beginPath();
-ctx.arc(p.x,p.y,1.5,0,Math.PI*2);
-ctx.fillStyle="#6df";
-ctx.fill();
-}
-requestAnimationFrame(draw);
-}
-draw();
-
-/* ===== MOUSE PARALLAX ===== */
+/* ===== SPOTLIGHT FOLLOW ===== */
 document.addEventListener("mousemove",e=>{
-let x=(e.clientX-window.innerWidth/2)/40;
-let y=(e.clientY-window.innerHeight/2)/40;
-document.querySelector(".parallax").style.transform=
-`rotateY(${x}deg) rotateX(${-y}deg)`;
+let s=document.getElementById("spotlight");
+s.style.left=e.clientX-200+"px";
+s.style.top=e.clientY-200+"px";
+});
+
+/* ===== PARALLAX ===== */
+document.addEventListener("mousemove",e=>{
+let x=(e.clientX/window.innerWidth-.5)*8;
+let y=(e.clientY/window.innerHeight-.5)*8;
+document.getElementById("panel")
+.style.transform=`rotateY(${x}deg) rotateX(${-y}deg)`;
 });
 
 /* ===== API ===== */
@@ -171,7 +232,7 @@ method:"POST",
 headers:{ "Content-Type":"application/json" },
 body:JSON.stringify({email})
 });
-alert("Request received");
+alert("Request submitted.");
 }
 </script>
 
