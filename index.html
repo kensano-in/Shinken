@@ -1,53 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Shinken</title>
 
 <style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:system-ui;
+}
+
 body{
-margin:0;
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-background:linear-gradient(135deg,#050b1f,#0c1a3b);
-font-family:sans-serif;
-color:white;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#000428,#004e92);
 }
 
 .card{
-background:rgba(255,255,255,0.08);
-padding:30px;
-border-radius:20px;
-text-align:center;
-width:320px;
-backdrop-filter:blur(15px);
+  width:90%;
+  max-width:400px;
+  padding:30px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
+  text-align:center;
+  color:white;
+  box-shadow:0 0 30px rgba(0,0,0,0.3);
+}
+
+h1{
+  font-size:28px;
+  margin-bottom:10px;
+}
+
+p{
+  opacity:0.8;
+  margin-bottom:20px;
 }
 
 input{
-width:100%;
-padding:12px;
-margin-top:20px;
-border:none;
-border-radius:10px;
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  margin-bottom:15px;
+  font-size:15px;
 }
 
 button{
-width:100%;
-padding:12px;
-margin-top:15px;
-border:none;
-border-radius:10px;
-background:linear-gradient(90deg,#7b6cff,#a770ff);
-color:white;
-font-size:16px;
-cursor:pointer;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  cursor:pointer;
+  color:white;
+  background:linear-gradient(90deg,#5f72ff,#9b59ff);
+}
+
+button:hover{
+  opacity:0.9;
 }
 
 #msg{
-margin-top:15px;
-font-size:14px;
+  margin-top:15px;
+  font-size:14px;
 }
 </style>
 </head>
@@ -55,38 +78,50 @@ font-size:14px;
 <body>
 
 <div class="card">
-<h1>⚡ SHINKEN</h1>
-<p>Future usernames loading soon...</p>
+  <h1>⚡ SHINKEN</h1>
+  <p>Future usernames loading soon...</p>
 
-<input id="email" placeholder="Enter your email">
-<button onclick="send()">Notify Me</button>
+  <input id="email" placeholder="Enter your email" />
+  <button onclick="send()">Notify Me</button>
 
-<div id="msg"></div>
+  <div id="msg"></div>
 </div>
 
 <script>
+
 async function send(){
-const email=document.getElementById("email").value;
-const msg=document.getElementById("msg");
 
-if(!email){
-msg.innerHTML="❌ Enter email first";
-return;
-}
+  const email = document.getElementById("email").value.trim();
+  const msg = document.getElementById("msg");
 
-msg.innerHTML="⏳ Sending...";
+  if(!email){
+    msg.innerHTML="❌ Enter email first";
+    return;
+  }
 
-try{
-await fetch("https://shinken.in/api",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email})
-});
+  msg.innerHTML="⏳ Sending...";
 
-msg.innerHTML="✅ Sent!";
-}catch(e){
-msg.innerHTML="❌ Failed to fetch";
-}
+  try{
+
+    const res = await fetch("https://shinken.in/api/test",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({email})
+    });
+
+    const text = await res.text();
+
+    if(res.ok){
+      msg.innerHTML="✅ Sent!";
+    }else{
+      msg.innerHTML="❌ Server error: "+text;
+    }
+
+  }catch(e){
+    msg.innerHTML="❌ Network error";
+  }
 }
 </script>
 
