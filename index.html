@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-<title>SHINKEN</title>
+<title>SHINKEN — Private Access</title>
 
 <style>
 :root{
---bg:#07070a;
---card:#0f1014;
---gold:#c8ab6c;
---text:#e7e7e7;
---soft:#7d8087;
+--bg:#06070a;
+--card:#0f1116;
+--gold:#c7ab6d;
+--soft:#7a7d84;
+--text:#eaeaea;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{
-background:var(--bg);
-color:var(--text);
+background:radial-gradient(circle at 30% 30%,#0c0d12,#050507);
 font-family:Inter;
-overflow:hidden;
+color:var(--text);
+overflow-x:hidden;
 }
 
 /* FILM GRAIN */
@@ -34,7 +34,7 @@ opacity:.05;
 pointer-events:none;
 }
 
-/* INTRO */
+/* INTRO CINEMATIC */
 #intro{
 position:fixed;
 inset:0;
@@ -44,75 +44,73 @@ align-items:center;
 justify-content:center;
 flex-direction:column;
 z-index:999;
-animation:fade 1s ease 4.5s forwards;
+animation:fade 1s ease 4s forwards;
 }
 
 #intro h1{
 font-family:"Playfair Display";
+font-size:52px;
 letter-spacing:10px;
-font-size:50px;
+animation:rise 2s forwards;
 opacity:0;
-animation:rise 1.6s forwards;
 }
-
 #intro p{
-margin-top:20px;
-letter-spacing:5px;
+letter-spacing:4px;
 color:var(--soft);
+margin-top:20px;
+animation:rise 2s forwards 1.5s;
 opacity:0;
-animation:rise 1.6s forwards 1.5s;
 }
-
-@keyframes rise{
-from{opacity:0;transform:translateY(30px)}
-to{opacity:1;transform:translateY(0)}
-}
-@keyframes fade{
-to{opacity:0;visibility:hidden}
-}
+@keyframes rise{to{opacity:1;transform:translateY(0)} from{transform:translateY(40px)}}
+@keyframes fade{to{opacity:0;visibility:hidden}}
 
 /* PANEL */
 .wrap{
-height:100vh;
+min-height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
+padding:30px;
 }
 
 .panel{
 background:var(--card);
 padding:60px;
-border-radius:18px;
-width:360px;
+border-radius:20px;
+width:420px;
 box-shadow:
-0 40px 80px rgba(0,0,0,.7),
-0 0 0 1px rgba(255,255,255,.04) inset;
+0 40px 100px rgba(0,0,0,.8),
+0 0 0 1px rgba(255,255,255,.05) inset;
 }
 
-/* LOGO */
 .logo{
 font-family:"Playfair Display";
-font-size:44px;
+font-size:46px;
 text-align:center;
-margin-bottom:30px;
-background:linear-gradient(#fff,#aaa,#fff);
+letter-spacing:6px;
+margin-bottom:20px;
+background:linear-gradient(#fff,#999,#fff);
 -webkit-background-clip:text;
 color:transparent;
-letter-spacing:6px;
 }
 
-/* INPUT */
+.subtitle{
+text-align:center;
+font-size:13px;
+color:var(--soft);
+margin-bottom:30px;
+}
+
 input{
 width:100%;
 padding:15px;
-background:#0a0b0f;
-border:1px solid #1c1d23;
+background:#0a0c11;
+border:1px solid #1b1d24;
 border-radius:10px;
 color:white;
-margin-top:12px;
+margin-top:10px;
 }
 
-/* BUTTON */
 button{
 width:100%;
 padding:15px;
@@ -122,9 +120,10 @@ border:none;
 border-radius:10px;
 font-weight:600;
 cursor:pointer;
+transition:.2s;
 }
+button:hover{transform:translateY(-2px)}
 
-/* FOOT */
 .note{
 margin-top:20px;
 font-size:12px;
@@ -132,13 +131,30 @@ color:var(--soft);
 text-align:center;
 }
 
-/* SPOTLIGHT */
+/* DEVELOPER SECTION */
+.dev{
+margin-top:50px;
+font-size:13px;
+color:var(--soft);
+line-height:1.8;
+}
+
+.dev b{color:white}
+
+.social{
+margin-top:20px;
+font-size:12px;
+color:var(--soft);
+line-height:1.7;
+}
+
+/* SPOTLIGHT CURSOR */
 #light{
 position:fixed;
 width:500px;
 height:500px;
 border-radius:50%;
-background:radial-gradient(circle,rgba(255,255,255,.1),transparent 70%);
+background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%);
 pointer-events:none;
 mix-blend-mode:overlay;
 }
@@ -158,12 +174,32 @@ mix-blend-mode:overlay;
 <div class="panel">
 
 <div class="logo">SHINKEN</div>
+<div class="subtitle">AI-Driven Private Invite Platform</div>
 
 <input id="email" placeholder="Corporate Email">
 <button onclick="send()">Request Invite</button>
 
 <div class="note">
-One verified email per lifetime · Temporary mail blocked
+One verified email per lifetime • Temporary domains blocked • AI spam detection enabled
+</div>
+
+<div class="dev">
+<b>Developed by</b><br>
+Shinichiro — Systems Architect & Founder<br>
+Ken — Security Engineer & AI Infrastructure<br><br>
+
+Shinichiro builds scalable private-access ecosystems.<br>
+Ken designs anti-abuse security & automation pipelines.
+</div>
+
+<div class="social">
+<b>Official Contacts</b><br>
+Instagram → Shinichiro.2 / Imkenfr / Shinken.in<br>
+X → Shinichirofr<br>
+Discord → shinichirofr<br>
+Telegram → shinichirofr<br>
+Business Email → ownershinken@gmail.com<br>
+WhatsApp → +1 709 700 7361
 </div>
 
 </div>
@@ -178,12 +214,19 @@ l.style.top=e.clientY-250+"px";
 
 async function send(){
 let email=document.getElementById("email").value;
-await fetch("https://shinken.in/api/test",{
+
+if(!email.includes("@")){
+alert("Invalid email.");
+return;
+}
+
+let res = await fetch("https://shinken.in/api/test",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
-alert("Request received.");
+
+alert("Request submitted. AI review in progress.");
 }
 </script>
 
