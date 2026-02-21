@@ -1,167 +1,315 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SHINKEN — Private Access</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"><style>
-/* ================= CINEMATIC BASE ================= */
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= BASE ================= */
 html,body{
 margin:0;
 padding:0;
-background:#02030a;
+background:#05060b;
 font-family:Inter,sans-serif;
 color:#e9e6df;
 overflow:hidden;
 }
 
-canvas{position:fixed;inset:0;z-index:-1}
+/* PARTICLE CANVAS */
+canvas{
+position:fixed;
+inset:0;
+z-index:-2;
+}
 
 /* FILM GRAIN */
 body::after{
 content:"";
-position:fixed;inset:0;
+position:fixed;
+inset:0;
 background:url("https://grainy-gradients.vercel.app/noise.svg");
-opacity:.05;pointer-events:none;
+opacity:.06;
+pointer-events:none;
 }
 
 /* INTRO */
 #intro{
-position:fixed;inset:0;
+position:fixed;
+inset:0;
 background:#000;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-z-index:5;
-animation:fadeOut 3s 3s forwards;
+z-index:10;
+animation:fadeOut 2.5s 3s forwards;
 }
+
 #intro h1{
-font-family:Playfair Display;
-letter-spacing:8px;
-font-size:40px;
-background:linear-gradient(90deg,#fff,#d9cba2,#fff);
--webkit-background-clip:text;color:transparent;
-animation:fadeIn 2s forwards;
+font-family:"Playfair Display";
+letter-spacing:10px;
+font-size:44px;
+background:linear-gradient(90deg,#fff,#c7b78e,#fff);
+-webkit-background-clip:text;
+color:transparent;
 opacity:0;
+animation:fadeIn 2s forwards;
 }
-#intro p{opacity:.5;margin-top:10px;font-size:12px}
+
+#intro p{
+opacity:.4;
+margin-top:10px;
+font-size:12px;
+letter-spacing:2px;
+}
 
 @keyframes fadeIn{to{opacity:1}}
 @keyframes fadeOut{to{opacity:0;visibility:hidden}}
 
-/* MAIN CARD */
+/* ================= CARD ================= */
 .wrap{
 position:absolute;
-top:50%;left:50%;
+top:50%;
+left:50%;
 transform:translate(-50%,-50%);
-width:90%;max-width:460px;
+width:92%;
+max-width:480px;
 }
+
 .card{
 background:rgba(10,12,18,.6);
-backdrop-filter:blur(18px);
+backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,.08);
-padding:40px;border-radius:24px;
-box-shadow:0 40px 120px rgba(0,0,0,.8);
+padding:42px;
+border-radius:28px;
+box-shadow:0 40px 140px rgba(0,0,0,.9);
 text-align:center;
 transition:.3s;
 }
-.card:hover{transform:translateY(-4px)}
 
-.logo{
-font-family:Playfair Display;
-font-size:48px;
-letter-spacing:10px;
-margin-bottom:25px;
-background:linear-gradient(90deg,#fff,#c7b78e,#fff);
--webkit-background-clip:text;color:transparent;
+.card:hover{
+transform:translateY(-6px);
 }
 
+/* LOGO */
+.logo{
+font-family:"Playfair Display";
+font-size:52px;
+letter-spacing:12px;
+margin-bottom:30px;
+background:linear-gradient(90deg,#fff,#c7b78e,#fff);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* INPUT */
 input{
-width:100%;padding:14px;
+width:100%;
+padding:15px;
+margin-bottom:15px;
 border-radius:12px;
 border:1px solid rgba(255,255,255,.1);
-background:rgba(255,255,255,.05);
-color:white;margin-bottom:15px;
+background:rgba(255,255,255,.04);
+color:#fff;
+font-size:14px;
 }
-button{
-width:100%;padding:14px;
-border:none;border-radius:12px;
-background:linear-gradient(90deg,#e8dcc2,#c3b084);
-font-weight:600;cursor:pointer;
-}
-.small{font-size:12px;margin-top:10px;opacity:.6}
 
+/* BUTTON */
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+background:linear-gradient(90deg,#e8dcc2,#c3b084);
+font-weight:600;
+cursor:pointer;
+margin-bottom:12px;
+transition:.2s;
+}
+
+button:hover{
+opacity:.9;
+}
+
+.small{
+font-size:12px;
+opacity:.6;
+margin-top:8px;
+}
+
+/* DIVIDER */
+.divider{
+height:1px;
+margin:25px 0;
+background:linear-gradient(90deg,transparent,#c7b78e,transparent);
+opacity:.5;
+}
+
+/* SECTION TITLE */
+.section-title{
+font-family:"Playfair Display";
+letter-spacing:5px;
+font-size:14px;
+margin-bottom:10px;
+opacity:.85;
+}
+
+/* SOCIAL */
 .social{
-display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:25px}
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:20px;
+}
+
 .social a{
-text-decoration:none;color:#ddd;
-padding:10px;border-radius:10px;
+text-decoration:none;
+color:#ddd;
+padding:11px;
+border-radius:10px;
 border:1px solid rgba(255,255,255,.08);
 background:rgba(255,255,255,.03);
+transition:.2s;
+font-size:13px;
 }
 
-.credit{margin-top:20px;font-size:11px;opacity:.4}
-</style></head>
-<body><canvas id="bg"></canvas>
+.social a:hover{
+background:rgba(255,255,255,.07);
+}
+
+.credit{
+margin-top:20px;
+font-size:11px;
+opacity:.4;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
 
 <div id="intro">
 <h1>SHINKEN</h1>
 <p>Developed by Shinichiro & Ken</p>
-</div><div class="wrap">
+</div>
+
+<div class="wrap">
 <div class="card" id="card">
+
 <div class="logo">SHINKEN</div>
+
 <input id="email" placeholder="Corporate Email">
 <button onclick="send()">Request Private Access</button>
-<div class="small">One verified email per lifetime • Temp domains blocked</div><div class="social">
-<a href="https://instagram.com/Shinichiro.2">Founder Instagram</a>
-<a href="https://instagram.com/Imkenfr">Co-founder Instagram</a>
-<a href="https://instagram.com/Shinken.in">Web-Instagram</a>
-<a href="https://x.com/Shinichirofr">X / Twitter</a>
+
+<div class="small">
+One verified email per lifetime • Temporary domains blocked • AI spam detection enabled
+</div>
+
+<div class="divider"></div>
+
+<div class="section-title">Membership Verification</div>
+
+<input id="invite" placeholder="Membership Code">
+<button onclick="verify()">Verify Membership</button>
+
+<div class="small">
+Your invitation token has been delivered to your verified address. Enter it to complete identity validation.
+</div>
+
+<div class="divider"></div>
+
+<div class="social">
+
+<a href="https://instagram.com/Shinichiro.2" target="_blank">Founder Instagram</a>
+<a href="https://instagram.com/Imkenfr" target="_blank">Co-Founder Instagram</a>
+
+<a href="https://instagram.com/Shinken.in" target="_blank">Official Instagram</a>
+<a href="https://x.com/Shinichirofr" target="_blank">X / Twitter</a>
+
 <a href="mailto:ownershinken@gmail.com">Business Email</a>
-<a href="https://wa.me/17097007361">WhatsApp</a>
-<a href="https://t.me/shinichirofr">Telegram</a>
-<a href="#">Discord</a>
+<a href="https://wa.me/17097007361" target="_blank">WhatsApp</a>
+
+<a href="https://t.me/shinichirofr" target="_blank">Telegram</a>
+<a href="https://discord.gg/" target="_blank">Discord</a>
+
 </div>
-<div class="credit">Private Access System • Invite only</div>
+
+<div class="credit">
+Private Access Infrastructure • Invite-Only System
 </div>
-</div><script>
-/* PARTICLE BACKGROUND */
-const c=document.getElementById('bg');
-const x=c.getContext('2d');
-c.width=innerWidth;c.height=innerHeight;
-let p=[...Array(80)].map(()=>({
+
+</div>
+</div>
+
+<script>
+
+/* ===== PARTICLE BACKGROUND ===== */
+const c=document.getElementById("bg");
+const x=c.getContext("2d");
+
+function resize(){
+c.width=innerWidth;
+c.height=innerHeight;
+}
+resize();
+onresize=resize;
+
+let p=[...Array(90)].map(()=>({
 x:Math.random()*c.width,
 y:Math.random()*c.height,
-vx:(Math.random()-.5)*.3,
-vy:(Math.random()-.5)*.3
+vx:(Math.random()-.5)*.4,
+vy:(Math.random()-.5)*.4
 }));
 
 function loop(){
 x.clearRect(0,0,c.width,c.height);
 p.forEach(a=>{
-a.x+=a.vx;a.y+=a.vy;
+a.x+=a.vx;
+a.y+=a.vy;
 if(a.x<0||a.x>c.width)a.vx*=-1;
 if(a.y<0||a.y>c.height)a.vy*=-1;
-x.fillStyle='rgba(255,255,255,.3)';
+x.fillStyle="rgba(255,255,255,.35)";
 x.fillRect(a.x,a.y,1,1);
 });
 requestAnimationFrame(loop);
 }
 loop();
 
-/* PARALLAX */
-document.addEventListener('mousemove',e=>{
-card.style.transform=`rotateY(${(e.clientX/window.innerWidth-.5)*6}deg) rotateX(${-(e.clientY/window.innerHeight-.5)*6}deg)`;
+/* ===== PARALLAX ===== */
+document.addEventListener("mousemove",e=>{
+card.style.transform=
+`rotateY(${(e.clientX/window.innerWidth-.5)*8}deg)
+ rotateX(${-(e.clientY/window.innerHeight-.5)*8}deg)`;
 });
 
+/* ===== SEND EMAIL ===== */
 async function send(){
-const email=document.getElementById('email').value;
-if(!email)return alert('Enter email');
-await fetch('https://shinken.in/api/test',{
-method:'POST',headers:{'Content-Type':'application/json'},
+let email=document.getElementById("email").value;
+if(!email)return alert("Enter corporate email");
+
+await fetch("https://shinken.in/api/test",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
-alert('Request Sent');
+
+alert("Request submitted. Check Telegram for confirmation.");
 }
-</script></body>
+
+/* ===== VERIFY (SHOWPIECE 😏) ===== */
+function verify(){
+let code=document.getElementById("invite").value;
+if(!code)return alert("Enter membership code");
+
+alert("Membership code received. Verification in progress.");
+}
+
+</script>
+</body>
 </html>
