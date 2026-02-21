@@ -1,127 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Shinken</title>
+<title>Shinken Email</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:system-ui;
-}
-
 body{
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#000428,#004e92);
+background:#0b1020;
+color:white;
+font-family:sans-serif;
+text-align:center;
+padding-top:80px;
 }
 
 .card{
-  width:90%;
-  max-width:400px;
-  padding:30px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(10px);
-  text-align:center;
-  color:white;
-  box-shadow:0 0 30px rgba(0,0,0,0.3);
-}
-
-h1{
-  font-size:28px;
-  margin-bottom:10px;
-}
-
-p{
-  opacity:0.8;
-  margin-bottom:20px;
+background:#121a40;
+padding:30px;
+border-radius:20px;
+width:300px;
+margin:auto;
 }
 
 input{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  outline:none;
-  margin-bottom:15px;
-  font-size:15px;
+padding:10px;
+width:90%;
+border-radius:10px;
+border:none;
+margin-top:10px;
 }
 
 button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  font-size:16px;
-  cursor:pointer;
-  color:white;
-  background:linear-gradient(90deg,#5f72ff,#9b59ff);
+padding:10px 20px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:linear-gradient(45deg,#6a7cff,#9c6bff);
+color:white;
+font-size:16px;
+cursor:pointer;
 }
 
-button:hover{
-  opacity:0.9;
-}
-
-#msg{
-  margin-top:15px;
-  font-size:14px;
-}
+#msg{margin-top:15px;color:#00ffa2;}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-  <h1>⚡ SHINKEN</h1>
-  <p>Future usernames loading soon...</p>
+<h2>📧 Join Shinken</h2>
 
-  <input id="email" placeholder="Enter your email" />
-  <button onclick="send()">Notify Me</button>
+<input id="email" placeholder="Enter email">
 
-  <div id="msg"></div>
+<br>
+<button onclick="send()">Submit</button>
+
+<div id="msg"></div>
 </div>
 
 <script>
-
 async function send(){
 
-  const email = document.getElementById("email").value.trim();
-  const msg = document.getElementById("msg");
+const email=document.getElementById("email").value;
 
-  if(!email){
-    msg.innerHTML="❌ Enter email first";
-    return;
-  }
+if(!email.includes("@")){
+document.getElementById("msg").innerText="❌ Invalid Email";
+return;
+}
 
-  msg.innerHTML="⏳ Sending...";
+const r=await fetch("https://shinken.in/api/email",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email})
+});
 
-  try{
-
-    const res = await fetch("https://shinken.in/api/test",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({email})
-    });
-
-    const text = await res.text();
-
-    if(res.ok){
-      msg.innerHTML="✅ Sent!";
-    }else{
-      msg.innerHTML="❌ Server error: "+text;
-    }
-
-  }catch(e){
-    msg.innerHTML="❌ Network error";
-  }
+document.getElementById("msg").innerText="✅ Sent!";
 }
 </script>
 
