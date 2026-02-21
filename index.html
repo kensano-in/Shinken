@@ -1,79 +1,183 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Shinken Email</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHINKEN — Private Digital Surface</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter, sans-serif;
+}
+
 body{
-background:#0b1020;
+background:#05060a;
 color:white;
-font-family:sans-serif;
-text-align:center;
-padding-top:80px;
+overflow-x:hidden;
 }
 
+/* ===== 3D BACKGROUND ===== */
+body::before{
+content:"";
+position:fixed;
+width:200%;
+height:200%;
+background:radial-gradient(circle at 20% 20%,#0f1b4d,transparent),
+radial-gradient(circle at 80% 70%,#4c0f5c,transparent);
+animation:rotate 25s linear infinite;
+z-index:-2;
+}
+@keyframes rotate{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
+
+/* ===== GLASS CARDS ===== */
 .card{
-background:#121a40;
-padding:30px;
+backdrop-filter:blur(20px);
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.15);
 border-radius:20px;
-width:300px;
-margin:auto;
+padding:35px;
+box-shadow:0 20px 60px rgba(0,0,0,0.6);
+margin:25px;
+transition:0.4s;
 }
 
+.card:hover{
+transform:translateY(-8px) scale(1.01);
+box-shadow:0 30px 80px rgba(0,0,0,0.9);
+}
+
+/* ===== HERO ===== */
+.hero{
+text-align:center;
+padding:90px 20px;
+}
+
+.hero h1{
+font-size:55px;
+font-weight:700;
+background:linear-gradient(90deg,#6df,#f6f);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+.hero p{
+margin-top:20px;
+opacity:.7;
+font-size:18px;
+}
+
+/* ===== EMAIL FORM ===== */
 input{
-padding:10px;
-width:90%;
-border-radius:10px;
+width:100%;
+padding:18px;
+border-radius:12px;
 border:none;
-margin-top:10px;
+outline:none;
+margin-top:20px;
+font-size:16px;
+background:#111;
+color:white;
 }
 
 button{
-padding:10px 20px;
+width:100%;
+padding:16px;
 margin-top:15px;
 border:none;
-border-radius:10px;
-background:linear-gradient(45deg,#6a7cff,#9c6bff);
+border-radius:12px;
+background:linear-gradient(90deg,#6df,#f6f);
 color:white;
-font-size:16px;
+font-size:17px;
+font-weight:600;
 cursor:pointer;
+transition:.3s;
+}
+button:hover{
+transform:scale(1.05);
 }
 
-#msg{margin-top:15px;color:#00ffa2;}
+/* ===== GRID ===== */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+padding:30px;
+}
+
+/* ===== FOOTER ===== */
+footer{
+text-align:center;
+padding:40px;
+opacity:.4;
+font-size:14px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="card">
-<h2>📧 Join Shinken</h2>
-
-<input id="email" placeholder="Enter email">
-
-<br>
-<button onclick="send()">Submit</button>
-
-<div id="msg"></div>
+<div class="hero">
+<h1>SHINKEN</h1>
+<p>Private digital surface · Controlled access · High-integrity systems</p>
 </div>
 
-<script>
-async function send(){
+<div class="grid">
 
+<div class="card">
+<h2>System Status</h2>
+<p>Noise floor suppressed.<br>
+Selective onboarding active.<br>
+Surface stabilizing for full launch.</p>
+</div>
+
+<div class="card">
+<h2>Launch Notification</h2>
+<p>Leave your real email. One notice only. No spam.</p>
+
+<form id="form">
+<input type="email" id="email" placeholder="your@email.com" required>
+<button>Request Access</button>
+</form>
+
+<p id="msg" style="margin-top:10px;opacity:.7"></p>
+</div>
+
+<div class="card">
+<h2>Operator Layer</h2>
+<p>
+Shinichiro — Language & Systems<br>
+Ken — Core Architecture<br><br>
+Structured work. Quiet surface. Real results.
+</p>
+</div>
+
+</div>
+
+<footer>
+© SHINKEN — Secure Surface · All rights reserved
+</footer>
+
+<script>
+document.getElementById("form").onsubmit=async e=>{
+e.preventDefault();
 const email=document.getElementById("email").value;
 
-if(!email.includes("@")){
-document.getElementById("msg").innerText="❌ Invalid Email";
-return;
-}
-
-const r=await fetch("https://shinken.in/api/email",{
+const r=await fetch("https://shinken.in/api/test",{
 method:"POST",
-headers:{"Content-Type":"application/json"},
+headers:{ "Content-Type":"application/json" },
 body:JSON.stringify({email})
 });
 
-document.getElementById("msg").innerText="✅ Sent!";
-}
+document.getElementById("msg").innerText=
+r.ok?"Request received":"Error — Try later";
+};
 </script>
 
 </body>
