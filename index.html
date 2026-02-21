@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SHINKEN</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
-<style>
+<title>SHINKEN</title>
 
-/* ===== PALETTE ===== */
+<style>
 :root{
---bg:#07080b;
---card:#111216;
---gold:#c4a96b;
---text:#e5e5e5;
---soft:#8a8c92;
+--bg:#07070a;
+--card:#0f1014;
+--gold:#c8ab6c;
+--text:#e7e7e7;
+--soft:#7d8087;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
+
 body{
 background:var(--bg);
 color:var(--text);
@@ -26,18 +24,17 @@ font-family:Inter;
 overflow:hidden;
 }
 
-/* ===== FILM GRAIN ===== */
+/* FILM GRAIN */
 body::after{
 content:"";
 position:fixed;
 inset:0;
 background:url("https://grainy-gradients.vercel.app/noise.svg");
-opacity:.06;
+opacity:.05;
 pointer-events:none;
-z-index:2;
 }
 
-/* ===== CINEMATIC INTRO ===== */
+/* INTRO */
 #intro{
 position:fixed;
 inset:0;
@@ -46,193 +43,147 @@ display:flex;
 align-items:center;
 justify-content:center;
 flex-direction:column;
-z-index:9999;
-animation:fadeout 1.4s ease forwards 5s;
+z-index:999;
+animation:fade 1s ease 4.5s forwards;
 }
 
-.intro-title{
+#intro h1{
 font-family:"Playfair Display";
-font-size:52px;
-letter-spacing:8px;
+letter-spacing:10px;
+font-size:50px;
 opacity:0;
-animation:rise 1.5s ease forwards;
+animation:rise 1.6s forwards;
 }
 
-.intro-sub{
+#intro p{
 margin-top:20px;
-letter-spacing:4px;
+letter-spacing:5px;
 color:var(--soft);
 opacity:0;
-animation:rise 1.5s ease forwards 1.5s;
-}
-
-.intro-credit{
-margin-top:50px;
-font-size:13px;
-color:var(--gold);
-opacity:0;
-animation:rise 1.5s ease forwards 3s;
+animation:rise 1.6s forwards 1.5s;
 }
 
 @keyframes rise{
-0%{transform:translateY(40px);opacity:0}
-100%{transform:translateY(0);opacity:1}
+from{opacity:0;transform:translateY(30px)}
+to{opacity:1;transform:translateY(0)}
 }
-@keyframes fadeout{
+@keyframes fade{
 to{opacity:0;visibility:hidden}
 }
 
-/* ===== SPOTLIGHT ===== */
-#spotlight{
-position:fixed;
-width:400px;
-height:400px;
-pointer-events:none;
-border-radius:50%;
-background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);
-mix-blend-mode:overlay;
-z-index:3;
-}
-
-/* ===== MAIN PANEL ===== */
-.wrapper{
+/* PANEL */
+.wrap{
 height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-perspective:1200px;
 }
 
 .panel{
 background:var(--card);
-padding:50px;
-border-radius:16px;
+padding:60px;
+border-radius:18px;
 width:360px;
 box-shadow:
-0 50px 100px rgba(0,0,0,.7),
-0 0 0 1px rgba(255,255,255,.03) inset;
-transition:.2s;
+0 40px 80px rgba(0,0,0,.7),
+0 0 0 1px rgba(255,255,255,.04) inset;
 }
 
-/* ===== CHROME LOGO ===== */
+/* LOGO */
 .logo{
 font-family:"Playfair Display";
-font-size:42px;
+font-size:44px;
 text-align:center;
 margin-bottom:30px;
-background:linear-gradient(180deg,#eee,#aaa,#eee);
+background:linear-gradient(#fff,#aaa,#fff);
 -webkit-background-clip:text;
 color:transparent;
-animation:spin 10s linear infinite;
-}
-@keyframes spin{
-from{transform:rotateY(0)}
-to{transform:rotateY(360deg)}
+letter-spacing:6px;
 }
 
-/* ===== INPUT ===== */
+/* INPUT */
 input{
 width:100%;
-padding:14px;
+padding:15px;
+background:#0a0b0f;
+border:1px solid #1c1d23;
 border-radius:10px;
-border:1px solid #1f2127;
-background:#0c0d11;
 color:white;
 margin-top:12px;
 }
 
-/* ===== BUTTON ===== */
+/* BUTTON */
 button{
 width:100%;
-padding:14px;
-margin-top:16px;
+padding:15px;
+margin-top:18px;
+background:var(--gold);
 border:none;
 border-radius:10px;
-background:var(--gold);
-color:black;
 font-weight:600;
 cursor:pointer;
-transition:.25s;
 }
-button:hover{opacity:.85}
 
+/* FOOT */
 .note{
-margin-top:15px;
+margin-top:20px;
 font-size:12px;
 color:var(--soft);
 text-align:center;
 }
 
-/* ===== INVITE CODE ANIMATION ===== */
-.code{
-margin-top:20px;
-letter-spacing:5px;
-text-align:center;
-font-size:20px;
-color:var(--gold);
-opacity:0;
-animation:code 3s forwards 2s;
+/* SPOTLIGHT */
+#light{
+position:fixed;
+width:500px;
+height:500px;
+border-radius:50%;
+background:radial-gradient(circle,rgba(255,255,255,.1),transparent 70%);
+pointer-events:none;
+mix-blend-mode:overlay;
 }
-@keyframes code{
-to{opacity:1;letter-spacing:10px}
-}
-
 </style>
 </head>
 
 <body>
 
 <div id="intro">
-<div class="intro-title">SHINKEN</div>
-<div class="intro-sub">PRIVATE ACCESS SYSTEM</div>
-<div class="intro-credit">Developed by NAHOYAMM</div>
+<h1>SHINKEN</h1>
+<p>PRIVATE ACCESS SYSTEM</p>
 </div>
 
-<div id="spotlight"></div>
+<div id="light"></div>
 
-<div class="wrapper">
-<div class="panel" id="panel">
+<div class="wrap">
+<div class="panel">
 
 <div class="logo">SHINKEN</div>
 
 <input id="email" placeholder="Corporate Email">
 <button onclick="send()">Request Invite</button>
 
-<div class="code">INVITE ONLY</div>
-
 <div class="note">
-One email lifetime · Temp mail blocked
+One verified email per lifetime · Temporary mail blocked
 </div>
 
 </div>
 </div>
 
 <script>
-
-/* ===== SPOTLIGHT FOLLOW ===== */
 document.addEventListener("mousemove",e=>{
-let s=document.getElementById("spotlight");
-s.style.left=e.clientX-200+"px";
-s.style.top=e.clientY-200+"px";
+let l=document.getElementById("light");
+l.style.left=e.clientX-250+"px";
+l.style.top=e.clientY-250+"px";
 });
 
-/* ===== PARALLAX ===== */
-document.addEventListener("mousemove",e=>{
-let x=(e.clientX/window.innerWidth-.5)*8;
-let y=(e.clientY/window.innerHeight-.5)*8;
-document.getElementById("panel")
-.style.transform=`rotateY(${x}deg) rotateX(${-y}deg)`;
-});
-
-/* ===== API ===== */
 async function send(){
 let email=document.getElementById("email").value;
 await fetch("https://shinken.in/api/test",{
 method:"POST",
-headers:{ "Content-Type":"application/json" },
+headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
-alert("Request submitted.");
+alert("Request received.");
 }
 </script>
 
