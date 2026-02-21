@@ -1,109 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shinken</title>
 
 <style>
 body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,#050b1f,#0c1a3b);
-    font-family:Segoe UI, sans-serif;
-    color:white;
+margin:0;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(135deg,#050b1f,#0c1a3b);
+font-family:sans-serif;
+color:white;
 }
 
 .card{
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(12px);
-    padding:40px;
-    border-radius:20px;
-    text-align:center;
-    width:320px;
-    box-shadow:0 0 40px rgba(0,0,0,0.5);
-}
-
-h1{
-    margin:0;
-    font-size:32px;
+background:rgba(255,255,255,0.08);
+padding:35px;
+border-radius:20px;
+text-align:center;
+width:320px;
 }
 
 input{
-    width:100%;
-    padding:12px;
-    margin-top:20px;
-    border-radius:10px;
-    border:none;
-    font-size:16px;
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-top:20px;
 }
 
 button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:none;
-    border-radius:10px;
-    font-size:16px;
-    background:linear-gradient(90deg,#7b8cff,#a770ff);
-    color:white;
-    cursor:pointer;
+width:100%;
+padding:12px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#7b8cff,#a770ff);
+color:white;
+font-size:16px;
+cursor:pointer;
 }
 
-button:hover{
-    opacity:0.9;
-}
-
-#msg{
-    margin-top:15px;
-    font-size:14px;
-}
+#msg{margin-top:10px}
 </style>
 </head>
+
 <body>
 
 <div class="card">
-    <h1>⚡ SHINKEN</h1>
-    <p>Future usernames loading soon…</p>
+<h2>⚡ SHINKEN</h2>
+<p>Future usernames loading soon…</p>
 
-    <input id="email" placeholder="Enter your email">
-    <button onclick="send()">Notify Me</button>
-
-    <div id="msg"></div>
+<input id="email" placeholder="Enter your email">
+<button onclick="send()">Notify Me</button>
+<div id="msg"></div>
 </div>
 
 <script>
 async function send(){
-    const email = document.getElementById("email").value;
-    const msg = document.getElementById("msg");
+let email=document.getElementById("email").value;
 
-    if(!email){
-        msg.innerText = "❌ Enter email first";
-        return;
-    }
+let res=await fetch("https://shinken-final.shinichiro-in.workers.dev",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email})
+});
 
-    msg.innerText = "Sending...";
-
-    try{
-        const res = await fetch(
-            "https://shinken-final.shinichiro-in.workers.dev",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({email})
-            }
-        );
-
-        msg.innerText = "✅ Done! Check Telegram";
-    }
-    catch(e){
-        msg.innerText = "❌ Failed to fetch";
-    }
+if(res.ok){
+msg.innerHTML="✅ Done! Check Telegram";
+}else{
+msg.innerHTML="❌ Failed";
+}
 }
 </script>
 
