@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shinken</title>
 
 <style>
@@ -18,18 +19,21 @@ color:white;
 
 .card{
 background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
 padding:35px;
 border-radius:20px;
 text-align:center;
 width:320px;
+box-shadow:0 0 40px rgba(0,0,0,.5);
 }
 
 input{
 width:100%;
 padding:12px;
+margin-top:20px;
 border-radius:10px;
 border:none;
-margin-top:20px;
+font-size:16px;
 }
 
 button{
@@ -38,44 +42,66 @@ padding:12px;
 margin-top:15px;
 border:none;
 border-radius:10px;
-background:linear-gradient(90deg,#7b8cff,#a770ff);
-color:white;
 font-size:16px;
+background:linear-gradient(90deg,#6b7cff,#a770ff);
+color:white;
 cursor:pointer;
 }
 
-#msg{margin-top:10px}
+#msg{
+margin-top:15px;
+font-size:14px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-<h2>⚡ SHINKEN</h2>
-<p>Future usernames loading soon…</p>
+<h1>⚡ SHINKEN</h1>
+<p>Future usernames loading soon...</p>
 
 <input id="email" placeholder="Enter your email">
 <button onclick="send()">Notify Me</button>
+
 <div id="msg"></div>
 </div>
 
 <script>
-async function send(){
-let email=document.getElementById("email").value;
 
-let res=await fetch("https://shinken-final.shinichiro-in.workers.dev",{
+async function send(){
+
+const email = document.getElementById("email").value;
+const msg = document.getElementById("msg");
+
+if(!email){
+msg.innerHTML="❌ Enter email first";
+return;
+}
+
+msg.innerHTML="⏳ Sending...";
+
+try{
+
+const res = await fetch(
+"https://shinken-final.shinichiro-in.workers.dev",
+{
 method:"POST",
-headers:{"Content-Type":"application/json"},
+headers:{
+"Content-Type":"application/json"
+},
 body:JSON.stringify({email})
 });
 
-if(res.ok){
-msg.innerHTML="✅ Done! Check Telegram";
-}else{
-msg.innerHTML="❌ Failed";
-}
-}
-</script>
+const text = await res.text();
+msg.innerHTML="✅ Sent";
 
+}catch(e){
+msg.innerHTML="❌ Failed to fetch";
+}
+
+}
+
+</script>
 </body>
 </html>
