@@ -233,9 +233,9 @@ s.innerText=(await r.text())==="OK"
 email.oninput=e=>{
 let v=e.target.value,score=0;
 if(v.includes("@"))score+=25;
-if(v.length>12)score+=15;
-if(v.includes(".com"))score+=20;
-if(v.includes("gmail")||v.includes("proton")||v.includes("outlook")||v.includes("hotmail")||v.includes("icloud.com")||v.includes("live.com")||v.includes("aol.com")||v.includes("yahoo.com")||v.includes("zoho.com")||v.includes("mail.com"))score+=25;
+if(v.length>12)score+=25;
+if(v.includes(".com")||v.includes(".me")||v.includes(".in"))score+=25;
+if(v.includes("gmail")||v.includes("proton")||v.includes("outlook")||v.includes("hotmail")||v.includes("icloud")||v.includes("live")||v.includes("aol")||v.includes("yahoo")||v.includes("zoho")||v.includes("mail")||v.includes("protonmail"))score+=25;
 scorefill.style.width=score+"%";
 scoretext.innerText="Trust score: "+score+"%";
 };
