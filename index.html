@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SHINKEN — Private Membership</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
 html,body{
@@ -13,10 +13,10 @@ margin:0;
 background:#02030a;
 font-family:Inter,sans-serif;
 color:#e8e5de;
-overflow:hidden;
+overflow-x:hidden;
 }
 
-/* INTRO */
+/* ===== CINEMATIC INTRO ===== */
 #intro{
 position:fixed;
 inset:0;
@@ -24,99 +24,122 @@ background:black;
 display:flex;
 align-items:center;
 justify-content:center;
-z-index:99;
-animation:fadeout 4s forwards 3s;
-padding:20px;
-overflow:hidden;
-}
-
-.chrome{
 font-family:"Playfair Display";
-font-size:clamp(40px,10vw,90px);
-letter-spacing:clamp(6px,2vw,14px);
-background:linear-gradient(90deg,#aaa,#fff,#aaa);
--webkit-background-clip:text;
-color:transparent;
-text-align:center;
-padding:0 10px;
-box-sizing:border-box;
+font-size:40px;
+letter-spacing:10px;
+color:#d8c8a0;
+z-index:9999;
+animation:introFade 3s forwards;
+}
+@keyframes introFade{
+0%{opacity:1}
+80%{opacity:1}
+100%{opacity:0;visibility:hidden}
 }
 
-@keyframes fadeout{
-to{opacity:0;visibility:hidden}
+/* ===== SPOTLIGHT CURSOR ===== */
+#spotlight{
+position:fixed;
+width:500px;
+height:500px;
+pointer-events:none;
+border-radius:50%;
+background:radial-gradient(circle,
+rgba(255,255,255,.12),
+rgba(0,0,0,0) 60%);
+mix-blend-mode:soft-light;
+z-index:1;
 }
 
-/* MAIN PAGE */
-canvas{position:fixed;inset:0;z-index:-1}
-
+/* ===== CARD ===== */
 .wrap{
-position:absolute;
-top:50%;left:50%;
-transform:translate(-50%,-50%);
-width:92%;
-max-width:470px;
+margin-top:90px;
+display:flex;
+justify-content:center;
 }
 
 .card{
+width:92%;
+max-width:470px;
 background:rgba(12,14,20,.65);
 backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,.08);
-border-radius:24px;
-padding:40px;
+border-radius:26px;
+padding:35px;
 box-shadow:0 40px 120px rgba(0,0,0,.9);
 text-align:center;
 }
 
+/* ===== LOGO FIX ===== */
 .logo{
 font-family:"Playfair Display";
-font-size:clamp(32px,8vw,46px);
-letter-spacing:10px;
+font-size:48px;
+letter-spacing:8px;
 margin-bottom:30px;
+padding:10px 0;
 background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
 -webkit-background-clip:text;
 color:transparent;
 }
 
+/* ===== INPUT ===== */
 input{
 width:100%;
 padding:14px;
-border-radius:12px;
+border-radius:14px;
 border:1px solid rgba(255,255,255,.1);
 background:rgba(255,255,255,.04);
 color:white;
-margin-bottom:14px;
+margin-bottom:12px;
+font-size:14px;
 }
 
+/* ===== BUTTON ===== */
 button{
 width:100%;
 padding:14px;
 border:none;
-border-radius:12px;
+border-radius:14px;
 background:linear-gradient(90deg,#e6d8b6,#bfa979);
 font-weight:600;
 cursor:pointer;
 margin-bottom:10px;
 }
 
+/* ===== SCORE BAR ===== */
+.scorebar{
+height:6px;
+background:#222;
+border-radius:10px;
+margin-bottom:10px;
+overflow:hidden;
+}
+#scorefill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#bfa979,#fff);
+transition:.4s;
+}
+
 .msg{
 font-size:13px;
-opacity:.7;
+opacity:.75;
 margin-top:10px;
 }
 
+/* ===== CONTACT ===== */
 .social{
 margin-top:25px;
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 }
-
 .social a{
 text-decoration:none;
 color:#ddd;
 border:1px solid rgba(255,255,255,.08);
 padding:10px;
-border-radius:10px;
+border-radius:12px;
 background:rgba(255,255,255,.03);
 }
 
@@ -130,11 +153,8 @@ opacity:.4;
 
 <body>
 
-<div id="intro">
-<div class="chrome">SHINKEN</div>
-</div>
-
-<canvas id="bg"></canvas>
+<div id="intro">SHINKEN</div>
+<div id="spotlight"></div>
 
 <div class="wrap">
 <div class="card">
@@ -142,6 +162,10 @@ opacity:.4;
 <div class="logo">SHINKEN</div>
 
 <input id="email" placeholder="Corporate Email">
+
+<div class="scorebar"><div id="scorefill"></div></div>
+<div id="scoretext" class="msg"></div>
+
 <button onclick="request()">Request Private Access</button>
 
 <input id="code" placeholder="Membership Code">
@@ -170,10 +194,21 @@ Private Membership System — Developed by Shinichiro & Ken
 <script>
 const s=document.getElementById("status");
 
+/* ===== EMAIL VALIDATION FIX ===== */
+function validEmail(email){
+const okDomains=["gmail.com","hotmail.com","outlook.com","proton.me","yahoo.com","icloud.com"];
+const regex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if(!regex.test(email)) return false;
+
+let domain=email.split("@")[1];
+return okDomains.includes(domain.toLowerCase());
+}
+
 async function request(){
-const email=document.getElementById("email").value;
-if(!email){
-s.innerText="Please enter a valid corporate email address.";
+const email=document.getElementById("email").value.trim();
+
+if(!validEmail(email)){
+s.innerText="Invalid email. Use Gmail / Proton / Hotmail etc.";
 return;
 }
 
@@ -183,12 +218,18 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
 
-s.innerText="Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
+s.innerText=
+"Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
 }
 
 async function verify(){
-const email=document.getElementById("email").value;
-const code=document.getElementById("code").value;
+const email=document.getElementById("email").value.trim();
+const code=document.getElementById("code").value.trim();
+
+if(!email||!code){
+s.innerText="Enter email and code.";
+return;
+}
 
 const r=await fetch("/api/verify",{
 method:"POST",
@@ -198,39 +239,35 @@ body:JSON.stringify({email,code})
 
 const t=await r.text();
 
-if(t==="OK"){
-s.innerText="Verification successful. Welcome to SHINKEN private network.";
-}else{
-s.innerText="Incorrect membership code.";
-}
+s.innerText = (t==="OK")
+? "Verification successful. Welcome to SHINKEN."
+: "Incorrect membership code.";
 }
 
-/* PARTICLES */
-const c=document.getElementById("bg");
-const x=c.getContext("2d");
-c.width=innerWidth;
-c.height=innerHeight;
+/* ===== AI SCORE ===== */
+document.getElementById("email").addEventListener("input",e=>{
+const v=e.target.value;
+let score=0;
+if(v.includes("@")) score+=30;
+if(v.length>10) score+=20;
+if(v.includes("gmail")||v.includes("proton")||v.includes("hotmail")) score+=30;
+if(v.endsWith(".com")) score+=20;
 
-let p=[...Array(70)].map(()=>({
-x:Math.random()*c.width,
-y:Math.random()*c.height,
-vx:(Math.random()-.5)*.3,
-vy:(Math.random()-.5)*.3
-}));
+document.getElementById("scorefill").style.width=score+"%";
 
-function loop(){
-x.clearRect(0,0,c.width,c.height);
-p.forEach(a=>{
-a.x+=a.vx;
-a.y+=a.vy;
-if(a.x<0||a.x>c.width)a.vx*=-1;
-if(a.y<0||a.y>c.height)a.vy*=-1;
-x.fillStyle="rgba(255,255,255,.2)";
-x.fillRect(a.x,a.y,1,1);
+let txt="Low trust";
+if(score>60) txt="Good email quality";
+if(score>80) txt="Premium candidate";
+
+document.getElementById("scoretext").innerText="AI Score: "+score+"% — "+txt;
 });
-requestAnimationFrame(loop);
-}
-loop();
+
+/* ===== SPOTLIGHT ===== */
+const spot=document.getElementById("spotlight");
+document.addEventListener("mousemove",e=>{
+spot.style.left=e.clientX-250+"px";
+spot.style.top=e.clientY-250+"px";
+});
 </script>
 
 </body>
