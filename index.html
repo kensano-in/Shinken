@@ -10,124 +10,117 @@
 <style>
 html,body{
 margin:0;
-background:#02030a;
+background:#03040a;
 font-family:Inter,sans-serif;
-color:#e8e5de;
+color:#ece8df;
 overflow-x:hidden;
 }
 
-/* ===== CINEMATIC INTRO ===== */
+/* ---------- INTRO ---------- */
 #intro{
-position:fixed;
-inset:0;
+position:fixed;inset:0;
 background:black;
 display:flex;
 align-items:center;
 justify-content:center;
-font-family:"Playfair Display";
-font-size:40px;
-letter-spacing:10px;
-color:#d8c8a0;
-z-index:9999;
-animation:introFade 3s forwards;
+z-index:999;
+animation:fadeout 4s forwards 3s;
 }
-@keyframes introFade{
-0%{opacity:1}
-80%{opacity:1}
-100%{opacity:0;visibility:hidden}
+.chrome{
+font-family:"Playfair Display";
+font-size:clamp(42px,10vw,90px);
+letter-spacing:clamp(6px,2vw,14px);
+background:linear-gradient(90deg,#999,#fff,#999);
+-webkit-background-clip:text;
+color:transparent;
+}
+@keyframes fadeout{to{opacity:0;visibility:hidden}}
+
+/* ---------- FILM GRAIN ---------- */
+body::after{
+content:"";
+position:fixed;inset:0;
+background:url("https://grainy-gradients.vercel.app/noise.svg");
+opacity:.05;
+pointer-events:none;
 }
 
-/* ===== SPOTLIGHT CURSOR ===== */
+/* ---------- SPOTLIGHT ---------- */
 #spotlight{
 position:fixed;
-width:500px;
-height:500px;
-pointer-events:none;
+width:500px;height:500px;
 border-radius:50%;
+pointer-events:none;
 background:radial-gradient(circle,
-rgba(255,255,255,.12),
+rgba(255,255,255,.15),
 rgba(0,0,0,0) 60%);
 mix-blend-mode:soft-light;
 z-index:1;
 }
 
-/* ===== CARD ===== */
+/* ---------- CARD ---------- */
 .wrap{
-margin-top:90px;
 display:flex;
 justify-content:center;
+margin-top:80px;
 }
-
 .card{
 width:92%;
-max-width:470px;
-background:rgba(12,14,20,.65);
-backdrop-filter:blur(20px);
+max-width:480px;
+background:rgba(20,22,30,.6);
+backdrop-filter:blur(30px);
 border:1px solid rgba(255,255,255,.08);
-border-radius:26px;
-padding:35px;
-box-shadow:0 40px 120px rgba(0,0,0,.9);
+border-radius:28px;
+padding:38px;
+box-shadow:0 60px 150px rgba(0,0,0,.9);
 text-align:center;
+transition:.2s;
 }
 
-/* ===== LOGO FIX ===== */
+/* ---------- LOGO ---------- */
 .logo{
 font-family:"Playfair Display";
-font-size:48px;
-letter-spacing:8px;
+font-size:clamp(34px,8vw,46px);
+letter-spacing:10px;
 margin-bottom:30px;
-padding:10px 0;
 background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
 -webkit-background-clip:text;
 color:transparent;
 }
 
-/* ===== INPUT ===== */
+/* ---------- INPUT ---------- */
 input{
 width:100%;
-padding:14px;
+padding:15px;
 border-radius:14px;
 border:1px solid rgba(255,255,255,.1);
-background:rgba(255,255,255,.04);
+background:rgba(255,255,255,.05);
 color:white;
 margin-bottom:12px;
-font-size:14px;
 }
 
-/* ===== BUTTON ===== */
+/* ---------- BUTTON ---------- */
 button{
 width:100%;
-padding:14px;
+padding:15px;
 border:none;
 border-radius:14px;
 background:linear-gradient(90deg,#e6d8b6,#bfa979);
 font-weight:600;
 cursor:pointer;
-margin-bottom:10px;
+margin-bottom:12px;
+transition:.2s;
 }
+button:hover{transform:translateY(-2px)}
 
-/* ===== SCORE BAR ===== */
+/* ---------- SCORE ---------- */
 .scorebar{
-height:6px;
-background:#222;
-border-radius:10px;
-margin-bottom:10px;
-overflow:hidden;
-}
-#scorefill{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#bfa979,#fff);
-transition:.4s;
-}
+height:6px;background:#222;border-radius:10px;margin-bottom:10px;overflow:hidden}
+#scorefill{height:100%;width:0;background:linear-gradient(90deg,#bfa979,#fff);transition:.4s}
 
-.msg{
-font-size:13px;
-opacity:.75;
-margin-top:10px;
-}
+.msg{font-size:13px;opacity:.75;margin-top:10px;line-height:1.5}
 
-/* ===== CONTACT ===== */
+/* ---------- SOCIAL ---------- */
 .social{
 margin-top:25px;
 display:grid;
@@ -138,26 +131,26 @@ gap:10px;
 text-decoration:none;
 color:#ddd;
 border:1px solid rgba(255,255,255,.08);
-padding:10px;
-border-radius:12px;
+padding:12px;
+border-radius:14px;
 background:rgba(255,255,255,.03);
+transition:.25s;
 }
+.social a:hover{background:rgba(255,255,255,.07)}
 
-.footer{
-margin-top:20px;
-font-size:11px;
-opacity:.4;
-}
+.footer{margin-top:20px;font-size:11px;opacity:.45}
+canvas{position:fixed;inset:0;z-index:-1}
 </style>
 </head>
 
 <body>
 
-<div id="intro">SHINKEN</div>
+<div id="intro"><div class="chrome">SHINKEN</div></div>
 <div id="spotlight"></div>
+<canvas id="bg"></canvas>
 
 <div class="wrap">
-<div class="card">
+<div class="card" id="card">
 
 <div class="logo">SHINKEN</div>
 
@@ -184,9 +177,7 @@ opacity:.4;
 <a href="#">Discord</a>
 </div>
 
-<div class="footer">
-Private Membership System — Developed by Shinichiro & Ken
-</div>
+<div class="footer">Private Membership System — Shinichiro & Ken</div>
 
 </div>
 </div>
@@ -194,23 +185,20 @@ Private Membership System — Developed by Shinichiro & Ken
 <script>
 const s=document.getElementById("status");
 
-/* ===== EMAIL VALIDATION FIX ===== */
-function validEmail(email){
-const okDomains=["gmail.com","hotmail.com","outlook.com","proton.me","yahoo.com","icloud.com"];
-const regex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-if(!regex.test(email)) return false;
-
-let domain=email.split("@")[1];
-return okDomains.includes(domain.toLowerCase());
+/* ---------- EMAIL VALIDATION ---------- */
+function validEmail(e){
+return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
 
+/* ---------- REQUEST ---------- */
 async function request(){
 const email=document.getElementById("email").value.trim();
-
 if(!validEmail(email)){
-s.innerText="Invalid email. Use Gmail / Proton / Hotmail etc.";
+s.innerText="Enter valid email.";
 return;
 }
+
+typeText("Evaluating membership profile…", s);
 
 await fetch("/api/request",{
 method:"POST",
@@ -218,57 +206,72 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
 
-s.innerText=
-"Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
+s.innerText="Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
 }
 
+/* ---------- VERIFY ---------- */
 async function verify(){
 const email=document.getElementById("email").value.trim();
 const code=document.getElementById("code").value.trim();
 
-if(!email||!code){
-s.innerText="Enter email and code.";
-return;
-}
-
-const r=await fetch("/api/verify",{
-method:"POST",
+const r=await fetch("/api/verify",{method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email,code})
-});
+body:JSON.stringify({email,code})});
 
 const t=await r.text();
-
-s.innerText = (t==="OK")
-? "Verification successful. Welcome to SHINKEN."
-: "Incorrect membership code.";
+s.innerText=(t==="OK")?"Welcome to SHINKEN.":"Incorrect membership code.";
 }
 
-/* ===== AI SCORE ===== */
-document.getElementById("email").addEventListener("input",e=>{
-const v=e.target.value;
-let score=0;
-if(v.includes("@")) score+=30;
-if(v.length>10) score+=20;
-if(v.includes("gmail")||v.includes("proton")||v.includes("hotmail")) score+=30;
-if(v.endsWith(".com")) score+=20;
+/* ---------- AI SCORE ---------- */
+email.oninput=e=>{
+let v=e.target.value,score=0;
+if(v.includes("@"))score+=30;
+if(v.length>10)score+=20;
+if(v.includes("gmail")||v.includes("proton"))score+=30;
+if(v.endsWith(".com"))score+=20;
+scorefill.style.width=score+"%";
+scoretext.innerText="AI Score: "+score+"%";
+};
 
-document.getElementById("scorefill").style.width=score+"%";
-
-let txt="Low trust";
-if(score>60) txt="Good email quality";
-if(score>80) txt="Premium candidate";
-
-document.getElementById("scoretext").innerText="AI Score: "+score+"% — "+txt;
-});
-
-/* ===== SPOTLIGHT ===== */
-const spot=document.getElementById("spotlight");
+/* ---------- SPOTLIGHT ---------- */
 document.addEventListener("mousemove",e=>{
-spot.style.left=e.clientX-250+"px";
-spot.style.top=e.clientY-250+"px";
+spotlight.style.left=e.clientX-250+"px";
+spotlight.style.top=e.clientY-250+"px";
 });
-</script>
 
+/* ---------- CARD TILT ---------- */
+card.onmousemove=e=>{
+card.style.transform=`rotateY(${(e.offsetX-200)/20}deg)
+rotateX(${-(e.offsetY-200)/20}deg)`;
+};
+card.onmouseleave=()=>card.style.transform="";
+
+/* ---------- TYPE TEXT ---------- */
+function typeText(txt,el){
+el.innerText="";
+let i=0;
+let t=setInterval(()=>{
+el.innerText+=txt[i];
+i++; if(i>=txt.length)clearInterval(t);
+},20);
+}
+
+/* ---------- PARTICLES ---------- */
+const c=bg,x=c.getContext("2d");
+c.width=innerWidth;c.height=innerHeight;
+let p=[...Array(90)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}));
+function loop(){
+x.clearRect(0,0,c.width,c.height);
+p.forEach(a=>{
+a.x+=a.vx;a.y+=a.vy;
+if(a.x<0||a.x>c.width)a.vx*=-1;
+if(a.y<0||a.y>c.height)a.vy*=-1;
+x.fillStyle="rgba(255,255,255,.18)";
+x.fillRect(a.x,a.y,1.2,1.2);
+});
+requestAnimationFrame(loop);
+}
+loop();
+</script>
 </body>
 </html>
