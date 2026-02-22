@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SHINKEN — Private Membership</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
 html,body{
@@ -16,135 +16,149 @@ color:#e8e5de;
 overflow:hidden;
 }
 
-/* ===== CINEMATIC INTRO ===== */
+/* ---------------- NETFLIX INTRO ---------------- */
 #intro{
 position:fixed;
 inset:0;
-background:#02030a;
+background:black;
 display:flex;
 align-items:center;
 justify-content:center;
-flex-direction:column;
-z-index:999;
-animation:fadeOut 2s ease forwards;
-animation-delay:2.5s;
+z-index:9999;
+animation:introFade 4.5s forwards;
 }
-#intro h1{
+
+.chrome{
 font-family:"Playfair Display";
-font-size:52px;
+font-size:70px;
 letter-spacing:14px;
-margin:0;
-background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
+background:linear-gradient(
+90deg,
+#999 0%,
+#fff 20%,
+#bbb 40%,
+#fff 60%,
+#999 100%
+);
 -webkit-background-clip:text;
 color:transparent;
-animation:zoom 2.5s ease;
-}
-#intro p{
-opacity:.6;
-margin-top:10px;
-letter-spacing:3px;
-}
-@keyframes zoom{
-0%{transform:scale(.6);opacity:0}
-100%{transform:scale(1);opacity:1}
-}
-@keyframes fadeOut{
-to{opacity:0;pointer-events:none}
+filter:drop-shadow(0 0 10px rgba(255,255,255,.3));
+animation:shine 2.5s infinite linear;
 }
 
-/* PARTICLES */
+@keyframes shine{
+0%{background-position:-500px}
+100%{background-position:500px}
+}
+
+@keyframes introFade{
+0%,70%{opacity:1}
+100%{opacity:0;visibility:hidden}
+}
+
+/* ---------------- BG ---------------- */
 canvas{position:fixed;inset:0;z-index:-1}
 
-/* CARD */
+/* ---------------- CARD ---------------- */
 .wrap{
 position:absolute;
 top:50%;left:50%;
 transform:translate(-50%,-50%);
 width:92%;
-max-width:500px;
+max-width:470px;
 }
 
 .card{
-background:rgba(12,14,20,.7);
-backdrop-filter:blur(25px);
+background:rgba(12,14,20,.65);
+backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,.08);
-border-radius:26px;
-padding:50px;
-box-shadow:0 50px 150px rgba(0,0,0,.9);
+border-radius:24px;
+padding:40px;
+box-shadow:0 40px 120px rgba(0,0,0,.9);
 text-align:center;
 }
 
 .logo{
 font-family:"Playfair Display";
-font-size:50px;
-letter-spacing:12px;
-margin-bottom:35px;
+font-size:46px;
+letter-spacing:10px;
+margin-bottom:30px;
 background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
 -webkit-background-clip:text;
 color:transparent;
 }
 
-/* BIGGER INPUTS */
 input{
 width:100%;
-padding:18px;
-border-radius:14px;
+padding:14px;
+border-radius:12px;
 border:1px solid rgba(255,255,255,.1);
-background:rgba(255,255,255,.05);
+background:rgba(255,255,255,.04);
 color:white;
-margin-bottom:18px;
+margin-bottom:14px;
 font-size:15px;
 }
 
 button{
 width:100%;
-padding:16px;
+padding:14px;
 border:none;
-border-radius:14px;
+border-radius:12px;
 background:linear-gradient(90deg,#e6d8b6,#bfa979);
 font-weight:600;
 cursor:pointer;
-margin-bottom:15px;
-font-size:15px;
+margin-bottom:10px;
 }
 
 .msg{
-font-size:14px;
-opacity:.8;
-min-height:18px;
+font-size:13px;
+opacity:.7;
 margin-top:10px;
+line-height:1.5;
 }
 
-/* CONTACT BOXES BACK */
 .social{
-margin-top:35px;
+margin-top:25px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
+gap:10px;
 }
+
 .social a{
 text-decoration:none;
 color:#ddd;
 border:1px solid rgba(255,255,255,.08);
-padding:14px;
+padding:12px;
 border-radius:14px;
 background:rgba(255,255,255,.03);
-font-size:14px;
+transition:.25s;
+}
+
+.social a:hover{
+background:rgba(255,255,255,.08);
 }
 
 .footer{
 margin-top:20px;
-font-size:12px;
+font-size:11px;
 opacity:.4;
+}
+
+/* MOBILE FIX for N cut */
+@media(max-width:420px){
+.logo{
+font-size:38px;
+letter-spacing:6px;
+}
 }
 </style>
 </head>
 
 <body>
 
+<!-- CINEMATIC INTRO -->
 <div id="intro">
-<h1>SHINKEN</h1>
-<p>PRIVATE MEMBERSHIP NETWORK</p>
+<div class="chrome">SHINKEN</div>
 </div>
 
 <canvas id="bg"></canvas>
@@ -183,62 +197,64 @@ Private Membership System — Developed by Shinichiro & Ken
 <script>
 const s=document.getElementById("status");
 
-const allowed=[
-"gmail.com","yahoo.com","hotmail.com","outlook.com",
-"proton.me","protonmail.com","icloud.com","aol.com"
-];
+async function request(){
+const email=document.getElementById("email").value.trim();
 
-function valid(email){
-email=email.trim().toLowerCase();
-const r=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-if(!r.test(email)) return "Invalid email format.";
-const d=email.split("@")[1];
-if(!allowed.includes(d)) return "Only verified mail providers allowed.";
-return "OK";
+const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if(!emailRegex.test(email)){
+s.innerText="Invalid email format.";
+return;
 }
 
-async function request(){
-const email=document.getElementById("email").value;
-const v=valid(email);
-if(v!=="OK"){s.innerText=v;return;}
-
-await fetch("/api/request",{method:"POST",
+await fetch("/api/request",{
+method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
 
-s.innerText="Request submitted. Check email for OTP.";
+s.innerText=
+"Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
 }
 
 async function verify(){
-const email=document.getElementById("email").value;
-const code=document.getElementById("code").value;
-if(!code){s.innerText="Enter membership code.";return;}
+const email=document.getElementById("email").value.trim();
+const code=document.getElementById("code").value.trim();
 
-const r=await fetch("/api/verify",{method:"POST",
+if(!email || !code){
+s.innerText="Enter email and membership code.";
+return;
+}
+
+const r=await fetch("/api/verify",{
+method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email,code})
 });
+
 const t=await r.text();
-s.innerText=(t==="OK")?
-"Welcome to SHINKEN private network.":
-"Incorrect membership code.";
+s.innerText=t==="OK"
+?"Verification successful. Welcome to SHINKEN private network."
+:"Incorrect membership code.";
 }
 
 /* PARTICLES */
 const c=document.getElementById("bg");
 const x=c.getContext("2d");
-c.width=innerWidth;c.height=innerHeight;
+c.width=innerWidth;
+c.height=innerHeight;
+
 let p=[...Array(70)].map(()=>({
 x:Math.random()*c.width,
 y:Math.random()*c.height,
 vx:(Math.random()-.5)*.3,
 vy:(Math.random()-.5)*.3
 }));
+
 function loop(){
 x.clearRect(0,0,c.width,c.height);
 p.forEach(a=>{
-a.x+=a.vx;a.y+=a.vy;
+a.x+=a.vx;
+a.y+=a.vy;
 if(a.x<0||a.x>c.width)a.vx*=-1;
 if(a.y<0||a.y>c.height)a.vy*=-1;
 x.fillStyle="rgba(255,255,255,.2)";
