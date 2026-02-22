@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SHINKEN — Private Membership</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -10,13 +10,13 @@
 <style>
 html,body{
 margin:0;
-background:#03040a;
+background:#04050c;
 font-family:Inter,sans-serif;
 color:#ece8df;
 overflow-x:hidden;
 }
 
-/* ---------- INTRO ---------- */
+/* CINEMATIC INTRO */
 #intro{
 position:fixed;inset:0;
 background:black;
@@ -24,19 +24,18 @@ display:flex;
 align-items:center;
 justify-content:center;
 z-index:999;
-animation:fadeout 4s forwards 3s;
+animation:fade 4s forwards 3s;
 }
 .chrome{
 font-family:"Playfair Display";
-font-size:clamp(42px,10vw,90px);
-letter-spacing:clamp(6px,2vw,14px);
+font-size:clamp(40px,9vw,80px);
+letter-spacing:clamp(6px,2vw,12px);
 background:linear-gradient(90deg,#999,#fff,#999);
 -webkit-background-clip:text;
 color:transparent;
 }
-@keyframes fadeout{to{opacity:0;visibility:hidden}}
+@keyframes fade{to{opacity:0;visibility:hidden}}
 
-/* ---------- FILM GRAIN ---------- */
 body::after{
 content:"";
 position:fixed;inset:0;
@@ -45,20 +44,18 @@ opacity:.05;
 pointer-events:none;
 }
 
-/* ---------- SPOTLIGHT ---------- */
+/* SPOTLIGHT */
 #spotlight{
 position:fixed;
 width:500px;height:500px;
 border-radius:50%;
 pointer-events:none;
-background:radial-gradient(circle,
-rgba(255,255,255,.15),
-rgba(0,0,0,0) 60%);
+background:radial-gradient(circle,rgba(255,255,255,.15),transparent 60%);
 mix-blend-mode:soft-light;
 z-index:1;
 }
 
-/* ---------- CARD ---------- */
+/* CARD */
 .wrap{
 display:flex;
 justify-content:center;
@@ -67,7 +64,7 @@ margin-top:80px;
 .card{
 width:92%;
 max-width:480px;
-background:rgba(20,22,30,.6);
+background:rgba(20,22,30,.65);
 backdrop-filter:blur(30px);
 border:1px solid rgba(255,255,255,.08);
 border-radius:28px;
@@ -77,18 +74,17 @@ text-align:center;
 transition:.2s;
 }
 
-/* ---------- LOGO ---------- */
 .logo{
 font-family:"Playfair Display";
-font-size:clamp(34px,8vw,46px);
+font-size:clamp(32px,8vw,46px);
 letter-spacing:10px;
-margin-bottom:30px;
+margin-bottom:28px;
 background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
 -webkit-background-clip:text;
 color:transparent;
 }
 
-/* ---------- INPUT ---------- */
+/* INPUT */
 input{
 width:100%;
 padding:15px;
@@ -97,9 +93,15 @@ border:1px solid rgba(255,255,255,.1);
 background:rgba(255,255,255,.05);
 color:white;
 margin-bottom:12px;
+outline:none;
+transition:.2s;
+}
+input:focus{
+border-color:#d8c8a0;
+box-shadow:0 0 0 2px rgba(216,200,160,.2);
 }
 
-/* ---------- BUTTON ---------- */
+/* BUTTON */
 button{
 width:100%;
 padding:15px;
@@ -112,15 +114,16 @@ margin-bottom:12px;
 transition:.2s;
 }
 button:hover{transform:translateY(-2px)}
+button:disabled{opacity:.5}
 
-/* ---------- SCORE ---------- */
+/* SCORE */
 .scorebar{
 height:6px;background:#222;border-radius:10px;margin-bottom:10px;overflow:hidden}
 #scorefill{height:100%;width:0;background:linear-gradient(90deg,#bfa979,#fff);transition:.4s}
 
-.msg{font-size:13px;opacity:.75;margin-top:10px;line-height:1.5}
+.msg{font-size:13px;opacity:.75;margin-top:10px;line-height:1.6}
 
-/* ---------- SOCIAL ---------- */
+/* SOCIAL */
 .social{
 margin-top:25px;
 display:grid;
@@ -155,11 +158,10 @@ canvas{position:fixed;inset:0;z-index:-1}
 <div class="logo">SHINKEN</div>
 
 <input id="email" placeholder="Corporate Email">
-
 <div class="scorebar"><div id="scorefill"></div></div>
 <div id="scoretext" class="msg"></div>
 
-<button onclick="request()">Request Private Access</button>
+<button id="reqbtn" onclick="request()">Request Private Access</button>
 
 <input id="code" placeholder="Membership Code">
 <button onclick="verify()">Verify Membership Code</button>
@@ -178,27 +180,30 @@ canvas{position:fixed;inset:0;z-index:-1}
 </div>
 
 <div class="footer">Private Membership System — Shinichiro & Ken</div>
-
 </div>
 </div>
 
 <script>
-const s=document.getElementById("status");
+const s=status,btn=reqbtn;
 
-/* ---------- EMAIL VALIDATION ---------- */
+/* EMAIL VALIDATION */
 function validEmail(e){
 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
 
-/* ---------- REQUEST ---------- */
+/* REQUEST */
 async function request(){
-const email=document.getElementById("email").value.trim();
+const email=document.getElementById("email").value.trim().toLowerCase();
+
 if(!validEmail(email)){
-s.innerText="Enter valid email.";
+s.innerText="Invalid email format.";
 return;
 }
 
-typeText("Evaluating membership profile…", s);
+btn.disabled=true;
+typeText("Analyzing identity…",s);
+
+await new Promise(r=>setTimeout(r,1200));
 
 await fetch("/api/request",{
 method:"POST",
@@ -207,9 +212,10 @@ body:JSON.stringify({email})
 });
 
 s.innerText="Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
+btn.disabled=false;
 }
 
-/* ---------- VERIFY ---------- */
+/* VERIFY */
 async function verify(){
 const email=document.getElementById("email").value.trim();
 const code=document.getElementById("code").value.trim();
@@ -218,35 +224,36 @@ const r=await fetch("/api/verify",{method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email,code})});
 
-const t=await r.text();
-s.innerText=(t==="OK")?"Welcome to SHINKEN.":"Incorrect membership code.";
+s.innerText=(await r.text())==="OK"
+?"Verification successful."
+:"Incorrect membership code.";
 }
 
-/* ---------- AI SCORE ---------- */
+/* AI SCORE */
 email.oninput=e=>{
 let v=e.target.value,score=0;
-if(v.includes("@"))score+=30;
-if(v.length>10)score+=20;
-if(v.includes("gmail")||v.includes("proton"))score+=30;
-if(v.endsWith(".com"))score+=20;
+if(v.includes("@"))score+=25;
+if(v.length>12)score+=15;
+if(v.includes(".com"))score+=20;
+if(v.includes("gmail")||v.includes("proton")||v.includes("outlook"))score+=25;
 scorefill.style.width=score+"%";
-scoretext.innerText="AI Score: "+score+"%";
+scoretext.innerText="Trust score: "+score+"%";
 };
 
-/* ---------- SPOTLIGHT ---------- */
+/* SPOTLIGHT */
 document.addEventListener("mousemove",e=>{
 spotlight.style.left=e.clientX-250+"px";
 spotlight.style.top=e.clientY-250+"px";
 });
 
-/* ---------- CARD TILT ---------- */
+/* CARD TILT */
 card.onmousemove=e=>{
 card.style.transform=`rotateY(${(e.offsetX-200)/20}deg)
 rotateX(${-(e.offsetY-200)/20}deg)`;
 };
 card.onmouseleave=()=>card.style.transform="";
 
-/* ---------- TYPE TEXT ---------- */
+/* TYPE TEXT */
 function typeText(txt,el){
 el.innerText="";
 let i=0;
@@ -256,17 +263,17 @@ i++; if(i>=txt.length)clearInterval(t);
 },20);
 }
 
-/* ---------- PARTICLES ---------- */
+/* PARTICLES */
 const c=bg,x=c.getContext("2d");
 c.width=innerWidth;c.height=innerHeight;
-let p=[...Array(90)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}));
+let p=[...Array(80)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}));
 function loop(){
 x.clearRect(0,0,c.width,c.height);
 p.forEach(a=>{
 a.x+=a.vx;a.y+=a.vy;
 if(a.x<0||a.x>c.width)a.vx*=-1;
 if(a.y<0||a.y>c.height)a.vy*=-1;
-x.fillStyle="rgba(255,255,255,.18)";
+x.fillStyle="rgba(255,255,255,.15)";
 x.fillRect(a.x,a.y,1.2,1.2);
 });
 requestAnimationFrame(loop);
