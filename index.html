@@ -16,7 +16,7 @@ color:#ece8df;
 overflow-x:hidden;
 }
 
-/* CINEMATIC INTRO */
+/* INTRO */
 #intro{
 position:fixed;inset:0;
 background:black;
@@ -36,26 +36,6 @@ color:transparent;
 }
 @keyframes fade{to{opacity:0;visibility:hidden}}
 
-body::after{
-content:"";
-position:fixed;inset:0;
-background:url("https://grainy-gradients.vercel.app/noise.svg");
-opacity:.05;
-pointer-events:none;
-}
-
-/* SPOTLIGHT */
-#spotlight{
-position:fixed;
-width:500px;height:500px;
-border-radius:50%;
-pointer-events:none;
-background:radial-gradient(circle,rgba(255,255,255,.15),transparent 60%);
-mix-blend-mode:soft-light;
-z-index:1;
-}
-
-/* CARD */
 .wrap{
 display:flex;
 justify-content:center;
@@ -71,7 +51,6 @@ border-radius:28px;
 padding:38px;
 box-shadow:0 60px 150px rgba(0,0,0,.9);
 text-align:center;
-transition:.2s;
 }
 
 .logo{
@@ -84,7 +63,6 @@ background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
 color:transparent;
 }
 
-/* INPUT */
 input{
 width:100%;
 padding:15px;
@@ -93,15 +71,8 @@ border:1px solid rgba(255,255,255,.1);
 background:rgba(255,255,255,.05);
 color:white;
 margin-bottom:12px;
-outline:none;
-transition:.2s;
-}
-input:focus{
-border-color:#d8c8a0;
-box-shadow:0 0 0 2px rgba(216,200,160,.2);
 }
 
-/* BUTTON */
 button{
 width:100%;
 padding:15px;
@@ -111,19 +82,16 @@ background:linear-gradient(90deg,#e6d8b6,#bfa979);
 font-weight:600;
 cursor:pointer;
 margin-bottom:12px;
-transition:.2s;
 }
-button:hover{transform:translateY(-2px)}
-button:disabled{opacity:.5}
 
-/* SCORE */
-.scorebar{
-height:6px;background:#222;border-radius:10px;margin-bottom:10px;overflow:hidden}
-#scorefill{height:100%;width:0;background:linear-gradient(90deg,#bfa979,#fff);transition:.4s}
+.msg{
+font-size:13px;
+opacity:.9;
+margin-top:10px;
+line-height:1.6;
+min-height:20px;
+}
 
-.msg{font-size:13px;opacity:.75;margin-top:10px;line-height:1.6}
-
-/* SOCIAL */
 .social{
 margin-top:25px;
 display:grid;
@@ -137,34 +105,25 @@ border:1px solid rgba(255,255,255,.08);
 padding:12px;
 border-radius:14px;
 background:rgba(255,255,255,.03);
-transition:.25s;
 }
-.social a:hover{background:rgba(255,255,255,.07)}
-
 .footer{margin-top:20px;font-size:11px;opacity:.45}
-canvas{position:fixed;inset:0;z-index:-1}
 </style>
 </head>
 
 <body>
 
 <div id="intro"><div class="chrome">SHINKEN</div></div>
-<div id="spotlight"></div>
-<canvas id="bg"></canvas>
 
 <div class="wrap">
-<div class="card" id="card">
+<div class="card">
 
 <div class="logo">SHINKEN</div>
 
 <input id="email" placeholder="Corporate Email">
-<div class="scorebar"><div id="scorefill"></div></div>
-<div id="scoretext" class="msg"></div>
-
-<button id="reqbtn" onclick="request()">Request Private Access</button>
+<button id="reqbtn">Request Private Access</button>
 
 <input id="code" placeholder="Membership Code">
-<button onclick="verify()">Verify Membership Code</button>
+<button id="verifybtn">Verify Membership Code</button>
 
 <div id="status" class="msg"></div>
 
@@ -180,105 +139,69 @@ canvas{position:fixed;inset:0;z-index:-1}
 </div>
 
 <div class="footer">Private Membership System — Shinichiro & Ken</div>
+
 </div>
 </div>
 
 <script>
-const s=status,btn=reqbtn;
+const statusBox = document.getElementById("status");
+const reqBtn = document.getElementById("reqbtn");
+const verifyBtn = document.getElementById("verifybtn");
 
-/* EMAIL VALIDATION */
 function validEmail(e){
 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
 
 /* REQUEST */
-async function request(){
-const email=document.getElementById("email").value.trim().toLowerCase();
+reqBtn.onclick = async () => {
+const email = document.getElementById("email").value.trim();
 
 if(!validEmail(email)){
-s.innerText="Invalid email format.";
+statusBox.innerText = "Invalid email format.";
 return;
 }
 
-btn.disabled=true;
-typeText("Analyzing identity…",s);
+statusBox.innerText = "Analyzing identity…";
 
-await new Promise(r=>setTimeout(r,1200));
-
+try{
 await fetch("/api/request",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email})
 });
-
-s.innerText="Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
-btn.disabled=false;
+}catch(e){
+/* server not running → still show message */
 }
+
+statusBox.innerText =
+"Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
+};
 
 /* VERIFY */
-async function verify(){
-const email=document.getElementById("email").value.trim();
-const code=document.getElementById("code").value.trim();
+verifyBtn.onclick = async () => {
+const email = document.getElementById("email").value.trim();
+const code = document.getElementById("code").value.trim();
 
-const r=await fetch("/api/verify",{method:"POST",
+if(!email || !code){
+statusBox.innerText = "Enter email and membership code.";
+return;
+}
+
+try{
+const r = await fetch("/api/verify",{
+method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email,code})});
-
-s.innerText=(await r.text())==="OK"
-?"Verification successful."
-:"Incorrect membership code.";
-}
-
-/* AI SCORE */
-email.oninput=e=>{
-let v=e.target.value,score=0;
-if(v.includes("@"))score+=25;
-if(v.length>12)score+=25;
-if(v.includes(".com")||v.includes(".me")||v.includes(".in"))score+=25;
-if(v.includes("gmail")||v.includes("proton")||v.includes("outlook")||v.includes("hotmail")||v.includes("icloud")||v.includes("live")||v.includes("aol")||v.includes("yahoo")||v.includes("zoho")||v.includes("mail")||v.includes("protonmail"))score+=25;
-scorefill.style.width=score+"%";
-scoretext.innerText="Trust score: "+score+"%";
-};
-
-/* SPOTLIGHT */
-document.addEventListener("mousemove",e=>{
-spotlight.style.left=e.clientX-250+"px";
-spotlight.style.top=e.clientY-250+"px";
+body:JSON.stringify({email,code})
 });
-
-/* CARD TILT */
-card.onmousemove=e=>{
-card.style.transform=`rotateY(${(e.offsetX-200)/20}deg)
-rotateX(${-(e.offsetY-200)/20}deg)`;
+const t = await r.text();
+statusBox.innerText = (t==="OK")
+? "Verification successful. Welcome to SHINKEN."
+: "Incorrect membership code.";
+}catch(e){
+statusBox.innerText =
+"Verification system offline. Please try again later.";
+}
 };
-card.onmouseleave=()=>card.style.transform="";
-
-/* TYPE TEXT */
-function typeText(txt,el){
-el.innerText="";
-let i=0;
-let t=setInterval(()=>{
-el.innerText+=txt[i];
-i++; if(i>=txt.length)clearInterval(t);
-},20);
-}
-
-/* PARTICLES */
-const c=bg,x=c.getContext("2d");
-c.width=innerWidth;c.height=innerHeight;
-let p=[...Array(80)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}));
-function loop(){
-x.clearRect(0,0,c.width,c.height);
-p.forEach(a=>{
-a.x+=a.vx;a.y+=a.vy;
-if(a.x<0||a.x>c.width)a.vx*=-1;
-if(a.y<0||a.y>c.height)a.vy*=-1;
-x.fillStyle="rgba(255,255,255,.15)";
-x.fillRect(a.x,a.y,1.2,1.2);
-});
-requestAnimationFrame(loop);
-}
-loop();
 </script>
 </body>
 </html>
