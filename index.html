@@ -10,7 +10,7 @@
 <style>
 html,body{
 margin:0;
-background:#05060d;
+background:#04050c;
 font-family:Inter,sans-serif;
 color:#ece8df;
 overflow-x:hidden;
@@ -24,35 +24,38 @@ display:flex;
 align-items:center;
 justify-content:center;
 z-index:999;
-animation:introFade 4s forwards 3s;
+animation:fade 4s forwards 3s;
 }
-.logoChrome{
+.chrome{
 font-family:"Playfair Display";
-font-size:clamp(42px,9vw,90px);
-letter-spacing:12px;
-background:linear-gradient(90deg,#888,#fff,#888);
+font-size:clamp(40px,9vw,80px);
+letter-spacing:clamp(6px,2vw,12px);
+background:linear-gradient(90deg,#999,#fff,#999);
 -webkit-background-clip:text;
 color:transparent;
-animation:shine 4s infinite linear;
 }
-@keyframes shine{
-0%{background-position:-200px}
-100%{background-position:200px}
+@keyframes fade{to{opacity:0;visibility:hidden}}
+
+body::after{
+content:"";
+position:fixed;inset:0;
+background:url("https://grainy-gradients.vercel.app/noise.svg");
+opacity:.05;
+pointer-events:none;
 }
-@keyframes introFade{to{opacity:0;visibility:hidden}}
 
 /* SPOTLIGHT */
-#spot{
+#spotlight{
 position:fixed;
 width:500px;height:500px;
 border-radius:50%;
-background:radial-gradient(circle,rgba(255,255,255,.12),transparent 60%);
 pointer-events:none;
+background:radial-gradient(circle,rgba(255,255,255,.15),transparent 60%);
 mix-blend-mode:soft-light;
 z-index:1;
 }
 
-/* GLASS CARD */
+/* CARD */
 .wrap{
 display:flex;
 justify-content:center;
@@ -61,11 +64,11 @@ margin-top:80px;
 .card{
 width:92%;
 max-width:480px;
-background:rgba(20,22,30,.7);
+background:rgba(20,22,30,.65);
 backdrop-filter:blur(30px);
 border:1px solid rgba(255,255,255,.08);
 border-radius:28px;
-padding:40px;
+padding:38px;
 box-shadow:0 60px 150px rgba(0,0,0,.9);
 text-align:center;
 transition:.2s;
@@ -75,12 +78,13 @@ transition:.2s;
 font-family:"Playfair Display";
 font-size:clamp(32px,8vw,46px);
 letter-spacing:10px;
-margin-bottom:30px;
+margin-bottom:28px;
 background:linear-gradient(90deg,#fff,#d8c8a0,#fff);
 -webkit-background-clip:text;
 color:transparent;
 }
 
+/* INPUT */
 input{
 width:100%;
 padding:15px;
@@ -97,6 +101,7 @@ border-color:#d8c8a0;
 box-shadow:0 0 0 2px rgba(216,200,160,.2);
 }
 
+/* BUTTON */
 button{
 width:100%;
 padding:15px;
@@ -111,9 +116,10 @@ transition:.2s;
 button:hover{transform:translateY(-2px)}
 button:disabled{opacity:.5}
 
-/* AI SCORE */
-.scorebar{height:6px;background:#222;border-radius:10px;margin-bottom:8px;overflow:hidden}
-#scorefill{height:100%;width:0;background:linear-gradient(90deg,#bfa979,#fff);transition:.3s}
+/* SCORE */
+.scorebar{
+height:6px;background:#222;border-radius:10px;margin-bottom:10px;overflow:hidden}
+#scorefill{height:100%;width:0;background:linear-gradient(90deg,#bfa979,#fff);transition:.4s}
 
 .msg{font-size:13px;opacity:.75;margin-top:10px;line-height:1.6}
 
@@ -133,18 +139,17 @@ border-radius:14px;
 background:rgba(255,255,255,.03);
 transition:.25s;
 }
-.social a:hover{background:rgba(255,255,255,.08)}
+.social a:hover{background:rgba(255,255,255,.07)}
 
 .footer{margin-top:20px;font-size:11px;opacity:.45}
-
 canvas{position:fixed;inset:0;z-index:-1}
 </style>
 </head>
 
 <body>
 
-<div id="intro"><div class="logoChrome">SHINKEN</div></div>
-<div id="spot"></div>
+<div id="intro"><div class="chrome">SHINKEN</div></div>
+<div id="spotlight"></div>
 <canvas id="bg"></canvas>
 
 <div class="wrap">
@@ -175,37 +180,20 @@ canvas{position:fixed;inset:0;z-index:-1}
 </div>
 
 <div class="footer">Private Membership System — Shinichiro & Ken</div>
-
 </div>
 </div>
 
 <script>
 const s=status,btn=reqbtn;
 
-/* EMAIL VALID */
+/* EMAIL VALIDATION */
 function validEmail(e){
 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
 
-/* AI SCORE */
-email.oninput=e=>{
-let v=e.target.value.toLowerCase();
-let score=0;
-
-if(v.includes("@"))score+=20;
-if(v.length>10)score+=10;
-if(v.endsWith(".com")||v.endsWith(".org"))score+=15;
-if(v.includes("gmail")||v.includes("outlook")||v.includes("proton"))score+=20;
-if(v.match(/[0-9]{4,}/))score-=15;
-
-score=Math.max(0,Math.min(100,score));
-scorefill.style.width=score+"%";
-scoretext.innerText="AI Trust Score: "+score+"%";
-};
-
 /* REQUEST */
 async function request(){
-let email=document.getElementById("email").value.trim();
+const email=document.getElementById("email").value.trim().toLowerCase();
 
 if(!validEmail(email)){
 s.innerText="Invalid email format.";
@@ -217,15 +205,11 @@ typeText("Analyzing identity…",s);
 
 await new Promise(r=>setTimeout(r,1200));
 
-try{
-await fetch("/api/request",{method:"POST",
+await fetch("/api/request",{
+method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email})});
-}catch{
-s.innerText="Server unreachable.";
-btn.disabled=false;
-return;
-}
+body:JSON.stringify({email})
+});
 
 s.innerText="Request submitted. Our review team will process your application within 72 hours. Access is currently limited, so if you do not receive a confirmation email immediately, please remain patient while we expand capacity.";
 btn.disabled=false;
@@ -233,21 +217,41 @@ btn.disabled=false;
 
 /* VERIFY */
 async function verify(){
-let email=document.getElementById("email").value.trim();
-let code=document.getElementById("code").value.trim();
+const email=document.getElementById("email").value.trim();
+const code=document.getElementById("code").value.trim();
+
 const r=await fetch("/api/verify",{method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email,code})});
+
 s.innerText=(await r.text())==="OK"
 ?"Verification successful."
 :"Incorrect membership code.";
 }
 
+/* AI SCORE */
+email.oninput=e=>{
+let v=e.target.value,score=0;
+if(v.includes("@"))score+=25;
+if(v.length>12)score+=15;
+if(v.includes(".com"))score+=20;
+if(v.includes("gmail")||v.includes("proton")||v.includes("outlook"))score+=25;
+scorefill.style.width=score+"%";
+scoretext.innerText="Trust score: "+score+"%";
+};
+
 /* SPOTLIGHT */
 document.addEventListener("mousemove",e=>{
-spot.style.left=e.clientX-250+"px";
-spot.style.top=e.clientY-250+"px";
+spotlight.style.left=e.clientX-250+"px";
+spotlight.style.top=e.clientY-250+"px";
 });
+
+/* CARD TILT */
+card.onmousemove=e=>{
+card.style.transform=`rotateY(${(e.offsetX-200)/20}deg)
+rotateX(${-(e.offsetY-200)/20}deg)`;
+};
+card.onmouseleave=()=>card.style.transform="";
 
 /* TYPE TEXT */
 function typeText(txt,el){
@@ -262,7 +266,7 @@ i++; if(i>=txt.length)clearInterval(t);
 /* PARTICLES */
 const c=bg,x=c.getContext("2d");
 c.width=innerWidth;c.height=innerHeight;
-let p=[...Array(90)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}));
+let p=[...Array(80)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}));
 function loop(){
 x.clearRect(0,0,c.width,c.height);
 p.forEach(a=>{
