@@ -66,7 +66,7 @@ export default function Home() {
   )
 }
 
-const styles: any = {
+const styles = {
   container: {
     height: '100vh',
     width: '100%',
