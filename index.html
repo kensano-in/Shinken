@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ShinChat — Coming Soon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+
+<style>
+  /* ─── RESET & BASE ──────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:         #0A0A0A;
+    --surface:    rgba(255,255,255,0.032);
+    --border:     rgba(255,255,255,0.07);
+    --red:        #FF4D4F;
+    --red-dim:    rgba(255,77,79,0.18);
+    --red-glow:   rgba(255,77,79,0.35);
+    --crimson:    #C0392B;
+    --text-hi:    #F5F0EE;
+    --text-mid:   rgba(245,240,238,0.55);
+    --text-lo:    rgba(245,240,238,0.28);
+    --font-head:  'Syne', sans-serif;
+    --font-mono:  'DM Mono', monospace;
+    --font-body:  'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-hi);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ─── CUSTOM CURSOR ─────────────────────────────────────────────── */
+  #cursor-dot {
+    position: fixed; top: 0; left: 0;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red);
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.08s ease, opacity 0.2s;
+    box-shadow: 0 0 12px 4px var(--red-glow);
+  }
+  #cursor-ring {
+    position: fixed; top: 0; left: 0;
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid rgba(255,77,79,0.4);
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.2s, height 0.2s, border-color 0.2s;
+  }
+  body:has(a:hover) #cursor-ring,
+  body:has(button:hover) #cursor-ring {
+    width: 48px; height: 48px;
+    border-color: var(--red);
+  }
+
+  /* ─── CANVAS ────────────────────────────────────────────────────── */
+  #bg-canvas {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
+  }
+
+  /* ─── GRID OVERLAY ──────────────────────────────────────────────── */
+  .grid-overlay {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,77,79,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,77,79,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: grid-pulse 8s ease-in-out infinite;
+  }
+  @keyframes grid-pulse {
+    0%,100% { opacity: 0.4; }
+    50%      { opacity: 1;   }
+  }
+
+  /* ─── RADIAL ORB ────────────────────────────────────────────────── */
+  .orb {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(700px, 90vw); height: min(700px, 90vw);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,77,79,0.07) 0%, rgba(192,57,43,0.04) 40%, transparent 70%);
+    filter: blur(40px);
+    z-index: 1; pointer-events: none;
+    animation: orb-breathe 6s ease-in-out infinite;
+  }
+  @keyframes orb-breathe {
+    0%,100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.7; }
+    50%      { transform: translate(-50%,-50%) scale(1.15); opacity: 1;  }
+  }
+
+  /* ─── LAYOUT ────────────────────────────────────────────────────── */
+  .page {
+    position: relative; z-index: 10;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center;
+  }
+
+  /* ─── NAV ───────────────────────────────────────────────────────── */
+  nav {
+    width: 100%; max-width: 1100px;
+    padding: 36px 40px 0;
+    display: flex; align-items: center; justify-content: space-between;
+    animation: fade-down 1s ease both;
+  }
+  .logo {
+    font-family: var(--font-head);
+    font-weight: 800; font-size: 1.05rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-hi);
+  }
+  .logo span { color: var(--red); }
+  .nav-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    border: 1px solid var(--border);
+    padding: 5px 12px; border-radius: 100px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* ─── HERO ──────────────────────────────────────────────────────── */
+  .hero {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    gap: 0;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem; font-weight: 400;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fade-up 0.8s 0.4s ease forwards;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: ''; display: block;
+    width: 30px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red));
+  }
+  .eyebrow::after { background: linear-gradient(90deg, var(--red), transparent); }
+
+  .hero-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(3rem, 9vw, 7.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--text-hi);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fade-up 1s 0.6s ease forwards;
+  }
+  .hero-title .accent { color: var(--red); position: relative; }
+  .hero-title .accent::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--red), var(--crimson), transparent);
+    border-radius: 2px;
+  }
+
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 300; line-height: 1.6;
+    color: var(--text-mid);
+    max-width: 520px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fade-up 0.9s 0.85s ease forwards;
+  }
+
+  .hero-micro {
+    font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fade-up 0.9s 1.1s ease forwards;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-micro .dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: var(--red); opacity: 0.6;
+  }
+
+  /* ─── COUNTDOWN ─────────────────────────────────────────────────── */
+  .countdown-wrap {
+    display: flex; gap: clamp(12px, 3vw, 28px);
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fade-up 1s 1.3s ease forwards;
+  }
+  .cd-block {
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: clamp(14px, 2.5vw, 22px) clamp(18px, 3vw, 32px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    position: relative; overflow: hidden;
+    min-width: clamp(64px, 12vw, 96px);
+    transition: border-color 0.3s;
+  }
+  .cd-block::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,77,79,0.06), transparent 60%);
+    pointer-events: none;
+  }
+  .cd-block:hover { border-color: rgba(255,77,79,0.3); }
+  .cd-num {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: var(--text-hi);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    transition: transform 0.15s ease;
+  }
+  .cd-num.tick { transform: translateY(-4px); }
+  .cd-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    margin-top: 6px;
+  }
+  .cd-sep {
+    font-family: var(--font-head); font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--red); opacity: 0.4;
+    align-self: center; margin-top: -6px;
+    animation: blink 1s step-start infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ─── NOTIFY ────────────────────────────────────────────────────── */
+  .notify-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+    width: 100%; max-width: 440px;
+    opacity: 0;
+    animation: fade-up 1s 1.55s ease forwards;
+    margin-bottom: 32px;
+  }
+  .input-group {
+    display: flex; gap: 8px; width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 6px 6px 20px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .input-group:focus-within {
+    border-color: rgba(255,77,79,0.5);
+    box-shadow: 0 0 0 3px rgba(255,77,79,0.08), 0 0 24px rgba(255,77,79,0.12);
+  }
+  .notify-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-family: var(--font-body); font-size: 0.875rem; font-weight: 300;
+    color: var(--text-hi);
+  }
+  .notify-input::placeholder { color: var(--text-lo); }
+  .notify-btn {
+    background: var(--red);
+    color: #fff; border: none; cursor: pointer;
+    font-family: var(--font-head); font-weight: 600;
+    font-size: 0.8rem; letter-spacing: 0.06em;
+    padding: 10px 24px; border-radius: 100px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s;
+    white-space: nowrap;
+    position: relative; overflow: hidden;
+  }
+  .notify-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 20px rgba(255,77,79,0.5), 0 4px 16px rgba(255,77,79,0.25);
+  }
+  .notify-btn:active { transform: scale(0.98); }
+  .notify-btn.success {
+    background: #1a6644;
+    box-shadow: 0 0 20px rgba(26,102,68,0.4);
+  }
+  .notify-btn .btn-text { transition: opacity 0.2s; }
+  .notify-btn .btn-check {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .notify-btn.success .btn-text { opacity: 0; }
+  .notify-btn.success .btn-check { opacity: 1; }
+
+  .status-line {
+    font-family: var(--font-mono);
+    font-size: 0.68rem; letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red);
+    display: flex; align-items: center; gap: 8px;
+    transition: opacity 0.5s;
+  }
+  .status-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--red);
+    animation: pulse-dot 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse-dot {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,77,79,0.6); }
+    50%      { box-shadow: 0 0 0 6px rgba(255,77,79,0); }
+  }
+
+  /* ─── DIVIDER ───────────────────────────────────────────────────── */
+  .section-divider {
+    width: 100%; max-width: 1100px; padding: 0 40px;
+    opacity: 0; animation: fade-up 1s 1.8s ease forwards;
+  }
+  .section-divider hr {
+    border: none; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+  }
+
+  /* ─── CONTACT ───────────────────────────────────────────────────── */
+  .contact {
+    width: 100%; max-width: 1100px;
+    padding: 60px 40px 80px;
+    display: flex; flex-direction: column; align-items: center; gap: 36px;
+    opacity: 0; animation: fade-up 1s 2s ease forwards;
+  }
+  .contact-title {
+    font-family: var(--font-mono);
+    font-size: 0.68rem; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--text-lo);
+    text-align: center;
+  }
+  .contact-grid {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+  }
+  .contact-pill {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    text-decoration: none;
+    color: var(--text-mid);
+    font-family: var(--font-body); font-size: 0.82rem; font-weight: 300;
+    transition: border-color 0.25s, color 0.25s, box-shadow 0.25s, transform 0.2s;
+  }
+  .contact-pill:hover {
+    border-color: rgba(255,77,79,0.4);
+    color: var(--text-hi);
+    box-shadow: 0 0 16px rgba(255,77,79,0.1);
+    transform: translateY(-2px);
+  }
+  .contact-pill svg {
+    width: 14px; height: 14px;
+    color: var(--red); flex-shrink: 0;
+  }
+
+  /* ─── FOOTER ────────────────────────────────────────────────────── */
+  footer {
+    width: 100%; max-width: 1100px;
+    padding: 20px 40px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px;
+    border-top: 1px solid var(--border);
+    opacity: 0; animation: fade-up 1s 2.2s ease forwards;
+  }
+  footer span {
+    font-family: var(--font-mono);
+    font-size: 0.62rem; letter-spacing: 0.12em;
+    color: var(--text-lo);
+  }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a {
+    font-family: var(--font-mono);
+    font-size: 0.62rem; letter-spacing: 0.12em;
+    color: var(--text-lo); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--text-mid); }
+
+  /* ─── KEYFRAMES ─────────────────────────────────────────────────── */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+  @keyframes fade-down {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0);     }
+  }
+
+  /* ─── RESPONSIVE ────────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    nav { padding: 24px 20px 0; }
+    .hero { padding: 60px 20px 40px; }
+    .countdown-wrap { gap: 8px; }
+    .cd-sep { display: none; }
+    .contact { padding: 40px 20px 60px; }
+    footer { padding: 16px 20px 24px; flex-direction: column; align-items: center; text-align: center; }
+    .section-divider { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<canvas id="bg-canvas"></canvas>
+<div class="grid-overlay"></div>
+<div class="orb"></div>
+
+<div class="page">
+
+  <nav>
+    <div class="logo">Shin<span>Chat</span></div>
+    <div class="nav-badge">under shinken.in</div>
+  </nav>
+
+  <section class="hero">
+
+    <div class="eyebrow">System Online</div>
+
+    <h1 class="hero-title">
+      ShinChat<br/>is <span class="accent">Coming.</span>
+    </h1>
+
+    <p class="hero-sub">
+      A new era of conversation is about to begin.
+    </p>
+
+    <p class="hero-micro">
+      <span>Fast</span>
+      <span class="dot"></span>
+      <span>Private</span>
+      <span class="dot"></span>
+      <span>Alive</span>
+    </p>
+
+    <div class="countdown-wrap" aria-label="Countdown to launch">
+      <div class="cd-block">
+        <div class="cd-num" id="cd-days">--</div>
+        <div class="cd-label">Days</div>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-hours">--</div>
+        <div class="cd-label">Hours</div>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-mins">--</div>
+        <div class="cd-label">Minutes</div>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-secs">--</div>
+        <div class="cd-label">Seconds</div>
+      </div>
+    </div>
+
+    <div class="notify-wrap">
+      <div class="input-group">
+        <input
+          class="notify-input"
+          id="notify-input"
+          type="email"
+          placeholder="your@email.com"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="notify-btn" id="notify-btn" aria-label="Notify me">
+          <span class="btn-text">Notify Me</span>
+          <span class="btn-check">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+      <div class="status-line">
+        <div class="status-dot"></div>
+        <span id="status-text">System initializing…</span>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="section-divider"><hr/></div>
+
+  <section class="contact">
+    <div class="contact-title">Connect With Us</div>
+    <div class="contact-grid">
+
+      <a href="mailto:admin@kensano.in" class="contact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="3"/>
+          <polyline points="2,4 12,13 22,4"/>
+        </svg>
+        admin@kensano.in
+      </a>
+
+      <a href="https://instagram.com/shinichiro.2" target="_blank" rel="noopener" class="contact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <circle cx="12" cy="12" r="4.5"/>
+          <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+        </svg>
+        @shinichiro.2
+      </a>
+
+      <a href="https://t.me/Shinichirofr" target="_blank" rel="noopener" class="contact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2.5L2.5 9.75l6.25 2.5L21.5 2.5z"/>
+          <path d="M8.75 12.25L11.5 21.5l3.25-5"/>
+          <path d="M8.75 12.25l12.75-9.75"/>
+        </svg>
+        @Shinichirofr
+      </a>
+
+      <a href="https://x.com/Shinichirofr" target="_blank" rel="noopener" class="contact-pill">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M13.94 10.54 20.56 3h-1.57l-5.73 6.47L8.4 3H3l6.95 9.86L3 21h1.57l6.08-6.87L15.6 21H21l-7.06-10.46zm-2.15 2.43-.7-1L5.15 4.2h2.4l4.52 6.43.7 1 5.88 8.37h-2.4l-4.56-6.47-.9-.01z"/>
+        </svg>
+        @Shinichirofr
+      </a>
+
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Shinken. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* ── CURSOR ─────────────────────────────────────────────────────── */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = -100, my = -100, rx = -100, ry = -100;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  rx += (mx - rx) * 0.14;
+  ry += (my - ry) * 0.14;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+
+/* ── PARTICLES ──────────────────────────────────────────────────── */
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init = false) {
+    this.x  = Math.random() * W;
+    this.y  = init ? Math.random() * H : H + 20;
+    this.r  = Math.random() * 1.4 + 0.3;
+    this.vy = -(Math.random() * 0.3 + 0.08);
+    this.vx = (Math.random() - 0.5) * 0.12;
+    this.alpha = Math.random() * 0.35 + 0.05;
+    this.life = 0;
+    this.maxLife = Math.random() * 600 + 300;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.y < -10 || this.life > this.maxLife) this.reset();
+  }
+  draw() {
+    const fade = Math.min(1, this.life / 80) * Math.min(1, (this.maxLife - this.life) / 80);
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,90,92,${this.alpha * fade})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 90; i++) particles.push(new Particle());
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+/* ── COUNTDOWN ──────────────────────────────────────────────────── */
+const LAUNCH = new Date('2026-09-01T00:00:00'); // ← change this
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function tick(id, val) {
+  const el = document.getElementById(id);
+  const s  = pad(val);
+  if (el.textContent !== s) {
+    el.classList.add('tick');
+    setTimeout(() => el.classList.remove('tick'), 200);
+    el.textContent = s;
+  }
+}
+
+function updateCountdown() {
+  const diff = LAUNCH - Date.now();
+  if (diff <= 0) {
+    ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => document.getElementById(id).textContent = '00');
+    return;
+  }
+  tick('cd-days',  Math.floor(diff / 86400000));
+  tick('cd-hours', Math.floor((diff % 86400000) / 3600000));
+  tick('cd-mins',  Math.floor((diff % 3600000)  / 60000));
+  tick('cd-secs',  Math.floor((diff % 60000)    / 1000));
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ── STATUS CYCLE ───────────────────────────────────────────────── */
+const statuses = [
+  'System initializing…',
+  'Loading core modules...',
+  'Establishing secure channels...',
+  'Preparing real-time engine...',
+  'Calibrating encryption layer...',
+  'Syncing distributed nodes...',
+  'Almost ready...'
+];
+let si = 0;
+const statusEl = document.getElementById('status-text');
+
+setInterval(() => {
+  statusEl.style.opacity = '0';
+  setTimeout(() => {
+    si = (si + 1) % statuses.length;
+    statusEl.textContent = statuses[si];
+    statusEl.style.opacity = '1';
+  }, 400);
+}, 3200);
+
+/* ── NOTIFY ME ──────────────────────────────────────────────────── */
+const btn   = document.getElementById('notify-btn');
+const input = document.getElementById('notify-input');
+
+btn.addEventListener('click', () => {
+  const email = input.value.trim();
+  if (!email || !email.includes('@')) {
+    input.focus();
+    const ig = input.parentElement;
+    ig.style.borderColor = 'rgba(255,77,79,0.7)';
+    ig.style.boxShadow   = '0 0 0 3px rgba(255,77,79,0.15)';
+    setTimeout(() => { ig.style.borderColor = ''; ig.style.boxShadow = ''; }, 1000);
+    return;
+  }
+  btn.classList.add('success');
+  input.value = '';
+  input.placeholder = "You're on the list.";
+  statusEl.textContent = 'Access request logged.';
+  setTimeout(() => {
+    btn.classList.remove('success');
+    input.placeholder = 'your@email.com';
+  }, 4000);
+});
+
+input.addEventListener('keydown', e => { if (e.key === 'Enter') btn.click(); });
+</script>
+</body>
+</html>
