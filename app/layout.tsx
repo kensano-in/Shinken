@@ -1,6 +1,15 @@
 import './globals.css'
 
-export default function RootLayout({ children }) {
+export const metadata = {
+  title: 'ShinChat',
+  description: 'Blackhole System Initializing...'
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
       <body>{children}</body>
