@@ -10,7 +10,10 @@
 
 ## Overview
 
-ShinChat is a real-time communication platform built under the **Shinken** ecosystem. This repository hosts the production landing page — a fully interactive, feature-rich coming-soon hub.
+ShinChat is a real-time communication platform built under the **Shinken** ecosystem. This repository now includes two production-ready static experiences:
+
+1. `index.html` → premium coming-soon + ecosystem landing.
+2. `app.html` → full interactive chat hub demo (auth, dashboard, AI, games, profile, notifications).
 
 ---
 
@@ -30,6 +33,12 @@ ShinChat is a real-time communication platform built under the **Shinken** ecosy
 | 📱 **Fully Responsive** | Mobile-first design with overlay navigation |
 | ♿ **Accessible** | Semantic HTML, ARIA labels, focus management |
 | 🔍 **SEO-ready** | OG tags, meta descriptions, canonical URLs |
+| 🧭 **Skip Navigation** | Keyboard-first "Skip to messages" accessibility path |
+| 📈 **Ops Dashboard Panel** | Live user metrics (messages, AI calls, games) + API data cards |
+| 🌐 **Public API Integrations** | Advice, Cat Fact, and Quotes integrations inspired by `public-apis` |
+| 🛎️ **Notification Drawer** | Persistent activity center backed by localStorage |
+| 🎮 **Command Extensions** | `/game ttt`, `/ai ...`, and `/api` command flows in chat |
+| 🧠 **Reduced-Motion Mode** | Honors `prefers-reduced-motion`, disables heavy motion/cursor |
 
 ---
 
@@ -37,7 +46,8 @@ ShinChat is a real-time communication platform built under the **Shinken** ecosy
 
 ```
 shinken/
-├── index.html           # Main HTML — semantic, accessible, SEO-complete
+├── index.html           # Main landing page
+├── app.html             # Full interactive ShinChat web app
 ├── css/
 │   ├── design-system.css  # Tokens, reset, base utilities, cursor, animations
 │   └── sections.css       # Section-level styles: hero, chat, stats, games
@@ -46,8 +56,11 @@ shinken/
 │   ├── particles.js      # Canvas particle system (class-based)
 │   ├── chat.js           # Chat preview animation module
 │   ├── notify.js         # Toast notification module
-│   └── utils.js          # Shared helpers (debounce, lerp, store, etc.)
-├── CNAME                 # GitHub Pages custom domain
+│   ├── utils.js          # Shared helpers (debounce, lerp, store, etc.)
+│   ├── app.js            # ShinChat application controller
+│   ├── db.js             # LocalStorage data layer
+│   ├── ai.js             # AI orchestration + fallback/rate limit
+│   └── integrations.js   # Public API integrations module
 └── README.md
 ```
 
@@ -65,7 +78,7 @@ python -m http.server 8080
 npx http-server . -p 8080
 
 # Option 3: VS Code Live Server extension
-# Right-click index.html → "Open with Live Server"
+# Right-click app.html (or index.html) → "Open with Live Server"
 ```
 
 > **Important:** JS modules (`type="module"`) require a server — opening `index.html` directly in the browser will fail due to CORS restrictions on ES module imports.

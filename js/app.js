@@ -24,6 +24,7 @@ const clearSession = () => {
 // ── DOM helpers ───────────────────────────────────────────────
 const $ = id => document.getElementById(id);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html) e.innerHTML = html; return e; };
+const userPrefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ── Toast ─────────────────────────────────────────────────────
 const toast = (() => {
@@ -44,6 +45,7 @@ const toast = (() => {
 
 // ── Custom Cursor ─────────────────────────────────────────────
 (() => {
+  if (userPrefersReducedMotion) return;
   const dot = $('cursor-dot'), ring = $('cursor-ring');
   let mx = -200, my = -200, rx = -200, ry = -200;
   document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
@@ -58,6 +60,7 @@ const toast = (() => {
 
 // ── Particle Canvas ───────────────────────────────────────────
 (() => {
+  if (userPrefersReducedMotion) return;
   const canvas = $('bg-canvas');
   const ctx = canvas.getContext('2d');
   let W, H, particles = [];
@@ -121,6 +124,7 @@ const formatTime = iso => {
 let currentChatId = null;
 let currentGame   = null;
 let typingTimer   = null;
+const MAX_NOTIFICATIONS = 20;
 
 // ══════════════════════════════════════════════════════════════
 //  AUTH
@@ -479,6 +483,7 @@ const renderTTTCard = (container, game, gameId) => {
         // Update stats if game finished
         if (updated.status === 'finished') {
           DB.updateUserStat(session._id, 'games');
+          setupDashboard();
         }
 
         // Re-render card in place
@@ -551,6 +556,7 @@ const startGame = chatId => {
   DB.sendMessage({ chatId, senderId: '__system__', text: `${session.username} started Tic-Tac-Toe! 🎮`, type: 'game', gameId: game._id });
 
   DB.updateUserStat(session._id, 'games');
+  setupDashboard();
   currentGame = game;
   ChatArea.renderMessages();
   ChatList.render('chat-list');
@@ -568,15 +574,22 @@ const sendMessage = async () => {
 
   const isAI   = text.startsWith('/ai ') || text === '/ai';
   const isGame = text.toLowerCase() === '/game ttt';
+  const isApi  = text.toLowerCase().startsWith('/api');
 
   if (isGame) {
     startGame(currentChatId);
     return;
   }
 
+  if (isApi) {
+    handlePublicApiCommand();
+    return;
+  }
+
   // Send user message
   DB.sendMessage({ chatId: currentChatId, senderId: session._id, text, type: 'text' });
   DB.updateUserStat(session._id, 'messages');
+  setupDashboard();
   ChatArea.renderMessages();
   ChatList.render('chat-list');
   ChatList.render('chat-list-2');
@@ -605,6 +618,7 @@ const handleAIRequest = async prompt => {
 
     DB.sendMessage({ chatId: currentChatId, senderId: '__ai__', text: response, type: 'ai' });
     DB.updateUserStat(session._id, 'aiUses');
+    setupDashboard();
 
     const remaining = AI.getRemainingCalls(session._id);
     ChatArea.renderMessages();
@@ -616,6 +630,66 @@ const handleAIRequest = async prompt => {
     thinkingRow.remove();
     DB.sendMessage({ chatId: currentChatId, senderId: '__ai__', text: err.message || 'AI is currently unavailable. Try again later.', type: 'ai' });
     ChatArea.renderMessages();
+  }
+};
+
+const notify = (title, message, type = 'info') => {
+  const items = JSON.parse(localStorage.getItem('shinchat_notifications') || '[]');
+  items.unshift({ id: crypto.randomUUID(), title, message, type, createdAt: new Date().toISOString() });
+  localStorage.setItem('shinchat_notifications', JSON.stringify(items.slice(0, MAX_NOTIFICATIONS)));
+  toast[type]?.(title, message);
+  renderNotifications();
+};
+
+const renderNotifications = () => {
+  const list = $('notification-list');
+  if (!list) return;
+  const items = JSON.parse(localStorage.getItem('shinchat_notifications') || '[]');
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = '<p class="notification-empty">No notifications yet. Activity will appear here.</p>';
+    return;
+  }
+  items.forEach(item => {
+    const row = el('article', `notification-item ${item.type}`);
+    row.innerHTML = `<h3>${ChatArea.escapeHtml(item.title)}</h3><p>${ChatArea.escapeHtml(item.message || '')}</p><time>${formatTime(item.createdAt)}</time>`;
+    list.appendChild(row);
+  });
+};
+
+const setupDashboard = async () => {
+  if (!session) return;
+  const user = DB.users.get(session._id);
+  if (!user) return;
+  $('metric-messages').textContent = user.stats?.messages || 0;
+  $('metric-ai').textContent = user.stats?.aiUses || 0;
+  $('metric-games').textContent = user.stats?.games || 0;
+  await refreshApiCards();
+};
+
+const refreshApiCards = async () => {
+  const wrap = $('api-cards');
+  if (!wrap || !window.Integrations) return;
+  wrap.innerHTML = '<div class="api-card skeleton"></div><div class="api-card skeleton"></div>';
+  const cards = await Integrations.getDashboardCards();
+  wrap.innerHTML = '';
+  cards.forEach(card => {
+    const cardEl = el('article', `api-card ${card.error ? 'error' : ''}`);
+    cardEl.innerHTML = `<h3>${ChatArea.escapeHtml(card.title)}</h3><p>${ChatArea.escapeHtml(card.body)}</p>`;
+    wrap.appendChild(cardEl);
+  });
+};
+
+const handlePublicApiCommand = async () => {
+  try {
+    const payload = await Integrations.getChatCommandResult();
+    DB.sendMessage({ chatId: currentChatId, senderId: '__ai__', text: `${payload.title}: ${payload.body}`, type: 'ai' });
+    ChatArea.renderMessages();
+    ChatList.render('chat-list');
+    ChatList.render('chat-list-2');
+    notify('Live API fetched', `Added ${payload.title.toLowerCase()} in chat.`, 'success');
+  } catch (err) {
+    notify('API command failed', err.message || 'Public API unavailable right now.', 'warn');
   }
 };
 
@@ -940,6 +1014,8 @@ const wireInputs = () => {
     const panel = $('ai-suggestions');
     if (msgInput.value.startsWith('/ai') && panel) {
       panel.style.display = 'flex';
+    } else if (panel) {
+      panel.style.display = 'none';
     }
   });
 
@@ -971,6 +1047,10 @@ const wireInputs = () => {
   $('btn-profile-back').addEventListener('click', () => {
     Router.go(currentChatId ? 'screen-chat' : 'screen-chat-list');
   });
+
+  $('btn-refresh-api')?.addEventListener('click', refreshApiCards);
+  $('btn-notifications')?.addEventListener('click', () => $('notification-drawer')?.classList.add('open'));
+  $('btn-close-notifications')?.addEventListener('click', () => $('notification-drawer')?.classList.remove('open'));
 };
 
 // ══════════════════════════════════════════════════════════════
@@ -989,8 +1069,10 @@ const App = {
 
     setSidebarUser();
     ChatList.render('chat-list');
+    setupDashboard();
+    renderNotifications();
     Router.go('screen-chat-list');
-    toast.success('Welcome back!', `Logged in as ${session.username}`);
+    notify('Welcome back!', `Logged in as ${session.username}`, 'success');
   },
 };
 
