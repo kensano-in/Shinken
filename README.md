@@ -1,35 +1,43 @@
-# ShinChat — Shinken Ecosystem
+# ShinChat — AI-Powered Chat Platform
 
-> **The next-generation, privacy-first chat platform.** Fast. Private. Alive.
+> **The next generation of conversation. Fast. Private. Intelligent.**
 
 [![Status](https://img.shields.io/badge/status-coming%20soon-red?style=flat-square)](https://shinken.in)
-[![Deployment](https://img.shields.io/badge/deployed-GitHub%20Pages-black?style=flat-square)](https://shinken.in)
-[![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red?style=flat-square)](#)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square)](https://nextjs.org)
+[![Deploy](https://img.shields.io/badge/deploy-Vercel-black?style=flat-square)](https://vercel.com)
 
 ---
 
-## Overview
+## What is ShinChat?
 
-ShinChat is a real-time communication platform built under the **Shinken** ecosystem. This repository hosts the production landing page — a fully interactive, feature-rich coming-soon hub.
+ShinChat is an AI-powered communication platform built under the **Shinken** ecosystem.
+Real-time chat with intelligence built directly into every conversation — summaries, smart replies,
+and context-aware AI without ever leaving your chat.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | JavaScript (no TypeScript) |
+| Styling | Global CSS (design token system) |
+| Fonts | Syne · DM Mono · Inter (via `next/font`) |
+| State | React hooks only |
+| Persistence | localStorage (email waitlist) |
+| Deployment | Vercel (primary) |
 
 ---
 
 ## Features
 
-| Feature | Description |
-|---|---|
-| 🎨 **Design System** | Full token-based CSS design system (colors, spacing, typography, motion) |
-| ⚡ **Particle Engine** | Modular canvas-based particle system |
-| 💬 **Chat Preview** | Live animated chat UI mockup with typing indicators |
-| 📊 **Dashboard Stats** | Animated counter stats with scroll-triggered reveals |
-| 🎯 **Mini Games** | Built-in reflex/click game, modular architecture for more |
-| 🔔 **Toast Notifications** | 4-type notification system (default, success, warn, info) |
-| 🕶️ **Custom Cursor** | Smooth lagging cursor with magnetic hover states |
-| ⏱ **Live Countdown** | Real-time launch countdown timer |
-| 📧 **Waitlist Form** | Email capture with localStorage persistence |
-| 📱 **Fully Responsive** | Mobile-first design with overlay navigation |
-| ♿ **Accessible** | Semantic HTML, ARIA labels, focus management |
-| 🔍 **SEO-ready** | OG tags, meta descriptions, canonical URLs |
+- **Hero** — Animated headline, live countdown, email waitlist with validation
+- **Features Grid** — 6-card feature overview, hover interactions
+- **AI Demo** — Live auto-playing chat demo with typing indicators, user can interact
+- **Stats** — Scroll-triggered animated counters + progress bars
+- **Email Capture** — Full CTA section with loading spinner + success state
+- **Footer** — Brand, social links, copyright
 
 ---
 
@@ -37,58 +45,58 @@ ShinChat is a real-time communication platform built under the **Shinken** ecosy
 
 ```
 shinken/
-├── index.html           # Main HTML — semantic, accessible, SEO-complete
-├── css/
-│   ├── design-system.css  # Tokens, reset, base utilities, cursor, animations
-│   └── sections.css       # Section-level styles: hero, chat, stats, games
-├── js/
-│   ├── main.js           # App entry — wires all modules
-│   ├── particles.js      # Canvas particle system (class-based)
-│   ├── chat.js           # Chat preview animation module
-│   ├── notify.js         # Toast notification module
-│   └── utils.js          # Shared helpers (debounce, lerp, store, etc.)
-├── CNAME                 # GitHub Pages custom domain
-└── README.md
+├── app/
+│   ├── layout.js           ← Root layout, fonts, SEO metadata
+│   ├── page.js             ← Page assembly
+│   └── globals.css         ← Design system (tokens, reset, all styles)
+├── components/
+│   ├── Navbar.js           ← Sticky nav with scroll effect
+│   ├── Hero.js             ← Hero + countdown + email form
+│   ├── Features.js         ← 6-card features grid
+│   ├── AIDemo.js           ← Interactive AI chat demo
+│   ├── Stats.js            ← Animated stats on scroll
+│   ├── EmailCapture.js     ← Bottom CTA email capture
+│   └── Footer.js           ← Footer + social links
+├── lib/
+│   └── utils.js            ← Email validation, storage, helpers
+├── next.config.js
+├── package.json
+└── .gitignore
 ```
 
 ---
 
-## Local Development
+## Getting Started
 
-No build step required — it's a pure HTML/CSS/JS static site.
+> Requires **Node.js 18+** — [Download here](https://nodejs.org)
 
 ```bash
-# Option 1: Python
-python -m http.server 8080
+# 1. Install dependencies
+npm install
 
-# Option 2: Node http-server
-npx http-server . -p 8080
+# 2. Run dev server
+npm run dev
+# → Opens at http://localhost:3000
 
-# Option 3: VS Code Live Server extension
-# Right-click index.html → "Open with Live Server"
-```
+# 3. Build for production
+npm run build
 
-> **Important:** JS modules (`type="module"`) require a server — opening `index.html` directly in the browser will fail due to CORS restrictions on ES module imports.
-
----
-
-## Deployment
-
-Deployed automatically via **GitHub Pages** to [shinken.in](https://shinken.in).
-
-```
-Branch: main (or gh-pages)
-Custom Domain: shinken.in (via CNAME)
+# 4. Preview production build
+npm start
 ```
 
 ---
 
-## Design Principles
+## Deployment (Vercel — Recommended)
 
-- **Apple** — Clarity and purposeful whitespace
-- **Stripe** — Engineering-first, zero compromises
-- **Vercel** — Performance as the default
-- **Linear** — UI precision and respect for the user
+1. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+2. Click **"Add New Project"** → import `kensano-in/Shinken`
+3. Framework: **Next.js** (auto-detected)
+4. Click **Deploy** — done ✓
+
+To add your custom domain (`shinken.in`):
+- Vercel Dashboard → Project → Settings → Domains → Add `shinken.in`
+- Update DNS: add a CNAME record pointing to `cname.vercel-dns.com`
 
 ---
 
@@ -97,9 +105,9 @@ Custom Domain: shinken.in (via CNAME)
 | Platform | Handle |
 |---|---|
 | Email | admin@kensano.in |
+| X / Twitter | [@Shinichirofr](https://x.com/Shinichirofr) |
 | Instagram | [@shinichiro.2](https://instagram.com/shinichiro.2) |
 | Telegram | [@Shinichirofr](https://t.me/Shinichirofr) |
-| X / Twitter | [@Shinichirofr](https://x.com/Shinichirofr) |
 
 ---
 
