@@ -635,7 +635,8 @@ const handleAIRequest = async prompt => {
 
 const notify = (title, message, type = 'info') => {
   const items = JSON.parse(localStorage.getItem('shinchat_notifications') || '[]');
-  items.unshift({ id: crypto.randomUUID(), title, message, type, createdAt: new Date().toISOString() });
+  const id = (window.crypto?.randomUUID?.() || `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
+  items.unshift({ id, title, message, type, createdAt: new Date().toISOString() });
   localStorage.setItem('shinchat_notifications', JSON.stringify(items.slice(0, MAX_NOTIFICATIONS)));
   toast[type]?.(title, message);
   renderNotifications();
@@ -661,9 +662,12 @@ const setupDashboard = async () => {
   if (!session) return;
   const user = DB.users.get(session._id);
   if (!user) return;
-  $('metric-messages').textContent = user.stats?.messages || 0;
-  $('metric-ai').textContent = user.stats?.aiUses || 0;
-  $('metric-games').textContent = user.stats?.games || 0;
+  const metricMessages = $('metric-messages');
+  const metricAI = $('metric-ai');
+  const metricGames = $('metric-games');
+  if (metricMessages) metricMessages.textContent = user.stats?.messages || 0;
+  if (metricAI) metricAI.textContent = user.stats?.aiUses || 0;
+  if (metricGames) metricGames.textContent = user.stats?.games || 0;
   await refreshApiCards();
 };
 
@@ -671,13 +675,18 @@ const refreshApiCards = async () => {
   const wrap = $('api-cards');
   if (!wrap || !window.Integrations) return;
   wrap.innerHTML = '<div class="api-card skeleton"></div><div class="api-card skeleton"></div>';
-  const cards = await Integrations.getDashboardCards();
-  wrap.innerHTML = '';
-  cards.forEach(card => {
-    const cardEl = el('article', `api-card ${card.error ? 'error' : ''}`);
-    cardEl.innerHTML = `<h3>${ChatArea.escapeHtml(card.title)}</h3><p>${ChatArea.escapeHtml(card.body)}</p>`;
-    wrap.appendChild(cardEl);
-  });
+  try {
+    const cards = await Integrations.getDashboardCards();
+    wrap.innerHTML = '';
+    cards.forEach(card => {
+      const cardEl = el('article', `api-card ${card.error ? 'error' : ''}`);
+      cardEl.innerHTML = `<h3>${ChatArea.escapeHtml(card.title)}</h3><p>${ChatArea.escapeHtml(card.body)}</p>`;
+      wrap.appendChild(cardEl);
+    });
+  } catch (error) {
+    wrap.innerHTML = '<article class="api-card error"><h3>Feed Offline</h3><p>Could not load API cards right now.</p></article>';
+    notify('Dashboard API error', error?.message || 'Could not load dashboard API cards.', 'warn');
+  }
 };
 
 const handlePublicApiCommand = async () => {
