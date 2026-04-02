@@ -125,6 +125,7 @@ let currentChatId = null;
 let currentGame   = null;
 let typingTimer   = null;
 const MAX_NOTIFICATIONS = 20;
+let dashboardRefreshTimer = null;
 
 // ══════════════════════════════════════════════════════════════
 //  AUTH
@@ -575,6 +576,7 @@ const sendMessage = async () => {
   const isAI   = text.startsWith('/ai ') || text === '/ai';
   const isGame = text.toLowerCase() === '/game ttt';
   const isApi  = text.toLowerCase().startsWith('/api');
+  const isHelp = text.toLowerCase() === '/help';
 
   if (isGame) {
     startGame(currentChatId);
@@ -586,10 +588,21 @@ const sendMessage = async () => {
     return;
   }
 
+  if (isHelp) {
+    DB.sendMessage({
+      chatId: currentChatId,
+      senderId: '__ai__',
+      text: 'Commands: /ai <prompt>, /game ttt, /api, /help',
+      type: 'ai',
+    });
+    ChatArea.renderMessages();
+    return;
+  }
+
   // Send user message
   DB.sendMessage({ chatId: currentChatId, senderId: session._id, text, type: 'text' });
   DB.updateUserStat(session._id, 'messages');
-  setupDashboard();
+  refreshDashboardSoon();
   ChatArea.renderMessages();
   ChatList.render('chat-list');
   ChatList.render('chat-list-2');
@@ -618,7 +631,7 @@ const handleAIRequest = async prompt => {
 
     DB.sendMessage({ chatId: currentChatId, senderId: '__ai__', text: response, type: 'ai' });
     DB.updateUserStat(session._id, 'aiUses');
-    setupDashboard();
+    refreshDashboardSoon();
 
     const remaining = AI.getRemainingCalls(session._id);
     ChatArea.renderMessages();
@@ -669,6 +682,11 @@ const setupDashboard = async () => {
   if (metricAI) metricAI.textContent = user.stats?.aiUses || 0;
   if (metricGames) metricGames.textContent = user.stats?.games || 0;
   await refreshApiCards();
+};
+
+const refreshDashboardSoon = () => {
+  clearTimeout(dashboardRefreshTimer);
+  dashboardRefreshTimer = setTimeout(() => setupDashboard(), 250);
 };
 
 const refreshApiCards = async () => {
@@ -1061,6 +1079,16 @@ const wireInputs = () => {
   $('btn-notifications')?.addEventListener('click', () => $('notification-drawer')?.classList.add('open'));
   $('btn-close-notifications')?.addEventListener('click', () => $('notification-drawer')?.classList.remove('open'));
 };
+
+window.addEventListener('error', event => {
+  const msg = event?.error?.message || event?.message || 'Unexpected application error';
+  notify('Runtime error', msg, 'warn');
+});
+
+window.addEventListener('unhandledrejection', event => {
+  const msg = event?.reason?.message || 'Unexpected promise rejection';
+  notify('Async error', msg, 'warn');
+});
 
 // ══════════════════════════════════════════════════════════════
 //  BOOT
